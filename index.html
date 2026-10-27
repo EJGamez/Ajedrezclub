@@ -10,13 +10,16 @@
 body{--auto:min(760px,max(300px,calc(100vh - 125px)));--bw:calc(var(--auto) * var(--k));margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
 header h1{font-size:17px;margin:0 8px 0 0;white-space:nowrap}
-nav{display:flex;flex-wrap:wrap;gap:6px}
-nav button{background:transparent;color:var(--mut);border:1px solid transparent;padding:6px 12px;border-radius:8px;font:inherit;cursor:pointer}
+nav{display:flex;flex-wrap:wrap;gap:0}
+nav button{background:transparent;color:var(--mut);border:1px solid transparent;padding:6px 7px;border-radius:8px;font:inherit;cursor:pointer}
 nav button:hover{color:var(--txt)}
 nav button.on{background:var(--panel2);color:var(--txt);border-color:var(--line)}
 #sizeBox{margin-left:auto;font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px}
-#sizeBox input{width:90px;accent-color:var(--acc)}
+#sizeBox input{width:64px;accent-color:var(--acc)}
 #wideBtn{font-size:13px}
+#sndBtn{padding:5px 8px;display:inline-flex;align-items:center}
+#sndPop{position:fixed;top:48px;right:12px;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.45);display:none;flex-direction:column;gap:9px;min-width:230px;font-size:14px}
+#sndPop.open{display:flex}#sndPop label{display:flex;align-items:center;gap:8px;cursor:pointer}#sndPop input[type=range]{flex:1;accent-color:var(--acc)}#sndPop .small{color:var(--mut);font-size:12px}
 #engstat{font-size:12px;color:var(--mut);white-space:nowrap}
 main{display:grid;grid-template-columns:minmax(0,var(--bw)) minmax(300px,1fr);gap:20px;padding:16px;max-width:1500px;margin:0 auto}
 body.wide{--auto:min(500px,max(300px,calc(100vh - 125px)))}
@@ -105,16 +108,28 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;color:var(--mut);font-
   <nav id="tabs">
     <button data-m="lesson">Lecciones</button>
     <button data-m="review">Repaso</button>
+    <button data-m="exam">Examen</button>
     <button data-m="tactics">Táctica</button>
+    <button data-m="struct" title="Estructuras de peones">Peones</button>
     <button data-m="games">Partidas</button>
     <button data-m="play">Jugar</button>
     <button data-m="edit">Crear</button>
     <button data-m="progress">Progreso</button>
   </nav>
   <label id="sizeBox" title="Tamaño del tablero (doble clic para restablecer)">Tablero <input type="range" id="sizeK" min="60" max="140" step="5" value="100"></label>
+  <button id="sndBtn" class="b" title="Sonido" aria-label="Sonido"></button>
   <button id="wideBtn" class="b" title="Hace el chat más ancho y el tablero más pequeño">Chat amplio</button>
   <span id="engstat">Cargando motor…</span>
 </header>
+
+<div id="sndPop" role="dialog" aria-label="Sonido">
+ <label><input type="checkbox" id="sndOn"> Sonidos de jugadas y avisos</label>
+ <label>Volumen <input type="range" id="sndVol" min="0" max="100" step="5"></label>
+ <label><input type="checkbox" id="sndVoice"> Voz: leer al entrenador</label>
+ <label><input type="checkbox" id="sndAnn"> Voz: anunciar cada jugada</label>
+ <button id="sndTest" class="b">Probar sonidos</button>
+ <div class="small">La voz usa el sintetizador de tu navegador (español).</div>
+</div>
 <main>
   <section>
     <div class="boardWrap"><div id="evalbar"><div id="evalFill"></div><span id="evalTxt"></span></div><div id="board"></div></div>
@@ -2256,6 +2271,23 @@ const PUZZLES=[
  {fen:'4k3/1p6/2n5/1B6/3P4/8/P7/4K3 w - - 0 1',theme:'Clavada',sol:['d5'],expl:'El caballo de c6 está clavado al rey por el alfil, así que no puede escapar del ataque del peón.'}
 ];
 
+/* =============== EJERCICIOS GENERADOS Y VERIFICADOS CON STOCKFISH =============== */
+const PZ_MATE=[{"fen":"8/5Q2/7k/R5p1/4P3/2P1K2P/6P1/5R2 w - - 0 39","n":1,"pat":"Mate con torre","f":["Ra6#","Rf6#"],"line":"39.Ra6#","expl":"La torre da el mate a lo largo de una fila o columna mientras otras piezas cierran las huidas del rey."},{"fen":"8/1R5b/3b1pk1/8/1P1P4/2P1r3/5KP1/4r3 b - - 4 42","n":1,"pat":"Mate con alfil","f":["Bg3#"],"line":"42...Bg3#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"6r1/p2k4/3r3p/6p1/1b3P2/4B3/5PPP/3R3K b - - 0 35","n":1,"pat":"Mate del pasillo","f":["Rxd1#"],"line":"35...Rxd1#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"8/k3r3/5p2/3B4/p1p5/P1N3p1/P1PK1p2/4R3 b - - 1 42","n":1,"pat":"Mate con peón","f":["fxe1=Q#"],"line":"42...fxe1=Q#","expl":"Un peón da jaque (a veces al coronar): nada puede capturarlo y el rey no tiene casillas libres."},{"fen":"8/4P2k/6Rp/8/1pP1B1p1/1P2P3/1B3K1P/5N2 w - - 1 45","n":1,"pat":"Mate con torre","f":["Rg5#","Rxg4#"],"line":"45.Rg5#","expl":"La torre da el mate a lo largo de una fila o columna mientras otras piezas cierran las huidas del rey."},{"fen":"8/3n3r/1p3k2/6p1/4Q1Pp/P1R5/1BP2P2/3K2N1 w - - 1 34","n":1,"pat":"Jaque doble","f":["Rf3#"],"line":"34.Rf3#","expl":"Dos piezas dan jaque a la vez: no se puede capturar ni interponer, solo mover el rey, y no le quedan casillas libres."},{"fen":"7k/8/p4NpB/4N3/3pp3/7P/PPP3K1/RN6 w - - 0 30","n":1,"pat":"Mate con caballo","f":["Nf7#","Nxg6#"],"line":"30.Nf7#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"1r6/k4pp1/p7/4P2p/2R1PP2/P3q3/6PP/4R2K b - - 8 42","n":1,"pat":"Mate del pasillo","f":["Qxe1#"],"line":"42...Qxe1#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"5rNk/5ppp/1p6/p7/P3P3/8/3r1PPP/3Q3K b - - 3 31","n":1,"pat":"Mate del pasillo","f":["Rxd1#"],"line":"31...Rxd1#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"8/1B2nk2/4p3/3n1P1p/1P1P3b/2q3p1/3RK1P1/r7 b - - 2 34","n":1,"pat":"Mate con caballo","f":["Nf4#","Qe3#"],"line":"34...Nf4#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"5Q2/8/r1B2Nk1/4Ppp1/1pP5/4PNP1/1P3K2/2B5 w - - 10 45","n":1,"pat":"Mate con alfil","f":["Be8#"],"line":"45.Be8#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"r4Q2/3b4/p3p2p/1p1k4/5PR1/1PP4K/P3B3/2R5 w - - 1 38","n":1,"pat":"Mate con alfil","f":["Bf3#"],"line":"38.Bf3#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"4k2r/5pp1/4pn1n/p6p/P7/1p1p4/1Pp1q3/7K b - - 7 43","n":1,"pat":"Mate con peón","f":["c1=Q#","c1=R#"],"line":"43...c1=Q#","expl":"Un peón da jaque (a veces al coronar): nada puede capturarlo y el rey no tiene casillas libres."},{"fen":"8/p1r4k/3N1p2/4n3/3N4/P5R1/1PPKBPP1/4R3 w - - 3 37","n":1,"pat":"Mate con torre","f":["Rh1#"],"line":"37.Rh1#","expl":"La torre da el mate a lo largo de una fila o columna mientras otras piezas cierran las huidas del rey."},{"fen":"k1b5/1n6/1pN2bpB/5Q1P/r1P1P3/8/P7/4K2R w K - 7 39","n":1,"pat":"Mate con dama","f":["Qxc8#"],"line":"39.Qxc8#","expl":"La dama da el mate apoyada por otra pieza o con las casillas de escape bloqueadas; cuenta siempre las casillas libres del rey."},{"fen":"6k1/7p/2p1p1b1/p6p/3q2p1/PP6/2Pr4/1K1n3R b - - 7 44","n":1,"pat":"Mate con dama","f":["Qb2#"],"line":"44...Qb2#","expl":"La dama da el mate apoyada por otra pieza o con las casillas de escape bloqueadas; cuenta siempre las casillas libres del rey."},{"fen":"N7/1b1kPQ2/3r4/p2p4/1P6/2PnP1P1/P5KP/2R2R2 w - - 1 41","n":1,"pat":"Jaque doble","f":["e8=Q#"],"line":"41.e8=Q#","expl":"Dos piezas dan jaque a la vez: no se puede capturar ni interponer, solo mover el rey, y no le quedan casillas libres."},{"fen":"rn2r1k1/p1p2ppp/bp6/1P6/P5P1/3q3P/4R3/4K1b1 w - - 3 35","n":1,"pat":"Mate del pasillo","f":["Rxe8#"],"line":"35.Rxe8#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"4Rbnk/4NQ2/p2p3B/5B1p/1Pp5/P7/5PPP/5RK1 w - - 0 32","n":1,"pat":"Mate con caballo","f":["Ng6#","Qxg8#","Qh7#"],"line":"32.Ng6#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"3k1r1N/Q2n1B2/2p3pB/1p5p/4P1P1/P1P1K1P1/8/3R1R2 w - - 1 32","n":1,"pat":"Mate con dama","f":["Qxd7#"],"line":"32.Qxd7#","expl":"La dama da el mate apoyada por otra pieza o con las casillas de escape bloqueadas; cuenta siempre las casillas libres del rey."},{"fen":"3r1k2/1p2bP1p/8/PpP1p3/1Pp1n3/B2RP3/4KPb1/7q b - - 6 30","n":1,"pat":"Mate con peón","f":["cxd3#","Bf3#","Qf1#"],"line":"30...cxd3#","expl":"Un peón da jaque (a veces al coronar): nada puede capturarlo y el rey no tiene casillas libres."},{"fen":"2Q2r1k/6pp/1p6/p2p4/Pn5q/bP5P/2PN1P2/BR2R2K w - - 1 31","n":1,"pat":"Mate del pasillo","f":["Qxf8#"],"line":"31.Qxf8#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"n2RQrk1/5ppp/p3p3/1p6/2B5/5N2/PBP2PPP/R5K1 w - - 0 22","n":1,"pat":"Mate del pasillo","f":["Qxf8#"],"line":"22.Qxf8#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"3r1k1r/3p4/1p1q2n1/1BR5/4npp1/P6p/4NPPP/B5RK b - - 0 35","n":1,"pat":"Mate ahogado","f":["Nxf2#"],"line":"35...Nxf2#","expl":"El rey está rodeado por sus propias piezas y el caballo da jaque sin que nadie pueda capturarlo ni el rey huir."},{"fen":"r2n1k1r/2p2qpp/3R4/1pQ2p2/8/7N/PPP2PPP/2K2B1R w - - 1 22","n":1,"pat":"Jaque doble","f":["Rxd8#"],"line":"22.Rxd8#","expl":"Dos piezas dan jaque a la vez: no se puede capturar ni interponer, solo mover el rey, y no le quedan casillas libres."},{"fen":"rnb2k2/3p2R1/1p3P2/p5NQ/1b2PB2/2N3P1/PPP2PB1/R3K3 w Q - 2 21","n":1,"pat":"Mate con caballo","f":["Nh7#","Qf7#","Qh8#"],"line":"21.Nh7#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"r2nb3/1p3k2/3PpN1Q/p2pPp2/1P4p1/P4N2/4BPPP/2R1R1K1 w - - 4 29","n":1,"pat":"Mate con caballo","f":["Ng5#"],"line":"29.Ng5#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"r1b2k1r/pp1p1pp1/2n1p3/4P3/Pb1p1nP1/2N5/4pP1P/R3K1R1 b Q - 0 18","n":1,"pat":"Mate con alfil","f":["Bxc3#"],"line":"18...Bxc3#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"1r1qkb1r/3bpppp/p1p5/5N2/4Q3/2P4P/PP3PP1/R1B1KB1R w KQ - 1 15","n":1,"pat":"Mate ahogado","f":["Nd6#"],"line":"15.Nd6#","expl":"El rey está rodeado por sus propias piezas y el caballo da jaque sin que nadie pueda capturarlo ni el rey huir."},{"fen":"r1b2b1r/p4ppp/2n1p1k1/2p3B1/1pB1P3/2P2N2/P3NPPP/R4RK1 w - - 9 17","n":1,"pat":"Mate con caballo","f":["Nf4#"],"line":"17.Nf4#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"8/5k2/3Q2p1/8/p7/1RP3P1/P1B1K3/5n2 w - - 4 41","n":2,"pat":"Mate de la escalera","f":["Rb7+"],"rep":"Kg8","line":"41.Rb7+ Kg8 42.Qb8#","expl":"Las piezas pesadas dan jaques en filas o columnas contiguas y empujan al rey hasta el borde: es el mate de escalera."},{"fen":"3k4/1R6/6P1/PB6/2Rp3p/8/1PP2Pp1/6K1 w - - 0 45","n":2,"pat":"Mate de la escalera","f":["Rd7+","g7"],"rep":"Ke8","line":"45.Rd7+ Ke8 46.Rc8#","expl":"Las piezas pesadas dan jaques en filas o columnas contiguas y empujan al rey hasta el borde: es el mate de escalera."},{"fen":"7k/8/p3Bp2/8/3R1B1P/P1r4p/7P/6RK w - - 7 41","n":2,"pat":"Mate con alfil","f":["Rd8+","Rg8+"],"rep":"Kh7","line":"41.Rd8+ Kh7 42.Bf5#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"2r5/2p2kr1/8/3P1P2/pp5p/PP5P/2K5/4q3 b - - 3 44","n":2,"pat":"Mate de la escalera","f":["Qe2+"],"rep":"Kb1","line":"44...Qe2+ 45.Kb1 Rg1#","expl":"Las piezas pesadas dan jaques en filas o columnas contiguas y empujan al rey hasta el borde: es el mate de escalera."},{"fen":"8/3p3k/p1b1p2r/7Q/Pbp4P/1P6/7K/6R1 w - - 1 45","n":2,"pat":"Mate de la escalera","f":["Qf7+"],"rep":"Kh8","line":"45.Qf7+ Kh8 46.Rg8#","expl":"Las piezas pesadas dan jaques en filas o columnas contiguas y empujan al rey hasta el borde: es el mate de escalera."},{"fen":"1b6/8/2knQRp1/p7/P1p3p1/2P4P/4K3/1R6 w - - 0 37","n":2,"pat":"Mate con dama","f":["Rxb8"],"rep":"g3","line":"37.Rxb8 g3 38.Qxd6#","expl":"La dama da el mate apoyada por otra pieza o con las casillas de escape bloqueadas; cuenta siempre las casillas libres del rey."},{"fen":"4Q3/p5k1/2p3pp/n1N5/2P1n3/1P3B2/5P2/3R2K1 w - - 3 39","n":2,"pat":"Mate de la escalera","f":["Qe7+"],"rep":"Kh8","line":"39.Qe7+ Kh8 40.Rd8#","expl":"Las piezas pesadas dan jaques en filas o columnas contiguas y empujan al rey hasta el borde: es el mate de escalera."},{"fen":"r6k/1p6/pQ5p/P1p1b3/7P/RP3B2/5P2/6K1 w - - 5 40","n":2,"pat":"Mate con alfil","f":["Qxh6+"],"rep":"Kg8","line":"40.Qxh6+ Kg8 41.Bd5#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"k7/8/p5pp/1Q1p4/2rB4/5BP1/PP2P1K1/R4R2 w - - 0 38","n":2,"pat":"Mate con alfil","f":["Bxd5+"],"rep":"Rc6","line":"38.Bxd5+ Rc6 39.Bxc6#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"1r6/p3b1p1/4b1k1/2p1P3/P2nP1p1/8/1B5r/RK1R4 b - - 3 35","n":2,"pat":"Mate con caballo","f":["Rbxb2+","Rhxb2+"],"rep":"Kc1","line":"35...Rbxb2+ 36.Kc1 Nb3#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"1r4kr/1pR4p/p4B2/4Q3/8/3pP2b/2PN2P1/4K2n w - - 0 31","n":2,"pat":"Mate con dama","f":["Rg7+","Qe7"],"rep":"Kf8","line":"31.Rg7+ Kf8 32.Qe7#","expl":"La dama da el mate apoyada por otra pieza o con las casillas de escape bloqueadas; cuenta siempre las casillas libres del rey."},{"fen":"6k1/1B1nQ3/7p/pp2p3/4N2P/PP3P2/5P2/3R1RK1 w - - 2 34","n":2,"pat":"Mate con torre","f":["Rxd7"],"rep":"a4","line":"34.Rxd7 a4 35.Rd8#","expl":"La torre da el mate a lo largo de una fila o columna mientras otras piezas cierran las huidas del rey."},{"fen":"1N1k4/1Qn3pp/4b1p1/3p4/5R2/4P3/PB3PPP/4K2R w K - 1 30","n":2,"pat":"Mate con caballo","f":["Rf8+"],"rep":"Ne8","line":"30.Rf8+ Ne8 31.Nc6#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"1k6/p1bb4/2n5/1p3p1p/4p2K/P1PNP1r1/R5r1/2B5 b - - 5 33","n":2,"pat":"Mate con torre","f":["Bd8+"],"rep":"Kxh5","line":"33...Bd8+ 34.Kxh5 Rh3#","expl":"La torre da el mate a lo largo de una fila o columna mientras otras piezas cierran las huidas del rey."},{"fen":"6k1/2p2ppp/1p1n4/1P1n2Qq/2P4P/Bp1P1P2/3K2B1/8 w - - 6 28","n":2,"pat":"Mate del pasillo","f":["Qd8+"],"rep":"Ne8","line":"28.Qd8+ Ne8 29.Qxe8#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"2b4r/6kp/1p2ppp1/3p4/3P4/1R3P2/r4NPP/4qBK1 b - - 5 30","n":2,"pat":"Mate del pasillo","f":["Qxf2+"],"rep":"Kh1","line":"30...Qxf2+ 31.Kh1 Qxf1#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"3nk2r/1p2ppb1/pN6/6pp/2p4P/P3P1P1/1PP5/3Q3K w - - 0 29","n":2,"pat":"Mate del pasillo","f":["Qd7+"],"rep":"Kf8","line":"29.Qd7+ Kf8 30.Qxd8#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"1rb1k3/2p5/4n1pp/pp2N1P1/1BP5/5Q2/P3PP1P/4KB1R w K a6 0 20","n":2,"pat":"Mate con dama","f":["Qc6+","Qf7+"],"rep":"Bd7","line":"20.Qc6+ Bd7 21.Qxd7#","expl":"La dama da el mate apoyada por otra pieza o con las casillas de escape bloqueadas; cuenta siempre las casillas libres del rey."},{"fen":"r1b1k3/1B1n3R/2pP1p2/p3p1N1/3P1P2/8/PPP2PQ1/RN1K4 w q - 0 21","n":2,"pat":"Mate con caballo","f":["Re7+","Ne6"],"rep":"Kf8","line":"21.Re7+ Kf8 22.Ne6#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"r3k1r1/pB2ppb1/6p1/2p4p/P4BbP/6P1/1PP1q2n/6KR b - - 1 25","n":2,"pat":"Mate con alfil","f":["Bd4+"],"rep":"Be3","line":"25...Bd4+ 26.Be3 Bxe3#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"4rk2/1pp2pp1/p1P2r2/7p/P7/2Pb2PP/1P1Pn3/R1BK2R1 b - - 2 29","n":2,"pat":"Mate con torre","f":["Nxg1"],"rep":"b3","line":"29...Nxg1 30.b3 Rf1#","expl":"La torre da el mate a lo largo de una fila o columna mientras otras piezas cierran las huidas del rey."},{"fen":"2b4k/r4R2/1pP2Pp1/p2BNpB1/3N3p/8/PP3PPP/R2Q2K1 w - - 0 27","n":2,"pat":"Jaque doble","f":["Nxg6+"],"rep":"Kg8","line":"27.Nxg6+ Kg8 28.Rg7#","expl":"Dos piezas dan jaque a la vez: no se puede capturar ni interponer, solo mover el rey, y no le quedan casillas libres."},{"fen":"r6r/2q1k1pp/1ppN4/4PQb1/p5BP/PP2P1P1/1B6/3RKN1R w K - 2 28","n":2,"pat":"Jaque doble","f":["Qf7+"],"rep":"Kd8","line":"28.Qf7+ Kd8 29.Nb7#","expl":"Dos piezas dan jaque a la vez: no se puede capturar ni interponer, solo mover el rey, y no le quedan casillas libres."},{"fen":"2b1k3/p3bp1p/1rPq3P/1p1np1r1/1Pp3Q1/P4P1K/3R4/RN3n1B b - - 1 31","n":2,"pat":"Jaque doble","f":["Nf4+","Rxg4"],"rep":"Kh4","line":"31...Nf4+ 32.Kh4 Rxg4#","expl":"Dos piezas dan jaque a la vez: no se puede capturar ni interponer, solo mover el rey, y no le quedan casillas libres."},{"fen":"rn1k2r1/1p4p1/2p2n1N/p1bpNQB1/1P2P3/2P3PB/P4P1P/R3K2R w KQ a6 0 22","n":2,"pat":"Mate con caballo","f":["Qc8+"],"rep":"Ke7","line":"22.Qc8+ Ke7 23.Nf5#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"8/1p2pk2/1B2n3/r3b2N/5PP1/8/3r4/q4RK1 b - - 0 42","n":2,"pat":"Sacrificio de dama","f":["Qxf1+"],"rep":"Kxf1","line":"42...Qxf1+ 43.Kxf1 Ra1#","expl":"El sacrificio de la dama desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"6k1/1p3ppp/6b1/8/1b1P4/8/PKp5/R3r1B1 b - - 11 45","n":2,"pat":"Sacrificio de torre","f":["Rb1+"],"rep":"Rxb1","line":"45...Rb1+ 46.Rxb1 cxb1=Q#","expl":"El sacrificio de la torre desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"r4k2/6p1/np6/1q3p2/p3p3/P6r/KP5q/2B5 b - - 3 40","n":2,"pat":"Sacrificio de torre","f":["Rxa3+"],"rep":"Kxa3","line":"40...Rxa3+ 41.Kxa3 Qb3#","expl":"El sacrificio de la torre desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"8/1p3k2/1n2rp2/K6p/P1P1R2P/1r4PN/8/2B5 b - - 1 41","n":2,"pat":"Sacrificio de caballo","f":["Nxc4+","Re5+"],"rep":"Rxc4","line":"41...Nxc4+ 42.Rxc4 Ra6#","expl":"El sacrificio de la caballo desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"4k1r1/5p2/3p1Qp1/p2N3p/4r3/3P4/p6K/3BNR2 w - - 3 37","n":2,"pat":"Sacrificio de alfil","f":["Ba4+"],"rep":"Rxa4","line":"37.Ba4+ Rxa4 38.Qe7#","expl":"El sacrificio de la alfil desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"7r/1p1n1kb1/1P5p/3p3P/3P2q1/1P6/rB4P1/6K1 b - - 0 34","n":2,"pat":"Sacrificio de alfil","f":["Bxd4+","Rxb2"],"rep":"Bxd4","line":"34...Bxd4+ 35.Bxd4 Qxg2#","expl":"El sacrificio de la alfil desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"4k3/p4rp1/p7/3r1N1n/1p2p3/6bP/3q1PP1/nR4K1 b - - 9 33","n":2,"pat":"Sacrificio de dama","f":["Qd1+"],"rep":"Rxd1","line":"33...Qd1+ 34.Rxd1 Rxd1#","expl":"El sacrificio de la dama desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"5r2/1R6/1P2pkpp/4Np2/4BP2/1p2N1P1/1P5P/5RK1 w - - 1 36","n":2,"pat":"Sacrificio de caballo","f":["N5g4+","N3g4+"],"rep":"fxg4","line":"36.N5g4+ fxg4 37.Nxg4#","expl":"El sacrificio de la caballo desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"1r2k2r/5pp1/3b4/p2p3p/3P2b1/2PN4/PB2q3/R1K4R b - - 3 29","n":2,"pat":"Sacrificio de alfil","f":["Bf4+"],"rep":"Nxf4","line":"29...Bf4+ 30.Nxf4 Qxb2#","expl":"El sacrificio de la alfil desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"NQ3N2/p5p1/p1k2p2/7p/1P2P1bP/6P1/PP2n1R1/R4K2 w - - 14 31","n":2,"pat":"Sacrificio de torre","f":["Rc1+"],"rep":"Nxc1","line":"31.Rc1+ Nxc1 32.Rc2#","expl":"El sacrificio de la torre desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"rk5r/pppQ1p2/6pp/3Rp2n/P7/2B1P2P/1PP1KR2/8 w - - 3 27","n":2,"pat":"Mate del pasillo","f":["Qd8+"],"rep":"Rxd8","line":"27.Qd8+ Rxd8 28.Rxd8#","expl":"El rey está encerrado por sus propios peones en la última fila: cualquier jaque de torre o dama por esa fila es mate."},{"fen":"r5k1/1p2r2p/pP1pbQ1B/2P1p3/6p1/R1PP2PP/6P1/5RK1 w - - 2 32","n":2,"pat":"Sacrificio de dama","f":["Qf8+"],"rep":"Rxf8","line":"32.Qf8+ Rxf8 33.Rxf8#","expl":"El sacrificio de la dama desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"1n6/4r1r1/p2PbQpk/Pp4Rp/3PB2P/1N4P1/1P3P1R/4K3 w - - 0 35","n":2,"pat":"Sacrificio de torre","f":["Rxh5+"],"rep":"Kxh5","line":"35.Rxh5+ Kxh5 36.Qg5#","expl":"El sacrificio de la torre desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"1r1r3k/2P2ppp/1p2p3/p2q4/Q3n3/4PNPP/RP2pP1R/4K3 b - - 1 27","n":2,"pat":"Sacrificio de dama","f":["Qd1+"],"rep":"Qxd1","line":"27...Qd1+ 28.Qxd1 exd1=Q#","expl":"El sacrificio de la dama desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"r3rk2/p2p1ppp/bp1b3N/3p4/5Pn1/2P1P2P/q2nB3/3RK2R b - - 3 28","n":2,"pat":"Sacrificio de caballo","f":["Nf3+"],"rep":"Bxf3","line":"28...Nf3+ 29.Bxf3 Qf2#","expl":"El sacrificio de la caballo desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"1q6/6k1/4pp1p/2P3p1/P5P1/7P/3r4/3R1K2 b - - 0 42","n":3,"pat":"Mate de la escalera","f":["Qf4+"],"rep":"Kg1","line":"42...Qf4+ 43.Kg1 Qf2+ 44.Kh1 Rxd1#","expl":"Las piezas pesadas dan jaques en filas o columnas contiguas y empujan al rey hasta el borde: es el mate de escalera."},{"fen":"5k2/8/1p1bQ2p/2p2p2/p1P3p1/P4P2/1P3K2/4R2R w - - 0 39","n":3,"pat":"Mate de la escalera","f":["Qf6+","Qxd6+"],"rep":"Kg8","line":"39.Qf6+ Kg8 40.Qg6+ Kh8 41.Rxh6#","expl":"Las piezas pesadas dan jaques en filas o columnas contiguas y empujan al rey hasta el borde: es el mate de escalera."},{"fen":"5rk1/1p3p1n/3N4/2Pp4/4b1P1/5P2/r1n1B2K/4q3 b - - 2 39","n":3,"pat":"Mate con torre","f":["Qf2+"],"rep":"Kh1","line":"39...Qf2+ 40.Kh1 Ra1+ 41.Bf1 Rxf1#","expl":"La torre da el mate a lo largo de una fila o columna mientras otras piezas cierran las huidas del rey."},{"fen":"r3k2r/5Rp1/n3b2p/p7/5P2/2K1P2P/P5PN/3q4 b kq - 0 25","n":3,"pat":"Mate con dama","f":["Rc8+"],"rep":"Rc7","line":"25...Rc8+ 26.Rc7 Rxc7+ 27.Kb2 Qc1#","expl":"La dama da el mate apoyada por otra pieza o con las casillas de escape bloqueadas; cuenta siempre las casillas libres del rey."},{"fen":"3r4/2k5/Qp1R3p/n5b1/8/2P2BPR/PPN2P2/1K4N1 w - - 1 37","n":3,"pat":"Mate con alfil","f":["Qxb6+"],"rep":"Kc8","line":"37.Qxb6+ Kc8 38.Rxd8+ Bxd8 39.Bg4#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"r3R3/2kB1p2/2P4p/4P1p1/1pP5/1P3p1P/3B1QP1/7K w - - 1 35","n":3,"pat":"Mate con torre","f":["Rxa8"],"rep":"fxg2+","line":"35.Rxa8 fxg2+ 36.Kxg2 g4 37.Rc8#","expl":"La torre da el mate a lo largo de una fila o columna mientras otras piezas cierran las huidas del rey."},{"fen":"rn2Q3/6k1/p1pR4/5P2/2Pb2q1/1P3Pp1/P3K2P/7R w - - 0 35","n":3,"pat":"Mate con peón","f":["Qe7+"],"rep":"Kh8","line":"35.Qe7+ Kh8 36.Rd8+ Qg8 37.hxg3#","expl":"Un peón da jaque (a veces al coronar): nada puede capturarlo y el rey no tiene casillas libres."},{"fen":"Q6B/4pk1p/1N3pp1/8/pp1P3P/6P1/PP1K4/4RbR1 w - - 2 34","n":3,"pat":"Mate con caballo","f":["Qd5+"],"rep":"e6","line":"34.Qd5+ e6 35.Qxe6+ Kf8 36.Nd7#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"1r6/ppP1k3/6p1/4p3/1PRpp1b1/P2q4/3N1P2/2K1B2r b - - 1 33","n":3,"pat":"Mate con peón","f":["Qxa3+"],"rep":"Kb1","line":"33...Qxa3+ 34.Kb1 Rxe1+ 35.Kc2 d3#","expl":"Un peón da jaque (a veces al coronar): nada puede capturarlo y el rey no tiene casillas libres."},{"fen":"rn2QBr1/2k2p2/pp1p4/2p4q/3P4/5N1R/PP3KP1/4R3 w - - 0 24","n":3,"pat":"Mate de la escalera","f":["Re7+"],"rep":"Nd7","line":"24.Re7+ Nd7 25.Qxd7+ Kb8 26.Re8#","expl":"Las piezas pesadas dan jaques en filas o columnas contiguas y empujan al rey hasta el borde: es el mate de escalera."},{"fen":"r1b2rk1/pp6/2P5/5p2/1Pp2p2/5Nn1/P2KPPP1/q4B2 b - - 1 28","n":3,"pat":"Mate con caballo","f":["Qb2+"],"rep":"Kd1","line":"28...Qb2+ 29.Kd1 Qb1+ 30.Kd2 Ne4#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"r3k2r/p4pp1/b3p3/6Pp/5P2/N2qn2K/P4bP1/R2R4 b kq - 3 28","n":3,"pat":"Mate con caballo","f":["Nxd1+"],"rep":"Kh2","line":"28...Nxd1+ 29.Kh2 Bg3+ 30.Kh3 Nf2#","expl":"El caballo da jaque, que no se puede parar interponiendo una pieza; el rey no tiene casillas libres."},{"fen":"r5r1/p1p1kpp1/2b5/7B/3nnp2/P1b5/3N1PPP/2R1KR2 b - - 0 23","n":3,"pat":"Mate con alfil","f":["Bxd2+"],"rep":"Kd1","line":"23...Bxd2+ 24.Kd1 Ba4+ 25.Rc2 Bxc2#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"2k2b2/R7/1n3prp/1Qpr3P/5p2/P1P3P1/2PNPP2/3K3R w - - 0 24","n":3,"pat":"Mate con dama","f":["Qe8+"],"rep":"Rd8","line":"24.Qe8+ Rd8 25.Qc6+ Kb8 26.Qb7#","expl":"La dama da el mate apoyada por otra pieza o con las casillas de escape bloqueadas; cuenta siempre las casillas libres del rey."},{"fen":"R3nbr1/2r1pppp/1pnk4/4N1B1/QP1P2P1/2P5/3NBPP1/1b3RK1 w - - 7 24","n":3,"pat":"Mate con alfil","f":["Nxf7+"],"rep":"Kd7","line":"24.Nxf7+ Kd7 25.Rd8+ Ke6 26.Bc4#","expl":"El alfil da jaque por una diagonal sin que se pueda interponer; las demás piezas cubren las casillas de huida."},{"fen":"6k1/r1p3p1/p7/4rP1Q/4BP2/2B3R1/1P6/5KN1 w - - 3 39","n":3,"pat":"Sacrificio de alfil","f":["Bd5+"],"rep":"Rxd5","line":"39.Bd5+ Rxd5 40.Rxg7+ Kf8 41.Qf7#","expl":"El sacrificio de la alfil desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"5k2/5p2/5R2/p2Pp1Q1/4P1p1/6P1/PP1n1K1P/2R5 w - - 4 35","n":3,"pat":"Sacrificio de torre","f":["Rxf7+","Rc8+"],"rep":"Kxf7","line":"35.Rxf7+ Kxf7 36.Rc7+ Ke8 37.Qe7#","expl":"El sacrificio de la torre desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"2r3k1/p3pp2/1p3bpr/n7/1P4R1/P2q4/R3NP2/4K3 b - - 1 32","n":3,"pat":"Sacrificio de torre","f":["Rc1+","Rh1+"],"rep":"Nxc1","line":"32...Rc1+ 33.Nxc1 Rh1+ 34.Rg1 Rxg1#","expl":"El sacrificio de la torre desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"3r3r/pQ3p1p/2p1kp2/8/1bP5/3B1P2/P4KPP/2RR4 w - - 0 31","n":3,"pat":"Sacrificio de torre","f":["Re1+"],"rep":"Bxe1+","line":"31.Re1+ Bxe1+ 32.Rxe1+ Kd6 33.Qe7#","expl":"El sacrificio de la torre desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"r3n3/7Q/k4r1p/pp2N3/3B4/3B3P/1PP1KP1P/R6R w - - 0 34","n":3,"pat":"Sacrificio de alfil","f":["Bxb5+"],"rep":"Kxb5","line":"34.Bxb5+ Kxb5 35.Qb7+ Rb6 36.Qxb6#","expl":"El sacrificio de la alfil desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"3b4/1b1p1k2/p4n1r/1p3n2/6P1/P1P2p2/1P3P1p/3R1R1K b - - 0 35","n":3,"pat":"Sacrificio de caballo","f":["Ng3+"],"rep":"fxg3","line":"35...Ng3+ 36.fxg3 f2+ 37.Rd5 Bxd5#","expl":"El sacrificio de la caballo desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"r2n2kr/1p4pp/p3bp2/3Q4/8/BP3NP1/P1P1B1PP/3R1RK1 w - - 1 23","n":3,"pat":"Sacrificio de dama","f":["Qxd8+"],"rep":"Rxd8","line":"23.Qxd8+ Rxd8 24.Rxd8+ Kf7 25.Ne5#","expl":"El sacrificio de la dama desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"r1qk1b1r/pp4pp/3P1p2/1Bn3B1/3Q3P/2N5/PP3P2/R3K2R w KQ - 0 17","n":3,"pat":"Sacrificio de alfil","f":["Bxf6+","Qxf6+"],"rep":"gxf6","line":"17.Bxf6+ gxf6 18.Qxf6+ Be7 19.Qxe7#","expl":"El sacrificio de la alfil desvía o elimina la pieza clave de la defensa y abre el camino al mate."},{"fen":"rq1r3Q/1b2pk2/p3p2b/Ppp5/3PP2R/3n1N2/3BNPP1/1R3K2 w - - 1 30","n":3,"pat":"Sacrificio de caballo","f":["Ng5+"],"rep":"Bxg5","line":"30.Ng5+ Bxg5 31.Rh7+ Kg6 32.Qg7#","expl":"El sacrificio de la caballo desvía o elimina la pieza clave de la defensa y abre el camino al mate."}];
+const PZ_POS=[{"fen":"r4rk1/5p1p/1pn2Qp1/2pqp3/P7/1P2PP2/6RP/R1B1K3 w Q - 0 20","best":"Rd2","ev":-28,"sec":[["e4",-170],["Ra3",-203]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"1rq2k1r/3nbppp/4p3/1QpnP3/8/P3BNP1/1P1N1P1P/R3KR2 w Q - 1 18","best":"Qd3","ev":3,"sec":[["Qa5",-65],["Qc4",-91]],"cat":"Actividad de la dama","idea":"La dama pasa a d3, donde ejerce más presión sin exponerse a ataques."},{"fen":"r2qk2r/1b2npp1/p3p2p/1pb5/P7/2PB1N1P/2P1QPP1/R1B2RK1 b kq a3 0 14","best":"O-O","ev":-4,"sec":[["Bxf3",-52],["Qa5",-71]],"cat":"Seguridad del rey","idea":"Enrocar (O-O) pone al rey a salvo y conecta las torres: es la prioridad antes de iniciar cualquier plan."},{"fen":"r1b1k2r/pp1nppbp/2n3p1/2P5/2N5/3BP3/PP1B1PPP/2RK2NR w kq - 3 11","best":"b4","ev":99,"sec":[["Ke2",-19],["Bb1",-24]],"cat":"Ruptura de peones","idea":"El avance b4 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1r2bk1/1b3pp1/1p1qpn1p/1N1pn3/1pP5/PQ2P2P/1B1NBPP1/2RR2K1 b - - 1 20","best":"Qb8","ev":24,"sec":[["Qc6",-121],["Qd8",-196]],"cat":"Actividad de la dama","idea":"La dama pasa a b8, donde ejerce más presión sin exponerse a ataques."},{"fen":"2r2k2/5pp1/1ppqp3/3r1nBQ/P2P4/7P/1P3PP1/R2R2K1 b - - 2 25","best":"Kg8","ev":10,"sec":[["Ke8",-63],["Ne7",-65]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g8): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2qk2r/pp1n2pp/2pp1p2/b3p1Bb/3PP3/1BP2N1P/PP3PP1/R2QK2R w KQkq - 0 12","best":"Be3","ev":35,"sec":[["Bh4",-14],["Bc1",-23]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e3, una diagonal más activa."},{"fen":"3r1rk1/1bp2pb1/pq2p2p/3n2p1/2NP4/3B2PP/PB2QP2/2R2RK1 b - - 8 24","best":"Qa7","ev":19,"sec":[["Qb5",-105],["Qc6",-108]],"cat":"Actividad de la dama","idea":"La dama pasa a a7, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b1k2r/1ppqnp2/p3p2p/4b1p1/3PB3/N1P5/P3QPPP/R1B2RK1 b kq - 0 15","best":"Bg7","ev":-32,"sec":[["Bf6",-106],["Bd6",-129]],"cat":"Alfil a la gran diagonal","idea":"El alfil en g7 domina la gran diagonal y presiona el flanco rival."},{"fen":"2q2k1r/3nbppp/4p3/2pnP3/8/P2QBNP1/1r1N1P1P/R3KR2 w Q - 0 19","best":"Nc4","ev":0,"sec":[["Rc1",-52],["Rh1",-64]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia c4, una casilla más útil para tu plan."},{"fen":"rn1qk2r/pbpp1pbp/1p2p1p1/4P3/3Pn3/3B1N2/PPP1QPP1/RNB1K2R b KQkq - 4 10","best":"f5","ev":-5,"sec":[["d5",-52],["Nc5",-338]],"cat":"Ruptura de peones","idea":"El avance f5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn1qkbnr/pp1bpppp/8/1Bp1P3/P2p4/8/1PPP1PPP/RNBQK1NR w KQkq - 2 6","best":"e6","ev":65,"sec":[["d3",20],["Nf3",20]],"cat":"Ruptura de peones","idea":"El avance e6 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/1B3PPP/R2QK2R b KQ - 2 15","best":"e5","ev":40,"sec":[["Nd7",-18],["Rab8",-38]],"cat":"Ruptura de peones","idea":"El avance e5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1b1kb1r/1p3ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3QK2R b Kkq - 2 16","best":"Bd7","ev":39,"sec":[["Qg5",-30],["Qd8",-56]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bd7) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r3kb1r/1pq1ppp1/p1n2n2/3P3p/B3p2N/1Q2P3/PP3PPP/R1B1K2R b KQkq - 1 12","best":"b5","ev":-7,"sec":[["Rc8",-54],["Rd8",-60]],"cat":"Ruptura de peones","idea":"El avance b5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn3rk1/p3pp1p/2p3p1/q2Pb3/NpP1P1b1/5NP1/P3QPBP/2RR2K1 w - - 2 18","best":"Qc2","ev":14,"sec":[["Nb2",-88],["d6",-249]],"cat":"Actividad de la dama","idea":"La dama pasa a c2, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b2rk1/1p2qpbp/n2p2p1/p3p3/3Pn3/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 12","best":"Nd5","ev":77,"sec":[["Nxe4",28],["Na4",-66]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d5, una casilla más útil para tu plan."},{"fen":"rnbq1rk1/pp3p2/2p2npb/3P3p/3Pp3/PQN1P3/1P1B1PPP/2R1KBNR w K - 1 10","best":"Bc4","ev":71,"sec":[["dxc6",17],["Na4",-43]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bc4) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r1bqkb1r/5ppp/p1p2n2/2Pp4/1P2p3/3BP3/P1P2PPP/RNBQK2R w KQkq - 0 9","best":"Be2","ev":0,"sec":[["Bf1",-45],["Bb2",-285]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e2, una diagonal más activa."},{"fen":"rn2kb1r/p2p1pp1/b1p1p2p/q3P3/2pP4/2P4N/P1Q1BPPP/R1B1K2R b KQkq - 1 11","best":"d5","ev":58,"sec":[["d6",-8],["Bc8",-19]],"cat":"Ruptura de peones","idea":"El avance d5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r2qkb1r/1pp1pp1p/p4n2/3pPbB1/2P5/4P3/PP3PPP/RN1QKB1R b KQkq - 0 8","best":"Ne4","ev":-37,"sec":[["Ng4",-178],["Rg8",-178]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp1b1p2/2n2Pp1/2p1p2p/3pP2q/N1PP2R1/PP2N1Bn/R1BQ2K1 b kq - 6 19","best":"Ng4","ev":56,"sec":[["Bg4",-108],["Qxf6",-344]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a g4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r2k3r/p1p1n3/1p3p2/4n2p/2PpPR2/P6P/P3B1PB/R5K1 b - - 0 19","best":"Nd7","ev":-29,"sec":[["Rf8",-114],["d3",-121]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d7, una casilla más útil para tu plan."},{"fen":"6kr/ppq2p2/6p1/3Q1p1p/3Pr3/P1P2NbP/1P3P2/4RRK1 b - - 0 24","best":"Kg7","ev":-6,"sec":[["Rxe1",-113],["Bd6",-143]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"rnb1k2r/ppqn1ppp/4p3/1NbpP1B1/8/5N2/PPP1BPPP/R2QK2R b KQkq - 3 9","best":"Qb6","ev":-40,"sec":[["Qc6",-101],["Qa5+",-129]],"cat":"Actividad de la dama","idea":"La dama pasa a b6, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1r3k1/1R3pb1/pN2p1pp/2n5/2Pp2P1/4P2P/5P1B/5R1K w - - 2 27","best":"Re7","ev":0,"sec":[["Nxc8",-121],["Rc7",-135]],"cat":"Torre a la séptima","idea":"La torre en la séptima fila (e7) ataca los peones rivales y limita al rey."},{"fen":"rnbqk1nr/1pp1b1pp/p3p3/3p4/3P1Bp1/2N2N2/PPP1PP1P/R2QKB1R w KQkq - 0 7","best":"Ne5","ev":29,"sec":[["Nd2",-67],["Ng1",-97]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e5: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp3ppp/2nb1q2/1Bpp3b/8/1P2PN1P/P2P1PP1/RN1Q1RK1 w kq - 0 11","best":"Nc3","ev":14,"sec":[["Bxc6+",-61],["Na3",-78]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nc3) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r1b1k1nr/pp2ppbp/2n3p1/2P5/2N5/4P3/PP1B1PPP/2RK1BNR b kq - 0 9","best":"Nf6","ev":-21,"sec":[["Be6",-77],["Bf5",-85]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nf6) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r2k3r/p2nq1pp/2pp1p2/4p3/4P3/1BP1QP1P/PP3P2/2KR3R b - - 2 18","best":"Kc7","ev":12,"sec":[["Kc8",-59],["h5",-86]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (c7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2q1rk1/5ppp/1pn1p3/2pp4/P2PN3/1P2PN2/5PbP/R1BQK2R w KQ - 0 14","best":"Rg1","ev":-38,"sec":[["Ng3",-159],["Nxc5",-342]],"cat":"Torre a columna semiabierta","idea":"La torre ocupa la columna g, semiabierta para ti: no tienes peones que la bloqueen y presionas el peón rival."},{"fen":"r3kb1r/1p1b1ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3Q1RK1 b kq - 4 17","best":"Rd8","ev":44,"sec":[["Ba4",-5],["Be7",-5]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/5PPP/R1BQK2R w KQ - 1 15","best":"Bb2","ev":17,"sec":[["Bd2",-34],["Rb1",-39]],"cat":"Alfil a la gran diagonal","idea":"El alfil se desarrolla a b2 y domina la gran diagonal, presionando el flanco rival."}];
+PZ_MATE.forEach(p=>{p.theme=p.pat});PZ_POS.forEach(p=>{p.theme='Posicional: '+p.cat});
+const ALLPZ=()=>PZ().concat(PZ_MATE,PZ_POS);
+const COLS={basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},pos:{n:'Mejorar la posición',get:()=>PZ_POS}};
+const MateU={
+ canMate(c){for(const m of c.moves()){c.move(m);const ok=c.in_checkmate();c.undo();if(ok)return true}return false},
+ forced(c,k){ // c: mueve el rival; ¿lo mato en k jugadas mías?
+  if(c.in_checkmate())return true;if(c.game_over()||k<1)return false;
+  for(const r of c.moves()){c.move(r);let ok=false;
+   if(k===1)ok=this.canMate(c);else{for(const m of c.moves()){c.move(m);const f=this.forced(c,k-1);c.undo();if(f){ok=true;break}}}
+   c.undo();if(!ok)return false}
+  return true}
+};
+const fmtEv=v=>(v>=0?'+':'')+(v/100).toFixed(1);
+
 /* =============== MOTOR STOCKFISH =============== */
 const Engine={
  w:null,readyP:null,cur:null,chain:Promise.resolve(),ok:false,kind:null,
@@ -2424,9 +2456,74 @@ class Board{
 const Chat={
  el:$('#chat'),chipsEl:$('#chips'),
  clear(){this.el.innerHTML='';this.chips([])},
- say(html,cls=''){const d=document.createElement('div');d.className='msg '+cls;d.innerHTML='<div class="av">&#9822;</div><div class="bub">'+html+'</div>';this.el.appendChild(d);this.el.scrollTop=this.el.scrollHeight;return d},
+ say(html,cls=''){if(cls==='bad')Snd.err();if(Snd.voice)Snd.say(html);const d=document.createElement('div');d.className='msg '+cls;d.innerHTML='<div class="av">&#9822;</div><div class="bub">'+html+'</div>';this.el.appendChild(d);this.el.scrollTop=this.el.scrollHeight;return d},
  me(html){const d=document.createElement('div');d.className='msg me';d.innerHTML='<div class="bub">'+html+'</div>';this.el.appendChild(d);this.el.scrollTop=this.el.scrollHeight},
  chips(list){this.chipsEl.innerHTML='';for(const c of list){const b=document.createElement('button');b.className='chip'+(c.pri?' pri':'');b.textContent=c.label;b.onclick=c.fn;this.chipsEl.appendChild(b)}}
+};
+
+
+/* =============== SONIDO (Web Audio, sin archivos externos) =============== */
+const Snd={
+ on:store.get('snd',true),vol:(+store.get('sndVol',70))/100,voice:!!store.get('sndVoice',false),announce:!!store.get('sndAnn',false),
+ ctx:null,out:null,_len:null,_last:null,_errT:0,
+ init(){
+  if(!this.ctx){try{const C=window.AudioContext||window.webkitAudioContext;this.ctx=new C();this.out=this.ctx.createGain();this.out.connect(this.ctx.destination)}catch(e){this.ctx=null}}
+  if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(()=>{});
+  if(this.out)this.out.gain.value=this.vol;
+ },
+ tone(f,t,d,{type='sine',g=.25,f2=null,a=.004}={}){
+  const c=this.ctx,o=c.createOscillator(),v=c.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
+  v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(g,t+a);v.gain.exponentialRampToValueAtTime(.0008,t+d);o.connect(v);v.connect(this.out);o.start(t);o.stop(t+d+.02);
+ },
+ noise(t,d,{g=.4,f=1200,q=1,type='bandpass'}={}){
+  const c=this.ctx,n=Math.max(1,Math.floor(c.sampleRate*d)),b=c.createBuffer(1,n,c.sampleRate),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=(Math.random()*2-1)*(1-i/n);
+  const s=c.createBufferSource();s.buffer=b;const fl=c.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q;const v=c.createGain();v.gain.setValueAtTime(g,t);v.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(fl);fl.connect(v);v.connect(this.out);s.start(t);
+ },
+ click(t,k=1,big=false){this.noise(t,big?.07:.04,{g:big?.9:.55,f:big?1500:1000*k,q:big?.7:1.2});this.tone((big?120:190)*k,t,big?.11:.07,{g:big?.4:.3,f2:(big?70:110)*k})},
+ play(name,delay=0){
+  if(!this.on)return;this.init();if(!this.ctx)return;const t=this.ctx.currentTime+.01+delay;
+  switch(name){
+   case 'move':this.click(t,1);break;
+   case 'opp':this.click(t,.85);break;
+   case 'capture':this.click(t,1,true);this.click(t+.05,1.1);break;
+   case 'castle':this.click(t,1);this.click(t+.11,.9);break;
+   case 'check':this.click(t,1);this.tone(880,t+.07,.18,{type:'triangle',g:.16});break;
+   case 'promote':this.click(t,1);[523,659,784,1047].forEach((f,i)=>this.tone(f,t+.06+i*.07,.14,{type:'triangle',g:.18}));break;
+   case 'mate':this.click(t,1,true);[523,415,330,262].forEach((f,i)=>this.tone(f,t+.12+i*.12,.5,{type:'triangle',g:.2}));break;
+   case 'ok':this.tone(660,t,.12,{g:.2});this.tone(880,t+.1,.2,{g:.2});break;
+   case 'err':this.tone(150,t,.22,{type:'sawtooth',g:.14,f2:95});break;
+   case 'win':[523,659,784,1047].forEach((f,i)=>this.tone(f,t+i*.12,.28,{type:'triangle',g:.22}));break;
+   case 'lose':[392,330,277,208].forEach((f,i)=>this.tone(f,t+i*.2,.35,{type:'triangle',g:.2}));break;
+   case 'draw':this.tone(440,t,.2,{g:.2});this.tone(440,t+.22,.28,{g:.2});break;
+   case 'start':this.tone(520,t,.1,{g:.18});this.tone(780,t+.09,.14,{g:.18});break;
+  }
+ },
+ err(){const n=performance.now();if(n-this._errT<250)return;this._errT=n;this.play('err')},
+ moveSound(m,fen,opp){
+  const c=new Chess(fen);let n='move';
+  if(c.in_checkmate())n='mate';else if(c.in_check())n='check';else if(m.promotion)n='promote';else if(m.flags.includes('k')||m.flags.includes('q'))n='castle';else if(m.captured)n='capture';
+  else if(opp)n='opp';
+  this.play(n);
+  if(c.game_over()&&!c.in_checkmate())this.play('draw',.35);
+  if(this.announce)this.speak(this.sanEs(m));
+ },
+ onSync(h,fens,live){
+  const n=h.length;
+  if(live&&this._len!=null&&n===this._len+1&&fens[n-1]===this._last)this.moveSound(h[n-1],fens[n],h[n-1].color!==A.userColor&&A.mode&&!A.mode.free);
+  this._len=n;this._last=fens[n];
+ },
+ sanEs(m){
+  const P={n:'caballo',b:'alfil',r:'torre',q:'dama',k:'rey',p:'peón'};
+  if(m.flags.includes('k'))return 'enroque corto';if(m.flags.includes('q'))return 'enroque largo';
+  let t=P[m.piece]+(m.captured?' captura en ':' ')+m.to;if(m.promotion)t+=' corona a '+P[m.promotion];
+  if(m.san.includes('#'))t+=', jaque mate';else if(m.san.includes('+'))t+=', jaque';return t;
+ },
+ speak(text){
+  try{const ss=window.speechSynthesis;if(!ss)return;ss.cancel();const u=new SpeechSynthesisUtterance(String(text).slice(0,420));u.lang='es-ES';u.volume=Math.min(1,this.vol+.1);ss.speak(u)}catch(e){}
+ },
+ say(html){const d=document.createElement('div');d.innerHTML=html.replace(/<br\s*\/?>/g,'. ').replace(/<\/(li|p|div)>/g,'. ');this.speak((d.textContent||'').replace(/\s+/g,' ').trim())},
+ icon(){return this.on?'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>':'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6m0-6 6 6"/></svg>'},
+ save(){store.set('snd',this.on);store.set('sndVol',Math.round(this.vol*100));store.set('sndVoice',this.voice);store.set('sndAnn',this.announce);$('#sndBtn').innerHTML=this.icon();$('#sndBtn').title=this.on?'Sonido activado':'Sonido silenciado'}
 };
 
 /* =============== APP =============== */
@@ -2447,6 +2544,7 @@ const A={
   if(c.in_check()){const tc=c.turn();for(const n in board.pos){if(board.pos[n]===(tc==='w'?'K':'k'))board.checkSq=n}}
   board.draw();
   this.drawMoves(idx);
+  Snd.onSync(h,fens,this.viewIdx==null);
  },
  drawMoves(idx){
   let h='';const start=+this.startFen.split(' ')[5]||1;let white=this.startFen.split(' ')[1]==='w';let n=start;
@@ -2458,7 +2556,7 @@ const A={
   $('#movelist').innerHTML=h;
   $('#movelist').querySelectorAll('.m').forEach(s=>s.onclick=()=>this.goto(+s.dataset.i));
  },
- goto(i){this.viewIdx=i>=this.hist.length?null:Math.max(0,i);board.arrows=[];this.sync();this.updateControls();if(this.mode&&this.mode.onNav)this.mode.onNav(this.viewIdx==null?this.hist.length:this.viewIdx)},
+ goto(i){const prev=this.viewIdx==null?this.hist.length:this.viewIdx;this.viewIdx=i>=this.hist.length?null:Math.max(0,i);board.arrows=[];this.sync();{const now=this.viewIdx==null?this.hist.length:this.viewIdx;if(now===prev+1&&this.hist[now-1])Snd.moveSound(this.hist[now-1],this.fens[now],false)}this.updateControls();if(this.mode&&this.mode.onNav)this.mode.onNav(this.viewIdx==null?this.hist.length:this.viewIdx)},
  updateControls(){const idx=this.viewIdx==null?this.hist.length:this.viewIdx;$('#bStart').disabled=$('#bPrev').disabled=idx===0;$('#bNext').disabled=$('#bEnd').disabled=idx>=this.hist.length},
  curFen(){return this.fens[this.viewIdx==null?this.hist.length:this.viewIdx]},
  status(t){$('#status').textContent=t||''}
@@ -2546,11 +2644,18 @@ const Lesson={
   const name=($('#lsName').value||'Mi repertorio').trim(),side=$('#lsSide').value;const cs=store.get('custom',[]);let made=[];
   const put=L=>{const k=cs.findIndex(x=>x.id===L.id);if(k>=0)cs[k]=L;else cs.push(L);made.push(L)};
   if(r.chapters.length)put({id:'p'+hash(name),title:name,side,custom:true,intro:'Repertorio importado desde PGN: '+r.chapters.length+' capítulos.',chapters:r.chapters});
-  if(r.games.length&&$('#lsGames').checked)put({id:'p'+hash(name+'|modelo'),title:name+' — partidas modelo',side,custom:true,intro:'Partidas completas de maestros. Recomendado: modo Estudio.',chapters:r.games});
+  if(r.games.length&&$('#lsGames').checked)put({id:'p'+hash(name+'|modelo'),title:name+' — partidas modelo',side,custom:true,kind:'games',intro:'Partidas completas de maestros. Recomendado: modo Estudio.',chapters:r.games});
   store.set('custom',cs);
   this.li=this.all().findIndex(x=>x.id===made[0].id);this.ci=0;this.enter();
   Chat.say(`Importé <b>${made.length}</b> lección(es): ${made.map(l=>esc(l.title)+' ('+l.chapters.length+' cap.)').join(', ')}.${r.bad?' Aviso: '+r.bad+' jugada(s) ilegales truncaron algún capítulo.':''}`,'ok');
  },
+ mv(){return this.cm||this.ch().moves},
+ varChips(){const lv=this.lastV;if(!lv)return[];return lv.v.map((v,i)=>({label:'↪ Seguir variante '+(i+1)+': '+v[0].san,fn:()=>this.branch(i)}))},
+ branch(vi){const lv=this.lastV;if(!lv)return;const v=lv.v[vi];A.game.undo();A.epoch++;A.viewIdx=null;A.sync();A.updateControls();
+  this.cm=this.mv().slice(0,lv.idx).concat(v);this.i=lv.idx;this.lastV=null;
+  Chat.say('Sigues la <b>variante '+(vi+1)+'</b>. Para volver a la línea principal pulsa «Reiniciar».','ok');this.advance()},
+ varNote(step,prev){if(!step.v||!step.v.length)return;
+  Chat.say('↪ <b>Alternativas</b> en esta posición<br>'+step.v.map((v,i)=>`<b>Variante ${i+1}:</b> ${esc(Rep.lineText(prev,v.map(x=>x.san)))}${v[0].c?' — '+v[0].c:''}`).join('<br>'),'warn')},
  deco(step){board.arrows=(step.a||[]).map(a=>a.slice(0,3));board.marks=step.k||[];board.draw()},
  seg(){$('#mPrac').classList.toggle('on',!this.study);$('#mStud').classList.toggle('on',this.study)},
  fillCh(){const ps=store.get('prog',{});$('#chSel').innerHTML=this.lesson().chapters.map((c,i)=>`<option value="${i}">${((ps[this.lesson().id]||[]).includes(c.id)?'✓ ':'')+esc(c.title)}</option>`).join('');$('#chSel').value=this.ci},
@@ -2559,7 +2664,7 @@ const Lesson={
   const L=this.lesson(),ch=this.ch();
   A.epoch++;Engine.stop();A.game=ch.fen?new Chess(ch.fen):new Chess();A.startFen=A.game.fen();A.viewIdx=null;
   A.userColor=L.side||'w';board.flipped=A.userColor==='b';board.arrows=[];board.marks=[];
-  this.i=0;this.fails=0;this.hint=0;this.hinted=false;this.lock=false;this.finished=false;
+  this.i=0;this.fails=0;this.hint=0;this.hinted=false;this.lock=false;this.finished=false;this.cm=null;this.lastV=null;
   setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();
   Chat.say(`<b>${esc(ch.title)}</b><br>${ch.intro||L.intro||''}`);
   if(this.study)Chat.say('Modo <b>estudio</b>: pulsa «Siguiente jugada» y te explico cada movimiento. Puedes retroceder con las flechas para analizar el tablero con calma.');
@@ -2568,9 +2673,9 @@ const Lesson={
  },
  advance(){
   const ch=this.ch();board.arrows=[];board.marks=[];board.draw();
-  if(this.i>=ch.moves.length)return this.finish();
-  this.cur=ch.moves[this.i];const mine=A.game.turn()===A.userColor;
-  if(this.study){A.status('');Chat.chips([{label:'Siguiente jugada ▶',pri:true,fn:()=>this.playStep()}]);return}
+  if(this.i>=this.mv().length)return this.finish();
+  this.cur=this.mv()[this.i];const mine=A.game.turn()===A.userColor;
+  if(this.study){A.status('');Chat.chips([{label:'Siguiente jugada ▶',pri:true,fn:()=>this.playStep()},...this.varChips()]);return}
   Chat.chips([{label:'Pista',fn:()=>this.giveHint()}]);
   if(!mine){A.status('Responde el rival…');this.lock=true;setTimeout(()=>{this.lock=false;if(A.live())this.playStep()},650)}
   else A.status('Tu turno: juega la jugada de la línea');
@@ -2584,16 +2689,22 @@ const Lesson={
   board.arrows=(step.a||[]).map(a=>a.slice(0,3));board.draw();
   const mine=m.color===A.userColor;
   Chat.say(`<b>${esc(this.label(prev,m.san))}</b>${step.c?' — '+step.c:''}`,mine?'ok':'');
+  this.varNote(step,prev);this.lastV=step.v&&step.v.length?{v:step.v,idx:this.i}:null;
   this.i++;this.advance();this.deco(step);
  },
  onMove(m){
   const step=this.cur;if(!step)return;const prev=A.fens[A.fens.length-2];
   const key=SRS.key(this.lesson().id,this.ch().id,this.i);
+  const alt=(step.v||[]).find(v=>v[0]&&clean(v[0].san)===clean(m.san));
   if(clean(m.san)===clean(step.san)){
    if(this.fails===0)SRS.grade(key,this.hinted?'hard':'good',true);
    this.fails=0;this.hint=0;this.hinted=false;
    Chat.say(`✓ <b>${esc(this.label(prev,m.san))}</b>${step.c?' — '+step.c:' Correcto.'}`,'ok');
-   this.i++;this.advance();this.deco(step);
+   this.varNote(step,prev);this.i++;this.advance();this.deco(step);
+  }else if(alt){
+   this.cm=this.mv().slice(0,this.i).concat(alt);this.fails=0;this.hint=0;this.hinted=false;
+   Chat.say(`✓ <b>${esc(this.label(prev,m.san))}</b> — es una <b>variante válida</b> de tu repertorio (la línea principal era <b>${esc(step.san)}</b>). Seguimos por aquí.${alt[0].c?'<br>'+alt[0].c:''}`,'ok');
+   this.i++;this.advance();this.deco(alt[0]);
   }else{
    this.fails++;this.lock=true;if(this.fails===1)SRS.grade(key,'again',true);
    const w=step.wrong&&step.wrong[m.san];
@@ -2615,7 +2726,7 @@ const Lesson={
   else{board.marks=[];board.arrows=[[m.from,m.to]];board.draw();Chat.say(`Es <b>${esc(m.san)}</b>.`,'warn')}
  },
  finish(){
-  this.finished=true;A.status('Capítulo completado');const L=this.lesson(),ch=this.ch();
+  this.finished=true;Snd.play('win',.3);A.status('Capítulo completado');const L=this.lesson(),ch=this.ch();
   const ps=store.get('prog',{});ps[L.id]=ps[L.id]||[];if(!ps[L.id].includes(ch.id))ps[L.id].push(ch.id);store.set('prog',ps);
   Chat.say(`<b>¡Capítulo completado!</b><br>${ch.outro||''}`,'ok');
   const chips=[{label:'Practicar vs Stockfish desde aquí',pri:true,fn:()=>Play.fromPosition(A.game.fen(),A.userColor)},
@@ -2628,29 +2739,43 @@ const Lesson={
 
 /* =============== MODO TÁCTICA =============== */
 const Tac={
- free:false,i:0,s:0,tries:0,failed:false,done:false,
+ free:false,i:0,s:0,tries:0,failed:false,done:false,col:'basic',mq:0,
  canMove(){return !this.done&&!this.lock},
+ list(){return (COLS[this.col]||COLS.basic).get()},
+ label(p,i){return p.n?`${i+1}. Mate en ${p.n}`:p.best?`${i+1}. Mejorar la posición`:`${i+1}. ${p.theme}`},
+ fill(){const L=this.list();$('#tpSel').innerHTML=L.map((p,i)=>`<option value="${i}">${esc(this.label(p,i))}</option>`).join('');if(this.i>=L.length)this.i=0;$('#tpSel').value=this.i},
  enter(){
-  $('#ctl').innerHTML=`<label>Problema<select id="tpSel">${PZ().map((p,i)=>`<option value="${i}">${i+1}. ${esc(p.theme)}</option>`).join('')}</select></label>
-  <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpNext" class="pri">Siguiente problema ▶</button></div>`;
-  $('#tpSel').value=this.i;
+  this.col=store.get('tcol','basic');if(!COLS[this.col])this.col='basic';
+  $('#ctl').innerHTML=`<div class="g2"><label>Colección<select id="tpCol">${Object.entries(COLS).map(([k,c])=>`<option value="${k}">${esc(c.n)} (${c.get().length})</option>`).join('')}</select></label>
+  <label>Problema<select id="tpSel"></select></label></div>
+  <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpRand">Al azar</button><button id="tpNext" class="pri">Siguiente problema ▶</button></div>`;
+  $('#tpCol').value=this.col;this.i=0;this.fill();
+  $('#tpCol').onchange=e=>{this.col=e.target.value;store.set('tcol',this.col);this.i=0;this.fill();this.load()};
   $('#tpSel').onchange=e=>{this.i=+e.target.value;this.load()};
   $('#tpHint').onclick=()=>this.hint();$('#tpRestart').onclick=()=>this.load();
-  $('#tpNext').onclick=()=>{this.i=(this.i+1)%PZ().length;$('#tpSel').value=this.i;this.load()};
+  $('#tpRand').onclick=()=>{const L=this.list();this.i=Math.floor(Math.random()*L.length);$('#tpSel').value=this.i;this.load()};
+  $('#tpNext').onclick=()=>{this.i=(this.i+1)%this.list().length;$('#tpSel').value=this.i;this.load()};
   this.load();
  },
  leave(){},
  load(){
-  const p=PZ()[this.i];A.epoch++;Engine.stop();A.game=new Chess(p.fen);A.startFen=A.game.fen();A.viewIdx=null;
+  const p=this.list()[this.i];if(!p)return;A.epoch++;Engine.stop();A.game=new Chess(p.fen);A.startFen=A.game.fen();A.viewIdx=null;
   A.userColor=A.game.turn();board.flipped=A.userColor==='b';board.arrows=[];board.marks=[];
-  this.s=0;this.tries=0;this.failed=false;this.done=false;this.lock=false;
+  this.s=0;this.tries=0;this.failed=false;this.done=false;this.lock=false;this.mq=p.n||0;
   setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();
-  Chat.say(`<b>Problema ${this.i+1} · ${esc(p.theme)}</b><br>Juegan ${A.userColor==='w'?'blancas':'negras'}. Encuentra la mejor jugada.`);
+  const who=A.userColor==='w'?'blancas':'negras';
+  if(p.n)Chat.say(`<b>Problema ${this.i+1} · Mate en ${p.n}</b><br>Juegan ${who}. Da mate en ${p.n} jugada${p.n>1?'s':''}, pase lo que pase el rival.`);
+  else if(p.best)Chat.say(`<b>Problema ${this.i+1} · Mejorar la posición</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`);
+  else Chat.say(`<b>Problema ${this.i+1} · ${esc(p.theme)}</b><br>Juegan ${who}. Encuentra la mejor jugada.`);
   A.status('Tu turno');Chat.chips([{label:'Pista',fn:()=>this.hint()}]);
  },
- stat(ok){const s=store.get('tstats',{});const t=PZ()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
+ stat(ok){const s=store.get('tstats',{});const t=this.list()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
+ wrong(msg){this.tries++;this.lock=true;if(!this.failed){this.failed=true;this.stat(false)}Chat.say(msg,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
  onMove(m){
-  const p=PZ()[this.i];const exp=p.sol[this.s];const last=this.s>=p.sol.length-1;
+  const p=this.list()[this.i];
+  if(p.n)return this.onMate(m,p);
+  if(p.best)return this.onPos(m,p);
+  const exp=p.sol[this.s];const last=this.s>=p.sol.length-1;
   let ok;
   if(exp==='#')ok=A.game.in_checkmate();
   else{ok=(Array.isArray(exp)?exp:[exp]).map(clean).includes(clean(m.san));if(!ok&&last&&A.game.in_checkmate())ok=true}
@@ -2665,23 +2790,56 @@ const Tac={
     Chat.say('✓ Bien. El rival responde <b>'+esc(mv.san)+'</b>. Sigue.','ok');
     if(this.s>=p.sol.length)this.solved();
    },600);
-  }else{
-   this.tries++;this.lock=true;
-   if(!this.failed){this.failed=true;this.stat(false)}
-   Chat.say(`<b>${esc(m.san)}</b> no es la mejor jugada. Busca ${p.theme==='Mate en 1'||p.theme.startsWith('Mate')?'jaques y capturas forzadas':'amenazas dobles o ataques a piezas indefensas'}.`,'bad');
-   setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700);
-  }
+  }else this.wrong(`<b>${esc(m.san)}</b> no es la mejor jugada. Busca ${p.theme==='Mate en 1'||p.theme.startsWith('Mate')?'jaques y capturas forzadas':'amenazas dobles o ataques a piezas indefensas'}.`);
+ },
+ onMate(m,p){
+  const rem=this.mq-1,first=this.mq===p.n,inF=p.f.map(clean).includes(clean(m.san));
+  let ok;
+  if(rem===0)ok=A.game.in_checkmate();
+  else if(rem===1)ok=MateU.forced(new Chess(A.game.fen()),1);
+  else ok=first&&inF;
+  if(!ok){this.wrong(`<b>${esc(m.san)}</b> no fuerza el mate en ${this.mq}. Busca jaques, sacrificios y movimientos que dejen al rey sin casillas.`);return}
+  this.mq--;
+  if(rem===0)return this.solved();
+  this.lock=true;
+  setTimeout(()=>{
+   const c=new Chess(A.game.fen());const ms=c.moves();let r=null;
+   if(first&&p.rep&&inF&&clean(m.san)===clean(p.f[0])&&ms.includes(p.rep))r=p.rep;
+   if(!r)r=ms[Math.floor(Math.random()*ms.length)];
+   const mv=A.game.move(r);A.sync();A.updateControls();this.lock=false;
+   Chat.say(`✓ Bien. El rival responde <b>${esc(mv.san)}</b>. Faltan ${this.mq} jugada${this.mq>1?'s':''} para el mate.`,'ok');
+  },600);
+ },
+ onPos(m,p){
+  if(clean(m.san)===clean(p.best))return this.solved();
+  const s=(p.sec||[]).find(x=>clean(x[0])===clean(m.san));
+  let msg=`<b>${esc(m.san)}</b> ${s?`es una jugada razonable (≈${fmtEv(s[1])} para ti), pero no es la mejor.`:'no es la mejor jugada.'}`;
+  const next=this.tries+1;
+  msg+=next>=3?` La mejor era <b>${esc(p.best)}</b> (≈${fmtEv(p.ev)}). Juégala para continuar.`:' Piensa en el plan: ¿qué pieza está peor situada, qué casilla débil o ruptura puedes aprovechar?';
+  this.wrong(msg);
+  if(next>=3)setTimeout(()=>{const c=new Chess(A.game.fen());const x=c.move(p.best);if(x){board.arrows=[[x.from,x.to]];board.draw()}},900);
  },
  solved(){
-  const p=PZ()[this.i];this.done=true;if(!this.failed)this.stat(true);
-  A.status('¡Resuelto!');
-  Chat.say(`<b>¡Correcto!</b> ${p.expl}${this.failed?'':'<br>Resuelto al primer intento.'}`,'ok');
+  const p=this.list()[this.i];this.done=true;if(!this.failed)this.stat(true);
+  A.status('¡Resuelto!');Snd.play('ok',.12);let h;
+  if(p.n)h=`<b>¡Mate!</b> ${esc(p.pat)}.<br>${p.expl}<br><span class="small">Línea: ${esc(p.line)}</span>`;
+  else if(p.best){const alt=p.sec&&p.sec[0];h=`<b>¡Correcto: ${esc(p.best)}!</b> ${p.idea}<br><span class="small">Stockfish: con ${esc(p.best)} tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(alt[0])}) deja ≈${fmtEv(alt[1])}`:''}.</span>`}
+  else h=`<b>¡Correcto!</b> ${p.expl}`;
+  Chat.say(h+(this.failed?'':'<br>Resuelto al primer intento.'),'ok');
   Chat.chips([{label:'Siguiente problema ▶',pri:true,fn:()=>$('#tpNext').click()},{label:'Analizar con Stockfish',fn:analyze}]);
  },
  hint(){
-  if(this.done)return;const p=PZ()[this.i];let exp=p.sol[this.s];if(Array.isArray(exp))exp=exp[0];if(!exp||exp==='#'){Chat.say('Busca un jaque que deje al rey sin casillas.','warn');return}
+  if(this.done)return;const p=this.list()[this.i];let exp;
+  if(p.n){
+   const c=new Chess(A.game.fen());
+   if(this.mq===1){exp=c.moves().find(x=>{c.move(x);const k=c.in_checkmate();c.undo();return k})}
+   else if(this.mq===2){exp=c.moves().find(x=>{c.move(x);const k=MateU.forced(c,1);c.undo();return k})}
+   else exp=p.f[0];
+  }else if(p.best)exp=p.best;
+  else{exp=p.sol[this.s];if(Array.isArray(exp))exp=exp[0]}
+  if(!exp||exp==='#'){Chat.say('Busca un jaque que deje al rey sin casillas.','warn');return}
   const c=new Chess(A.game.fen());const m=c.move(exp);if(!m)return;
-  if(!this._h||this._h.i!==this.i||this._h.s!==this.s){this._h={i:this.i,s:this.s,n:0}}
+  if(!this._h||this._h.i!==this.i||this._h.s!==this.s+this.mq){this._h={i:this.i,s:this.s+this.mq,n:0}}
   this._h.n++;
   if(this._h.n===1){board.marks=[m.from];board.draw();Chat.say('Pista: mira la pieza marcada.','warn')}
   else{board.marks=[];board.arrows=[[m.from,m.to]];board.draw();Chat.say(`Es <b>${esc(m.san)}</b>.`,'warn')}
@@ -2713,10 +2871,10 @@ const Play={
  render(){A.sync();A.updateControls();Chat.chips([])},
  fromPosition(fen,color){Mode.set('play',()=>{this.newGame(fen,color)})},
  newGame(fen,color){
-  this.started=true;Engine.stop();A.epoch++;
+  Snd.play('start');this.started=true;Engine.stop();A.epoch++;
   let col=color||this.color;if(col==='r')col=Math.random()<.5?'w':'b';
   A.game=new Chess(fen||undefined);A.startFen=A.game.fen();A.viewIdx=null;A.userColor=col;board.flipped=col==='b';
-  board.arrows=[];board.marks=[];this.thinking=false;this.pre=null;this.notes=[];this.counted=false;this.over=false;
+  board.arrows=[];board.marks=[];this.thinking=false;this.pre=null;this.notes=[];this.counted=false;this.over=false;this.repDone=false;
   if(color){this.color=color;const sel=$('#plCol');if(sel)sel.value=color}
   setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();
   const L=LEVELS[this.level];
@@ -2726,6 +2884,7 @@ const Play={
  },
  async afterMove(){
   if(this.checkEnd())return;
+  Rep.trackLive();
   const ep=A.epoch;
   if(A.game.turn()!==A.userColor){return this.engineMove()}
   A.status('Tu turno');
@@ -2787,6 +2946,7 @@ const Play={
  },
  finishGame(t,res){
   this.result=res==='d'?'1/2-1/2':((res==='w')===(A.userColor==='w')?'1-0':'0-1');
+  Snd.play(res==='w'?'win':res==='l'?'lose':'draw',.6);
   const s=store.get('games',{w:0,l:0,d:0});s[res]++;store.set('games',s);
   let h=`<b>${t}</b>`;
   if(this.notes.length){h+='<br>Momentos a revisar:<ul>'+this.notes.slice(0,6).map(n=>`<li>${n.kind}: ${esc(n.lab)} (mejor ${esc(n.best)})</li>`).join('')+'</ul>';
@@ -2933,6 +3093,7 @@ const Rev={
   const c=this.cur;if(!c)return;
   if(clean(m.san)===clean(c.step.san)){
    let card=null;if(!this.graded&&!c.retry)card=SRS.grade(c.key,this.hinted?'hard':'good');
+   Snd.play('ok',.15);
    Chat.say(`✓ <b>${esc(m.san)}</b>${c.step.c?' — '+c.step.c:' Correcto.'}${card?`<br><span class="small">${SRS.text(card)}</span>`:this.graded?'<br><span class="small">Cuenta como fallo; la verás otra vez en esta sesión.</span>':''}`,'ok');
    this.done++;this.lock=true;board.arrows=(c.step.a||[]).map(a=>a.slice(0,3));board.draw();
    Chat.chips([{label:'Siguiente ▶',pri:true,fn:()=>this.next()}]);
@@ -2970,6 +3131,495 @@ const Rev={
  }
 };
 
+
+/* =============== CONTENIDO: ESTRUCTURAS DE PEONES =============== */
+const G='rgba(70,170,90,.85)',R_='rgba(217,89,76,.85)',B_='rgba(70,130,230,.85)';
+const STRUCTS=[
+{id:'carlsbad',name:'Carlsbad (Gambito de dama, intercambio)',
+ tag:'Blancas: a2 b2 d4 e3 · Negras: a7 b7 c6 d5',
+ appears:'Gambito de dama (variante del intercambio), Eslava y Semieslava con intercambio en d5, y a veces Catalana cerrada.',
+ know:'Las blancas tienen <b>2 peones (a, b)</b> contra <b>3 (a, b, c)</b> en el flanco de dama, pero una mayoría en el centro y flanco de rey (e3 contra ningún peón negro en la columna e). Cada bando tiene así un flanco donde juega con ventaja de peones.',
+ white:'<b>Ataque de minoría</b>: b2-b4-b5 para cambiar o debilitar el peón c6 (queda atrasado en una columna abierta). Se prepara con Tab1, a2-a4 y Dc2. Otras ideas: ruptura central e3-e4 cuando está bien apoyada y caballo en e5.',
+ black:'Contrajuego rápido en el centro y flanco de rey: …Ce4 (para cambiar el alfil blanco de g5), …Cg6, …f5 y …Ad6. Frenar el ataque con …a6 y …b5 propio. Cuidado con ceder la columna c sin compensación.',
+ errors:'Blancas: lanzar b4-b5 sin preparar la torre en b1, o cambiar demasiadas piezas ligeras sin lograr una debilidad real. Negras: quedarse pasivas esperando el ataque de minoría.',
+ pos:[
+ {m:'1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.cxd5 exd5 5.Bg5 Be7 6.e3 c6 7.Bd3 Nbd7 8.Qc2 O-O 9.Nge2 Re8 10.O-O Nf8',side:'w',
+  note:'Posición típica de Carlsbad. Las blancas juegan b2-b4 seguido de a2-a4 y b4-b5, con Tab1 detrás.',
+  q:'Juegan blancas. ¿Cuál es el plan estratégico principal?',
+  a:[['b2','b4',G],['b4','b5',G]],k:['c6'],
+  opts:[['Ataque de minoría en el flanco de dama (b2-b4 y b4-b5) para debilitar c6.',1,'Dos peones (a, b) contra tres (a, b, c): al cambiar peones en b5 deja a las negras con un peón c6 débil o una columna abierta que las blancas dominan.'],
+        ['Tormenta de peones en el flanco de rey con g2-g4 y h2-h4.',0,'Las negras tienen su rey sin peones adelantados que los obliguen a reaccionar y tu mayoría está en el centro, no en ese flanco; así solo debilitas tu propio enroque.'],
+        ['Cambiar damas enseguida y jugar un final sin plan concreto.',0,'Sin una debilidad que explotar el final es igual. El plan de Carlsbad se basa en crear una debilidad en c6, no en simplificar.'],
+        ['Cambiar el alfil de g5 y renunciar a toda ruptura, esperando que las negras se equivoquen.',0,'Sin plan concreto no sacas partido de tu estructura; el ataque de minoría es precisamente tu forma de crear una debilidad.']]},
+ {m:'1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.cxd5 exd5 5.Bg5 Be7 6.e3 c6 7.Bd3 Nbd7 8.Qc2 O-O 9.Nge2 Re8 10.O-O Nf8 11.Rab1',side:'b',
+  note:'Con Tab1 las blancas amenazan b2-b4-b5. Las negras deben buscar contrajuego sin demora.',
+  q:'Juegan negras tras 11.Tab1. ¿Cómo responden al ataque de minoría?',
+  a:[['f8','g6',G],['f6','e4',G]],k:['e4'],
+  opts:[['Contrajuego en el centro y flanco de rey (…Cg6, …Ce4, …f5) y frenar con …a6.',1,'Es la receta clásica: no esperar pasivas. Un caballo en e4 y la ruptura …f5 crean amenazas reales antes de que llegue b5.'],
+        ['Esperar con jugadas de espera: …Dd7 y …Tad8 sin más.',0,'Pasividad: el ataque de minoría es lento pero seguro y acabarás con c6 débil sin nada a cambio.'],
+        ['Avanzar …c5 inmediatamente, dejando d5 colgando.',0,'…c5 deja un peón d5 aislado y débil mientras las blancas tienen piezas bien situadas; suele salir mal sin preparación.'],
+        ['Cambiar todas las piezas menores y ofrecer tablas.',0,'Cambiar sin plan favorece al bando con el ataque de minoría: las negras quedan con la peor estructura.']]}
+ ]},
+{id:'iqp',name:'Peón dama aislado (Tarrasch, d5 negro)',
+ tag:'Blancas: sin peones c/d · Negras: peón d5 aislado',
+ appears:'Defensa Tarrasch, Semi-Tarrasch, Siciliana (con blancas), Nimzo-India (variante Sämisch) y muchas aperturas de peón de dama.',
+ know:'Un peón sin peones amigos en las columnas vecinas (aquí el d5 negro). Su casilla de bloqueo (d4) es un puesto excelente para un caballo rival. A cambio, el bando con el aislado tiene <b>más espacio, actividad y juego de piezas</b>.',
+ white:'<b>Bloquear</b> la casilla d4 con un caballo o alfil, <b>cambiar piezas</b> (sobre todo las más activas del rival) y presionar d5 para llegar a un final favorable.',
+ black:'Mantener las piezas activas y <b>evitar los cambios</b>. Preparar el empuje …d4 o buscar ataque al rey contra el enroque blanco; usar las columnas abiertas c y e.',
+ errors:'Con el aislado: cambiar piezas pasivamente y llegar a un final sin compensación. Contra el aislado: dejarse arrastrar a un ataque y permitir que el aislado se libere con …d4.',
+ pos:[
+ {m:'1.d4 d5 2.c4 e6 3.Nc3 c5 4.cxd5 exd5 5.Nf3 Nc6 6.g3 Nf6 7.Bg2 Be7 8.O-O O-O 9.dxc5 Bxc5',side:'w',
+  note:'Las negras tienen un peón d5 aislado, pero piezas muy activas. Las blancas buscan bloquearlo y cambiar.',
+  q:'Juegan blancas. ¿Cuál es el plan estratégico contra el peón d5 aislado?',
+  a:[['f3','d4',G],['c1','g5',G]],k:['d4','d5'],
+  opts:[['Dominar la casilla d4 y cambiar piezas para llegar a un final con la mejor estructura.',1,'El aislado es débil en el juego tranquilo: sin las piezas activas, d5 se vuelve un objetivo y el bloqueo en d4 lo paraliza.'],
+        ['Atacar el rey con h2-h4 y g3-g4 enseguida.',0,'No hay ventaja de peones en ese flanco y las piezas negras están más activas; es muy arriesgado.'],
+        ['Mantener todas las piezas para atacar a lo loco.',0,'Contra un aislado conviene lo contrario: simplificar. Las piezas activas son el compensador del rival.'],
+        ['Empujar e2-e4 sin preparación para abrir la posición.',0,'Abrir antes de neutralizar la actividad negra deja las piezas rivales con más espacio y ayuda justo a quien tiene el aislado.']]},
+ {m:'1.d4 d5 2.c4 e6 3.Nc3 c5 4.cxd5 exd5 5.Nf3 Nc6 6.g3 Nf6 7.Bg2 Be7 8.O-O O-O 9.dxc5 Bxc5 10.Bg5',side:'b',
+  note:'Las blancas clavan el caballo y quieren cambiar piezas. Las negras necesitan actividad.',
+  q:'Juegan negras. ¿Qué enfoque estratégico es el correcto?',
+  a:[['d5','d4',G]],k:['d4'],
+  opts:[['Activar las piezas y buscar el empuje …d4 para liberar la posición.',1,'El aislado tiene que compensar su debilidad con dinámica: …d4 abre líneas para los alfiles y evita el bloqueo.'],
+        ['Cambiar piezas lo antes posible para simplificar.',0,'Al revés: cada cambio acerca un final donde el aislado es una debilidad permanente.'],
+        ['Proteger d5 con …Ae6 y …De7 y quedarse pasivas.',0,'Defender el peón quieto invita al bloqueo en d4 y a una lenta derrota posicional.'],
+        ['Avanzar …b5 para ganar espacio en el flanco de dama.',0,'Con los peones a y b solos, …b5 debilita c5 y c6 sin respaldo; el juego está en el centro y con las piezas.']]}
+ ]},
+{id:'stonewall',name:'Stonewall (Defensa Holandesa)',
+ tag:'Negras: f5 e6 d5 c6 · casilla débil: e5',
+ appears:'Defensa Holandesa (Stonewall) y, con colores invertidos, el sistema Stonewall jugado con blancas.',
+ know:'Las negras forman una "pared" con peones en f5, e6, d5 y c6. Ganan control de e4, pero sus peones no vigilan e5, que queda como <b>casilla débil</b>; el alfil de casillas blancas queda bloqueado por e6.',
+ white:'Ocupar <b>e5 con un caballo</b> sostenido por peón en d4 y alfil en f4; cambiar el alfil negro de d6 (que es la mejor defensa de esa casilla) y apoyar con Tac1; la ruptura cxd5 abre líneas cuando conviene.',
+ black:'Ocupar <b>e4 con un caballo</b> (…Ce4) y atacar con …De8-h5 y …g5 en el flanco de rey. Lograr …Ad7 y …Ae8 para reactivar el alfil malo.',
+ errors:'Blancas: jugar e2-e4 prematuro sin preparar. Negras: avanzar …f4 / …e5 sin necesidad y debilitar sus propias casillas.',
+ pos:[
+ {m:'1.d4 f5 2.g3 Nf6 3.Bg2 e6 4.Nf3 d5 5.O-O Bd6 6.c4 c6 7.Nc3 O-O',side:'w',
+  note:'Stonewall clásico. e5 es una casilla clave que ningún peón negro puede controlar.',
+  q:'Juegan blancas. ¿Cuál es la idea posicional principal?',
+  a:[['f3','e5',G],['c1','f4',G]],k:['e5'],
+  opts:[['Establecer un caballo en e5 y cambiar el alfil de d6 con Af4.',1,'e5 está fuera del alcance de los peones negros; un caballo allí domina y el cambio de alfiles debilita aún más esa casilla.'],
+        ['Avanzar e2-e4 enseguida para romper el centro negro.',0,'Sin apoyo suficiente, e4 pierde un peón o deja la columna e abierta para las negras.'],
+        ['Atacar el flanco de rey con h2-h4 y g3-g4.',0,'Tu propio rey queda debilitado con el alfil de g2 y el enroque; no es el plan natural de la estructura.'],
+        ['Cambiar damas y jugar un final tranquilo sin más.',0,'Sin una casilla débil que explotar el final es igual: aquí hay un objetivo concreto, e5.']]},
+ {m:'1.d4 f5 2.g3 Nf6 3.Bg2 e6 4.Nf3 d5 5.O-O Bd6 6.c4 c6 7.Nc3 O-O 8.Qc2',side:'b',
+  note:'Las negras tienen una pared sólida y necesitan un plan activo contra el enroque blanco.',
+  q:'Juegan negras. ¿Cuál es el plan típico en este esquema?',
+  a:[['f6','e4',G],['d8','e8',G]],k:['e4'],
+  opts:[['Ocupar e4 con un caballo y atacar el rey con …De8-h5 y …g5.',1,'e4 es el puesto natural de la estructura; con la dama en h5 y el avance …g5 se crea ataque directo.'],
+        ['Romper con …e5 inmediatamente.',0,'Pierde el control del centro: las negras quedan con peones débiles en f5 y d5 y el alfil de g2 se abre.'],
+        ['Pasar a un plan de tablas sin riesgos con cambios de piezas.',0,'La Stonewall es ante todo un esquema de ataque; la pasividad deja a las blancas jugar en e5.'],
+        ['Avanzar …b5 para atacar en el flanco de dama.',0,'Las negras no tienen mayoría ahí y …b5 debilita c6 y c5 sin necesidad.']]}
+ ]},
+{id:'maroczy',name:'Presa Maroczy (Siciliana Dragón acelerado)',
+ tag:'Blancas: c4 y e4 · Negras: d6, g6, sin peón c',
+ appears:'Siciliana (Dragón acelerado y otras variantes con …g6).',
+ know:'Las blancas tienen peones en c4 y e4 que controlan d5 y mucho espacio, y el peón d6 negro queda frenado. A cambio, las blancas tienen <b>pocas piezas activas</b> por restricciones de peones; las negras ceden espacio pero conservan una posición muy sólida.',
+ white:'<b>Mantener la presa</b> (peones c4 y e4), evitar liberar a las negras con cambios innecesarios y buscar juego con piezas en d5, b3 y Tc1.',
+ black:'Cambiar piezas (sobre todo caballos) para aliviar la falta de espacio y preparar una ruptura: <b>…d5</b> (si se puede) o <b>…a6/…b5</b> con …Tc8.',
+ errors:'Blancas: jugar f2-f3 o e4-e5 sin cálculo y debilitar d4. Negras: moverse sin plan mientras el espacio blanco crece.',
+ pos:[
+ {m:'1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 g6 5.c4 Bg7 6.Be3 Nf6 7.Nc3 O-O 8.Be2 d6 9.O-O',side:'b',
+  note:'Presa Maroczy clásica. Las blancas dominan d5 y las negras buscan romper la presa.',
+  q:'Juegan negras. ¿Cuál es la clave estratégica para equilibrar?',
+  a:[['c6','d4',G],['d6','d5',G]],k:['d5'],
+  opts:[['Cambiar piezas (…Cxd4) y preparar …d5 o …a6 + …b5 para romper la presa.',1,'Con poco espacio, cada cambio alivia la presión y los rompimientos …d5 o …b5 son los únicos que liberan la posición.'],
+        ['Mantener todas las piezas en el tablero y esperar.',0,'En espacios reducidos los cambios ayudan a la defensa; con todas las piezas la presa se vuelve asfixiante.'],
+        ['Atacar el rey con …g5 y …h5 enseguida.',0,'Tu rey queda debilitado y las blancas tienen más espacio para reaccionar en el centro.'],
+        ['Avanzar …f5 sin preparar para abrir líneas.',0,'Debilita e6, e5 y la diagonal a2-g8 y las blancas lo castigan con Cd5 o abriendo el centro a su favor.']]},
+ {m:'1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 g6 5.c4 Bg7 6.Be3 Nf6 7.Nc3 O-O 8.Be2 d6 9.O-O Nd7',side:'w',
+  note:'Con …Cd7 las negras quieren cambiar caballos y reorganizarse. Las blancas deben conservar su espacio.',
+  q:'Juegan blancas. ¿Qué plan estratégico es el más coherente?',
+  a:[['d1','d2',G],['a1','c1',G]],k:['d5'],
+  opts:[['Mantener la presa Maroczy y evitar cambios que liberen a las negras; jugar con Dd2, Tac1 y Cd5 cuando convenga.',1,'La ventaja de espacio solo vale mientras no la diluyas: conserva c4/e4, mejora las piezas y controla d5.'],
+        ['Avanzar e4-e5 de inmediato para abrir el juego.',0,'Cede la casilla d5 y deja el peón d4 como objetivo: justo lo que buscan las negras.'],
+        ['Cambiar los caballos en d4 con Cxd4 y simplificar.',0,'Ayudas a las negras a liberar su posición; con menos piezas la presa pierde efecto.'],
+        ['Lanzar la tormenta de peones en el flanco de rey con f2-f4 y g2-g4.',0,'Sin el centro seguro el ataque se vuelve contra ti; el espacio es el activo principal, no el ataque directo.']]}
+ ]},
+{id:'french',name:'Cadena de peones (Francesa de avance)',
+ tag:'Blancas: e5 y d4 · Negras: e6 y d5',
+ appears:'Defensa Francesa (variante del avance), India de Rey (cadena d5/e4 en la variante clásica) y otras aperturas cerradas.',
+ know:'Una <b>cadena de peones</b> blanca (e5 apoyado por d4) frente a la negra (d5 apoyado por e6). Regla clásica: <b>se ataca la base</b> de la cadena rival y se juega en el flanco hacia donde apunta la cadena. La cadena blanca apunta al flanco de rey; la negra, al de dama.',
+ white:'Defender la base d4 (c3, Cf3, a menudo a3 o Ae2) y buscar juego en el <b>flanco de rey</b> (f2-f4, Ce2-g3, h2-h4) apoyado por la ventaja de espacio.',
+ black:'Atacar la <b>base d4</b> con …c5, …Cc6, …Db6 y …Ad7; luego jugar en el flanco de dama (…c4, …b5). El peón e6 y el alfil de c8 son un problema: hay que reactivarlo.',
+ errors:'Blancas: dejar caer d4 por descuido. Negras: atacar solo la cabeza e5 sin presión sobre d4.',
+ pos:[
+ {m:'1.e4 e6 2.d4 d5 3.e5',side:'b',
+  note:'Francesa de avance. El peón e5 está apoyado únicamente por d4: esa es la base.',
+  q:'Juegan negras. ¿Dónde hay que atacar la cadena de peones?',
+  a:[['c7','c5',G]],k:['d4'],
+  opts:[['En la base d4, con …c5, …Cc6 y …Db6.',1,'Si cae la base, la cabeza e5 queda sin apoyo y cae también: es el principio de las cadenas.'],
+        ['En la cabeza e5, con …f6 sin preparar.',0,'…f6 puede ser un buen recurso, pero atacar solo la cabeza sin la base suele dejar a las blancas con ventaja de espacio.'],
+        ['En el flanco de rey, enrocando y avanzando g7-g5.',0,'Las negras tienen más espacio en el flanco de dama; atacar donde apunta tu propia cadena es incoherente con la estructura.'],
+        ['Cambiar el alfil de c8 por el caballo blanco sin más.',0,'No toca la cadena: sin presión sobre d4 las blancas mantienen la ventaja de espacio.']]},
+ {m:'1.e4 e6 2.d4 d5 3.e5 c5 4.c3 Nc6 5.Nf3 Qb6',side:'w',
+  note:'Las negras presionan d4 y las blancas deben sostenerlo manteniendo la cadena.',
+  q:'Juegan blancas. ¿Cuál es el plan estratégico?',
+  a:[['c1','d2',G],['b1','d2',G]],k:['d4'],
+  opts:[['Sostener d4 y ganar espacio y juego en el flanco de rey, aprovechando que las negras presionan en el otro.',1,'La cadena blanca apunta hacia el flanco de rey: allí está tu mayor espacio y piezas; defiende la base y juega donde apunta la cadena.'],
+        ['Cambiar en c5 y d4 abriendo el centro para atacar rápido.',0,'Abrir el centro neutraliza tu ventaja de espacio y libera el alfil malo de c8 de las negras.'],
+        ['Avanzar b2-b4 para atacar a la dama negra y al peón c5.',0,'b4 debilita la estructura y deja d4 aún más difícil de proteger.'],
+        ['Dejar d4 sin defender y atacar con Ad3 y Ch4.',0,'Si caen la base y la cadena, la ventaja de espacio desaparece; primero hay que asegurar d4.']]}
+ ]},
+{id:'kid',name:'India de Rey: centro cerrado (d5/e5)',
+ tag:'Blancas: c4 d5 e4 · Negras: d6 e5',
+ appears:'India de Rey (variante clásica y sistemas con g3) y otras estructuras cerradas con peones en d5/e5 y c4/e4.',
+ know:'El centro queda <b>bloqueado</b>: ningún bando puede romperlo fácilmente. La partida se decide en los flancos: las blancas en el <b>flanco de dama</b> (ruptura c4-c5) y las negras en el <b>flanco de rey</b> (…f5, …g5, …h5).',
+ white:'Jugar en el flanco de dama con <b>c4-c5</b> (apoyada por b4, Cd3 y a veces Tb1), abrir una columna para las torres y cambiar el peón d6.',
+ black:'Lanzar la <b>avalancha de peones</b> en el flanco de rey: …f5, …f4, …g5 y …h5-h4, con …Cg6 y …Tf7 detrás. Es una carrera: gana el que llegue antes.',
+ errors:'Blancas: jugar en el flanco de rey en vez del de dama. Negras: avanzar peones sin apoyo de piezas y dejar el enroque inservible.',
+ pos:[
+ {m:'1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.Nf3 O-O 6.Be2 e5 7.O-O Nc6 8.d5 Ne7 9.Ne1 Nd7',side:'w',
+  note:'Centro cerrado. Las blancas van a mover Cd3 y c4-c5; las negras, a lanzar f7-f5.',
+  q:'Juegan blancas. ¿Cuál es la idea estratégica?',
+  a:[['c4','c5',G],['e1','d3',G]],k:['c5'],
+  opts:[['Jugar en el flanco de dama con Cd3, b2-b4 y c4-c5 para abrir una columna.',1,'Con el centro cerrado, el juego se decide en los flancos; el tuyo es el de dama, donde tienes espacio y las negras no avanzan peones.'],
+        ['Romper en el centro con e4xd5 sin apoyo.',0,'El centro está cerrado precisamente porque romperlo favorece a las negras; abrirlo sin motivo da vida a sus alfiles.'],
+        ['Defender pasivamente el flanco de rey y esperar.',0,'Contra una avalancha de peones hay que contraatacar rápido: la defensa pasiva pierde la carrera.'],
+        ['Cambiar damas y aspirar a tablas.',0,'No tienes motivo para simplificar: en esta estructura tu juego de peones ya va por delante.']]},
+ {m:'1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.Nf3 O-O 6.Be2 e5 7.O-O Nc6 8.d5 Ne7 9.Ne1 Nd7 10.Be3 f5 11.f3 f4 12.Bf2',side:'b',
+  note:'Las negras ya empezaron la avalancha. Quedan g7-g5, Cg6 y h5-h4.',
+  q:'Juegan negras. ¿Qué plan continúa la ofensiva?',
+  a:[['g7','g5',G],['e7','g6',G]],k:['g5'],
+  opts:[['Seguir con …g5, …Cg6 y …h5-h4 para atacar el enroque blanco.',1,'La estructura te dicta el plan: más peones al ataque, con los caballos reforzando g5, h4 y f4.'],
+        ['Cambiar el alfil de g7 por el caballo en f6 sin más.',0,'Sacas del ataque a tu pieza más fuerte y el ataque pierde velocidad.'],
+        ['Desviar el juego al flanco de dama con …a5 y …b5.',0,'Allí las blancas tienen más espacio y no es tu zona; el tiempo perdido se convierte en ventaja blanca.'],
+        ['Romper el centro con …exd5 y …c6.',0,'Abrir el centro quita el atractivo de tu ataque y libera el flanco de dama blanco.']]}
+ ]},
+{id:'benoni',name:'Benoni moderno (d5 y e4 vs c5 y d6)',
+ tag:'Blancas: d5 e4 · Negras: c5 d6, columna e abierta',
+ appears:'Benoni moderno, Benko, Siciliana Scheveningen con avance d5 y ciertas líneas de la India de Rey.',
+ know:'Las blancas tienen <b>mayoría de peones en el centro</b> (d5 y e4) contra la mayoría de las negras en el <b>flanco de dama</b> (a, b, c contra a, b). Las negras tienen la columna e abierta y la diagonal larga para su alfil de g7.',
+ white:'Jugar la ruptura <b>e4-e5</b> y mantener el centro; mientras tanto frenar …b5 con a2-a4 y controlar e5 con Cd2/Af4.',
+ black:'Romper con <b>…b5</b> (apoyada por la mayoría de peones en dama), …a6 y la torre en b8; usar la columna e abierta con …Te8 y …Ca6-c7.',
+ errors:'Blancas: dejar que las negras jueguen …b5 sin respuesta. Negras: jugar …b5 sin preparar …a6 y …Cbd7.',
+ pos:[
+ {m:'1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4 g6 7.Nf3 Bg7 8.Be2 O-O 9.O-O',side:'b',
+  note:'Benoni clásico. Las negras tienen mayoría en dama y un alfil muy activo en g7.',
+  q:'Juegan negras. ¿Cuál es la ruptura típica?',
+  a:[['b7','b5',G]],k:['b5'],
+  opts:[['…b5, apoyada por …a6 y …Cbd7/…Ca6, aprovechando la mayoría de peones de dama.',1,'Tu ventaja es la mayoría en dama: cada vez que consigas …b5 y …b4 las negras ganan espacio y debilitan e4/d5.'],
+        ['…f5 para atacar el centro blanco.',0,'Sin la torre en f8 y sin preparar, deja el peón d6 y la diagonal a1-h8 débiles; es un plan menor.'],
+        ['Cambiar damas rápidamente con …Dc7 y …Dd8.',0,'La estructura exige dinamismo; con damas fuera el espacio blanco prevalece.'],
+        ['…a5 y …Ca6 para jugar solo en el flanco de rey.',0,'Las negras no tienen mayoría de peones en rey; el juego natural es en el flanco de dama con …b5.']]},
+ {m:'1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4 g6 7.Nf3 Bg7 8.Be2 O-O 9.O-O Re8',side:'w',
+  note:'Las negras apuntan a e4. Las blancas controlan e5 y frenan …b5.',
+  q:'Juegan blancas. ¿Cuál es el plan estratégico?',
+  a:[['a2','a4',G],['e4','e5',G]],k:['e5'],
+  opts:[['Frenar …b5 con a2-a4 y preparar la ruptura e4-e5 con Cd2 y Te1.',1,'Impides la ruptura clave de las negras y mantienes tu ventaja de espacio; e4-e5 llega cuando las piezas están listas.'],
+        ['Cambiar el alfil de g7 con Ah6 sin más plan.',0,'El alfil de g7 es la pieza más peligrosa, pero cambiarla no resuelve el problema del flanco de dama.'],
+        ['Avanzar b2-b4 para abrir líneas rápidamente.',0,'Debilita c4 y las negras reaccionan con …cxb4 o …a5; no frena …b5.'],
+        ['Atacar el rey con h2-h4 y g2-g4 desde el inicio.',0,'Tu rey queda expuesto mientras las negras tienen una ruptura natural en dama; prioriza frenar …b5.']]}
+ ]},
+{id:'catalan',name:'Catalana abierta: peón d4 contra c7/e6',
+ tag:'Blancas: sin peón c · Negras: c7 y e6 contra d4',
+ appears:'Catalana abierta (…dxc4) y la Semi-Eslava; es la estructura central de tu repertorio con 4…dxc4.',
+ know:'Tras …dxc4 y la recuperación del peón, las blancas tienen <b>un solo peón (d4) frente a los peones c7 y e6</b>. No hay peón c blanco: la fuerza de la estructura está en la <b>gran diagonal</b> del alfil de g2 contra b7/a8 y en la presión sobre el flanco de dama.',
+ white:'Recuperar el peón de c4 <b>sin prisa</b> (Dc2/Da4+, Ne5), mantener la presión del Ag2 sobre b7 y minar …b5 con a2-a4. Buscar Ad2-a5 o Af4 contra c7 y la ruptura e2-e4.',
+ black:'Defender b7 con …Ab7 y …Cbd7, preparar …c5 para liberar la posición y completar el desarrollo. Evitar cambiar peones sin plan.',
+ errors:'Blancas: recuperar el peón con prisa descuidando el desarrollo. Negras: jugar …b5 sin poder sostenerlo cuando llega a2-a4.',
+ pos:[
+ {m:'1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 dxc4 5.Nf3 a6',side:'w',
+  note:'Catalana abierta temprana. Las negras guardan el peón extra con …a6 y …b5.',
+  q:'Juegan blancas. ¿Qué enfoque conviene?',
+  a:[['f3','e5',G],['a2','a4',G]],k:['c4','b7'],
+  opts:[['Recuperar c4 sin prisa y mantener la presión del Ag2 sobre b7 y a8.',1,'El peón negro de c4 es difícil de defender a la larga; la diagonal larga da compensación inmediata y el material se recupera.'],
+        ['Tomar c4 enseguida con la dama arriesgando el desarrollo.',0,'Recuperar a toda costa te cuesta tiempos; con piezas desarrolladas el peón cae solo.'],
+        ['Cambiar los alfiles con Ae5 y simplificar.',0,'Sacas del juego al alfil de g2, que es tu mejor argumento; la posición queda sin ventaja.'],
+        ['Avanzar e2-e4 inmediatamente para ocupar el centro.',0,'Con el peón c4 negro vivo, e4 puede perder material y deja la diagonal larga sin protección.']]},
+ {m:'1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O dxc4 7.Qc2 a6 8.Qxc4 b5 9.Qc2 Bb7',side:'w',
+  note:'Posición clave de la Catalana abierta. El alfil negro neutraliza al de g2.',
+  q:'Juegan blancas. ¿Cuál es el plan más coherente?',
+  a:[['a2','a4',G],['c1','f4',G]],k:['b7','b5'],
+  opts:[['Minar …b5 con a2-a4 y buscar Ad2-a5/Af4 y Ce5 para aumentar la presión.',1,'Con a4 atacas la estructura de peones negra y las piezas se reagrupan hacia c7 y e5 con tiempo.'],
+        ['Cambiar damas y llegar a un final sin ventaja.',0,'Sin damas la diagonal larga pierde fuerza y las negras igualan con facilidad.'],
+        ['Avanzar b2-b4 para ganar espacio.',0,'Debilita c4 y c3 y las negras responden con …a5; no mejora tu posición.'],
+        ['Jugar b2-b3 y retirar el alfil de la gran diagonal.',0,'El alfil de g2 es tu mejor pieza; sacarlo de la diagonal larga regala a las negras justo lo que necesitan.']]}
+ ]}
+];
+
+
+/* =============== MODO ESTRUCTURAS DE PEONES =============== */
+const Struct={
+ free:true,si:0,pi:0,rand:false,cur:null,
+ canMove(){return true},
+ onMove(){},
+ fen(p){const c=new Chess();for(const t of p.m.replace(/\d+\./g,' ').split(/\s+/).filter(Boolean))c.move(t);return c.fen()},
+ stats(){return store.get('struct',{})},
+ enter(){
+  $('#ctl').innerHTML=`<label>Estructura<select id="stSel">${STRUCTS.map((x,i)=>`<option value="${i}">${esc(x.name)}</option>`).join('')}</select></label>
+  <div class="row"><button id="stStudy">Explicación</button><button id="stQuiz" class="pri">Adivina el plan</button><button id="stRand">Quiz aleatorio</button><button id="stPlay">Jugar desde aquí</button></div>`;
+  $('#stSel').value=this.si;
+  $('#stSel').onchange=e=>{this.si=+e.target.value;this.pi=0;this.rand=false;this.study()};
+  $('#stStudy').onclick=()=>{this.rand=false;this.study()};
+  $('#stQuiz').onclick=()=>{this.rand=false;this.pi=0;this.ask()};
+  $('#stRand').onclick=()=>{this.rand=true;this.pickRandom();this.ask()};
+  $('#stPlay').onclick=()=>this.playHere();
+  this.study();
+ },
+ leave(){},
+ load(p,decor){
+  const fen=this.fen(p);A.epoch++;Engine.stop();A.game=new Chess(fen);A.startFen=fen;A.viewIdx=null;A.userColor=p.side;board.flipped=p.side==='b';
+  board.arrows=decor?(p.a||[]).map(a=>a.slice(0,3)):[];board.marks=decor?(p.k||[]):[];
+  setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();board.draw();
+ },
+ st(){return STRUCTS[this.si]},
+ study(){
+  const x=this.st();const p=x.pos[this.pi];this.cur=p;Chat.clear();
+  this.load(p,true);
+  Chat.say(`<b>${esc(x.name)}</b><br><span class="small">${esc(x.tag)}</span><br><br><b>Cómo reconocerla.</b> ${x.know}<br><br><b>Plan de las blancas.</b> ${x.white}<br><br><b>Plan de las negras.</b> ${x.black}<br><br><b>Errores típicos.</b> ${x.errors}<br><br><b>Dónde aparece.</b> ${esc(x.appears)}`);
+  Chat.say(`<b>Posición ${this.pi+1}/${x.pos.length}</b> — ${p.note}<br><span class="small">Mueve las piezas libremente para explorar, o pulsa «Analizar».</span>`,'ok');
+  A.status('Posición típica '+(this.pi+1)+'/'+x.pos.length);
+  const chips=[{label:'Adivina el plan',pri:true,fn:()=>{this.rand=false;this.ask()}}];
+  if(x.pos.length>1)chips.push({label:'Posición '+(this.pi===0?2:1)+' ▶',fn:()=>{this.pi=this.pi===0?1:0;this.study()}});
+  chips.push({label:'Jugar desde aquí',fn:()=>this.playHere()},{label:'Analizar posición',fn:analyze});
+  Chat.chips(chips);
+ },
+ pickRandom(){
+  const st=this.stats();const items=[];
+  STRUCTS.forEach((x,i)=>x.pos.forEach((p,j)=>{const s=st[x.id+'|'+j];const w=!s?3:1+5*(1-s.ok/s.n);items.push({i,j,w})}));
+  const tot=items.reduce((a,b)=>a+b.w,0);let r=Math.random()*tot,k=0;for(;k<items.length-1;k++){r-=items[k].w;if(r<=0)break}
+  this.si=items[k].i;this.pi=items[k].j;const sel=$('#stSel');if(sel)sel.value=this.si;
+ },
+ ask(){
+  const x=this.st(),p=x.pos[this.pi];this.cur=p;Chat.clear();this.load(p,false);
+  const opts=p.opts.map((o,i)=>({t:o[0],ok:!!o[1],why:o[2]})).map(o=>[Math.random(),o]).sort((a,b)=>a[0]-b[0]).map(o=>o[1]);this.opts=opts;this.answered=false;
+  const L='ABCD';
+  Chat.say(`<b>${esc(x.name)}</b> · pregunta ${this.rand?'aleatoria':(this.pi+1)+'/'+x.pos.length}<br>${esc(p.q)}<br><br>${opts.map((o,i)=>`<b>${L[i]})</b> ${esc(o.t)}`).join('<br>')}`);
+  A.status('Adivina el plan: elige A–D');
+  Chat.chips([...opts.map((o,i)=>({label:L[i],pri:true,fn:()=>this.answer(i)})),{label:'Analizar posición',fn:analyze}]);
+ },
+ answer(i){
+  if(this.answered)return;this.answered=true;const x=this.st(),p=this.cur,o=this.opts[i],good=this.opts.find(q=>q.ok);const L='ABCD';
+  const st=this.stats(),key=x.id+'|'+this.pi;const s=st[key]||{ok:0,n:0};s.n++;if(o.ok)s.ok++;st[key]=s;store.set('struct',st);
+  this.load(p,true);
+  Chat.me(`${L[i]}) ${esc(o.t)}`);
+  if(o.ok)Snd.play('ok');
+  if(o.ok)Chat.say(`✓ <b>Correcto: ${esc(o.t)}</b><br>${esc(o.why)}`,'ok');
+  else Chat.say(`✗ <b>${L[i]} no es el plan.</b> ${esc(o.why)}<br><br>La respuesta correcta era <b>${L[this.opts.indexOf(good)]}) ${esc(good.t)}</b><br>${esc(good.why)}`,'bad');
+  Chat.say(p.note);A.status(o.ok?'¡Bien!':'Revisa la explicación');
+  const chips=[{label:'Siguiente pregunta ▶',pri:true,fn:()=>this.next()},{label:'Jugar desde aquí',fn:()=>this.playHere()},{label:'Analizar posición',fn:analyze},{label:'Ver explicación',fn:()=>{this.rand=false;this.study()}}];
+  Chat.chips(chips);
+ },
+ next(){
+  if(this.rand){this.pickRandom();return this.ask()}
+  const x=this.st();if(this.pi<x.pos.length-1)this.pi++;else{this.si=(this.si+1)%STRUCTS.length;this.pi=0;const sel=$('#stSel');if(sel)sel.value=this.si}
+  this.ask();
+ },
+ playHere(){const p=this.cur||this.st().pos[0];Play.fromPosition(this.fen(p),p.side)},
+ panel(){
+  const st=this.stats();let tot=0,h='<h3>Estructuras de peones: Adivina el plan</h3>';
+  const rows=STRUCTS.map(x=>{let ok=0,n=0;x.pos.forEach((p,j)=>{const s=st[x.id+'|'+j];if(s){ok+=s.ok;n+=s.n}});tot+=n;return {x,ok,n}});
+  if(!tot)return h+'<div class="small">Aún sin respuestas: prueba la pestaña Peones.</div>';
+  h+='<table>';for(const r of rows){const pct=r.n?Math.round(r.ok/r.n*100):0;h+=`<tr><td>${esc(r.x.name)}</td><td>${r.n?pct+'%':'—'}</td><td>${r.n} resp.</td><td><div class="bar"><i style="width:${pct}%"></i></div></td></tr>`}
+  return h+'</table>';
+ }
+};
+
+/* =============== REPERTORIO: ÁRBOL, DESVIACIONES Y EXAMEN =============== */
+const Rep={
+ key(fen){return fen.split(' ').slice(0,4).join(' ')},
+ isGames(l){return l.kind==='games'||/ — partidas modelo$/.test(l.title||'')},
+ lessons(color){return Lesson.all().filter(l=>(l.side||'w')===color&&!this.isGames(l))},
+ tree(color){
+  const T=new Map();
+  const add=(g,san,l,c)=>{const k=this.key(g.fen());let n=T.get(k);const m=new Chess(g.fen()).move(san,{sloppy:true});if(!m)return null;if(!n){n={};T.set(k,n)}if(!n[clean(m.san)])n[clean(m.san)]={san:m.san,l,c};return m};
+  for(const l of this.lessons(color))for(const ch of l.chapters){
+   let g;try{g=new Chess(ch.fen||undefined)}catch(e){continue}
+   for(const st of ch.moves){
+    for(const v of (st.v||[])){const h=new Chess(g.fen());for(const x of v){if(!add(h,x.san,l.title,ch.title))break;h.move(x.san,{sloppy:true})}}
+    if(!add(g,st.san,l.title,ch.title))break;g.move(st.san,{sloppy:true});
+   }
+  }
+  return T;
+ },
+ walk(T,color,startFen,sans){
+  const g=new Chess(startFen);
+  for(let i=0;i<sans.length;i++){
+   const n=T.get(this.key(g.fen()));if(!n)return {st:'end',ply:i};
+   const fb=g.fen();const mv=g.move(sans[i],{sloppy:true});if(!mv)break;
+   if(!n[clean(mv.san)]){const ex=Object.values(n);return {st:'dev',ply:i,who:mv.color===color?'me':'opp',played:mv.san,expected:ex.map(x=>x.san),src:ex[0],fen:fb,line:sans.slice(0,i)}}
+  }
+  return {st:'in',ply:sans.length};
+ },
+ lineText(fen,sans,max=10){
+  const g=new Chess(fen);const out=[];
+  sans.slice(0,max).forEach((s,i)=>{const p=g.fen().split(' ');const m=g.move(s,{sloppy:true});if(!m)return;out.push(p[1]==='w'?p[5]+'. '+m.san:(i===0?p[5]+'... ':'')+m.san)});
+  return out.join(' ')+(sans.length>max?' …':'');
+ },
+ gameSide(g){
+  const names=(store.get('myname','')||'').toLowerCase().split(',').map(x=>x.trim()).filter(Boolean);
+  const w=(g.white||'').toLowerCase(),b=(g.black||'').toLowerCase();
+  return names.some(n=>b.includes(n))&&!names.some(n=>w.includes(n))?'b':'w';
+ },
+ describe(r,color){
+  if(r.st==='dev'){
+   if(r.who==='me')return `📖 <b>Te saliste de tu repertorio</b> en la jugada ${Math.floor(r.ply/2)+1}: jugaste <b>${esc(r.played)}</b>; tu repertorio decía <b>${esc(r.expected.join(' / '))}</b>${r.src?' (<i>'+esc(r.src.c)+'</i>)':''}.`;
+   return `📖 <b>El rival se salió de tu repertorio</b> en la jugada ${Math.floor(r.ply/2)+1} con <b>${esc(r.played)}</b> (esperabas ${esc(r.expected.join(' / '))}). Es un hueco: puedes guardarlo en Progreso › Repertorio.`;
+  }
+  if(r.st==='end')return `📖 Tu repertorio cubría esta partida hasta la jugada ${Math.floor(r.ply/2)+1}; desde ahí ya no tienes línea preparada.`;
+  return `📖 Toda la partida siguió tu repertorio.`;
+ },
+ record(it){const d=store.get('dev',[]);d.push(it);store.set('dev',d.slice(-200))},
+ trackLive(){
+  if(Play.repDone)return;const color=A.userColor,T=this.tree(color);
+  if(!T.size||!T.has(this.key(A.startFen))){Play.repDone=true;return}
+  const sans=A.hist.map(m=>m.san);if(!sans.length)return;
+  const r=this.walk(T,color,A.startFen,sans);if(r.st==='in')return;
+  Play.repDone=true;
+  if(r.st==='end'){if(r.ply>=4)Chat.say(this.describe(r,color),'warn');return}
+  Chat.say(this.describe(r,color),r.who==='me'?'warn':'');
+  this.record({src:'play',color,ply:r.ply,who:r.who,played:r.played,expected:r.expected,fen:r.fen,line:r.line,t:Date.now(),src2:r.src&&r.src.c});
+ },
+ noteGame(g,color){
+  const T=this.tree(color);if(!T.size)return;const c=new Chess();if(!c.load_pgn(g.pgn))return;if(c.header().FEN)return;
+  Chat.say(this.describe(this.walk(T,color,new Chess().fen(),c.history()),color),'');
+ },
+ addHole(it){
+  const cs=store.get('custom',[]);const id='holes-'+it.color;let L=cs.find(x=>x.id===id);
+  if(!L){L={id,title:'Huecos del repertorio ('+(it.color==='w'?'blancas':'negras')+')',side:it.color,custom:true,kind:'holes',intro:'Líneas del rival que todavía no cubres. Estúdialas y añade tu respuesta.',chapters:[]};cs.push(L)}
+  const sans=it.line.concat([it.played]);const cid='h'+hash(sans.join(' '));if(L.chapters.some(c=>c.id===cid))return false;
+  const g=new Chess();const moves=sans.map(x=>{const m=g.move(x,{sloppy:true});return {san:m?m.san:x}});
+  moves[moves.length-1].c='El rival se salió aquí de tu repertorio. Estudia tu mejor respuesta y añádela a tu lección.';
+  const last=this.lineText(new Chess().fen(),sans,999).split(' ').slice(-2).join(' ');
+  L.chapters.push({id:cid,title:'Hueco: …'+last,intro:'Línea de un rival que no estaba en tu repertorio.',moves,outro:'Busca la mejor respuesta (con Stockfish en «Analizar posición») y crea una lección con ella.'});
+  store.set('custom',cs);return true;
+ },
+ panel(){
+  const games=store.get('games_pgn',[]),an=store.get('games_an',{});const items=[];let tot=0,inb=0,skipped=0;const evs=[],errs=[];
+  for(const g of games){
+   const color=this.gameSide(g),T=this.tree(color);if(!T.size){skipped++;continue}
+   const c=new Chess();if(!c.load_pgn(g.pgn)||c.header().FEN)continue;const sans=c.history();
+   const r=this.walk(T,color,new Chess().fen(),sans);tot++;
+   if(r.st==='dev'){const it={...r,src3:'game',color,g:g.white+' – '+g.black};
+    const a=an[g.id];if(a&&a.ev&&a.ev.length===sans.length+1){const sg=color==='w'?1:-1;it.ev=a.ev[r.ply+1]*sg/100;evs.push(it.ev);
+     for(let k=r.ply+2;k<=sans.length;k++){if((k%2===1)!==(color==='w'))continue;const loss=wp(a.ev[k-1]*sg)-wp(a.ev[k]*sg);if(loss>=10){errs.push(k);break}}}
+    items.push(it)}else inb++;
+  }
+  const dev=store.get('dev',[]);for(const d of dev)items.push({...d});
+  const grp=new Map();for(const it of items){const k=it.who+'|'+this.key(it.fen)+'|'+it.played;const e=grp.get(k);if(e)e.n++;else grp.set(k,{...it,n:1})}
+  this.groups=[...grp.values()].sort((a,b)=>b.n-a.n).slice(0,12);
+  const me=items.filter(x=>x.who==='me').length,opp=items.filter(x=>x.who==='opp').length;
+  let h='<h3>Repertorio: dónde sales del libro</h3>';
+  if(!items.length&&!tot)h+='<div class="small">Importa partidas en «Partidas» (pon tu nombre de usuario) o juega en «Jugar»: aquí verás en qué jugada te sales de tu repertorio y qué líneas del rival te faltan.</div>';
+  else{
+   h+=`<div>Partidas contrastadas: <b>${tot}</b> · seguiste el libro hasta el final: ${inb} · te saliste tú: <b>${me}</b> · se salió el rival (huecos): <b>${opp}</b>${skipped?' · '+skipped+' sin repertorio de ese color':''}</div>`;
+   const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+   if(evs.length)h+=`<div class="small" style="margin-top:4px">Con análisis (${evs.length}): al salir del libro tu evaluación media es <b>${avg(evs)>=0?'+':''}${avg(evs).toFixed(1)}</b>${errs.length?` y tu primer error llega, de media, hacia la jugada <b>${Math.round(avg(errs)/2)}</b>`:''}.</div>`;
+   if(this.groups.length){
+    h+='<table><tr><th>Quién</th><th>Línea hasta la salida</th><th>Esperado</th><th>Veces</th><th></th></tr>';
+    this.groups.forEach((it,i)=>{let t=this.lineText(new Chess().fen(),it.line.concat([it.played]),200);if(t.length>64)t='… '+t.slice(-64);
+     h+=`<tr><td>${it.who==='me'?'Tú':'Rival'}</td><td>${esc(t)}</td><td>${esc((it.expected||[]).join(' / '))}</td><td>${it.n}×</td><td><button data-act="play" data-i="${i}">Jugar</button>${it.who==='opp'?` <button data-act="hole" data-i="${i}">+ Hueco</button>`:''}</td></tr>`});
+    h+='</table>';
+   }
+  }
+  const st=store.get('exam',{}),names={};Lesson.all().forEach(l=>l.chapters.forEach(c=>names[l.id+'|'+c.id]=c.title));
+  const rows=Object.entries(st).filter(([k,x])=>x.n>0&&names[k]).sort((a,b)=>b[1].f/b[1].n-a[1].f/a[1].n||b[1].n-a[1].n).slice(0,6);
+  if(rows.length){h+='<h3>Examen de repertorio: líneas más débiles</h3><table>';
+   for(const [k,x] of rows){const p=Math.round((1-x.f/x.n)*100);h+=`<tr><td>${esc(names[k])}</td><td>${p}%</td><td>${x.n} intentos</td><td><div class="bar"><i style="width:${p}%"></i></div></td></tr>`}
+   h+='</table>';const hs=store.get('exam_hist',[]).slice(-5).reverse();
+   if(hs.length)h+='<div class="small" style="margin-top:6px">Últimos exámenes: '+hs.map(x=>`${new Date(x.t).toLocaleDateString()} ${x.ok}/${x.n}`).join(' · ')+'</div>';}
+  return h;
+ },
+ bind(root){root.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{const it=(this.groups||[])[+b.dataset.i];if(!it)return;
+  if(b.dataset.act==='play')Play.fromPosition(it.fen,it.color);
+  else{const ok=this.addHole(it);b.textContent=ok?'Añadido ✓':'Ya existe';b.disabled=true}})}
+};
+
+const Exam={
+ free:false,scope:'all',n:10,q:[],qi:-1,mv:[],i:0,lineFails:0,res:[],lock:false,active:false,l:null,ch:null,tree:null,
+ canMove(){return this.active&&!this.lock&&A.game.turn()===A.userColor},
+ pool(){const out=[];for(const l of Lesson.all()){if(Rep.isGames(l))continue;if(this.scope!=='all'&&l.id!==this.scope)continue;l.chapters.forEach(ch=>{if(ch.moves.length)out.push({l,ch})})}return out},
+ enter(){
+  const ls=Lesson.all().filter(l=>!Rep.isGames(l));
+  $('#ctl').innerHTML=`<div class="g2"><label>Repertorio<select id="exSc"><option value="all">Todas mis lecciones</option>${ls.map(l=>`<option value="${esc(l.id)}">${esc(l.title)}</option>`).join('')}</select></label>
+  <label>Líneas<select id="exN">${[5,10,20].map(n=>`<option>${n}</option>`).join('')}</select></label></div>
+  <div class="row"><button id="exGo" class="pri">Empezar examen</button><button id="exWeak">Solo mis líneas débiles</button><button id="exSkip">Ver jugada</button></div>`;
+  if(![...$('#exSc').options].some(o=>o.value===this.scope))this.scope='all';
+  $('#exSc').value=this.scope;$('#exN').value=this.n;
+  $('#exSc').onchange=e=>{this.scope=e.target.value};$('#exN').onchange=e=>{this.n=+e.target.value};
+  $('#exGo').onclick=()=>this.start(false);$('#exWeak').onclick=()=>this.start(true);$('#exSkip').onclick=()=>this.giveUp();
+  this.intro();
+ },
+ leave(){this.active=false},
+ intro(){
+  this.active=false;A.epoch++;Engine.stop();A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();A.status('');Chat.clear();
+  Chat.say('<b>Examen de repertorio.</b><br>Te voy a poner líneas de tu repertorio al azar (las que más fallas salen más). Juega <b>de memoria</b> tus jugadas; el rival responde solo y, a veces, se desvía por una de las variantes de tu PGN. Sin pistas: si fallas te enseño la jugada y sigues.');
+  Chat.chips([{label:'Empezar examen',pri:true,fn:()=>this.start(false)}]);
+ },
+ pick(pool,n){
+  const st=store.get('exam',{});const now=Date.now();
+  const items=pool.map(p=>{const s=st[p.l.id+'|'+p.ch.id];return {p,w:!s?3:1+5*(s.f/s.n)+Math.min(2,(now-s.t)/(7*DAY))}});const out=[];
+  while(out.length<n&&items.length){const tot=items.reduce((a,x)=>a+x.w,0);let r=Math.random()*tot,k=0;for(;k<items.length-1;k++){r-=items[k].w;if(r<=0)break}out.push(items.splice(k,1)[0].p)}
+  return out;
+ },
+ start(weak,retry){
+  let pool=this.pool();const st=store.get('exam',{});
+  if(retry)this.q=retry;
+  else{
+   if(weak)pool=pool.filter(p=>{const s=st[p.l.id+'|'+p.ch.id];return s&&s.f>0});
+   if(!pool.length){Chat.clear();Chat.say(weak?'Aún no tienes líneas débiles: haz primero un examen.':'No hay líneas en ese repertorio.','warn');return}
+   this.q=this.pick(pool,Math.min(this.n,pool.length));
+  }
+  this.qi=-1;this.res=[];this.active=true;Chat.clear();this.next();
+ },
+ next(){
+  this.qi++;if(this.qi>=this.q.length)return this.summary();
+  const {l,ch}=this.q[this.qi];this.l=l;this.ch=ch;this.mv=ch.moves.slice();this.i=0;this.lineFails=0;this.lock=false;this.soft=0;
+  this.tree=Rep.tree(l.side||'w');
+  A.epoch++;Engine.stop();A.game=ch.fen?new Chess(ch.fen):new Chess();A.startFen=A.game.fen();A.viewIdx=null;A.userColor=l.side||'w';board.flipped=A.userColor==='b';board.arrows=[];board.marks=[];
+  setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();
+  Chat.say(`<b>Línea ${this.qi+1}/${this.q.length}</b> — juegas con las ${A.userColor==='w'?'blancas':'negras'}. Reproduce tu repertorio de memoria.`);
+  Chat.chips([]);this.advance();
+ },
+ advance(){
+  board.arrows=[];board.marks=[];board.draw();
+  if(this.i>=this.mv.length)return this.endLine();
+  if(A.game.turn()===A.userColor){A.status(`Línea ${this.qi+1}/${this.q.length} · tu turno`);this.lock=false;return}
+  this.lock=true;A.status('Responde el rival…');const ep=A.epoch;
+  setTimeout(()=>{
+   if(ep!==A.epoch||!this.active)return;
+   const step=this.mv[this.i];
+   if(step.v&&step.v.length&&Math.random()<.35){const v=step.v[Math.floor(Math.random()*step.v.length)];this.mv=this.mv.slice(0,this.i).concat(v)}
+   const m=A.game.move(this.mv[this.i].san,{sloppy:true});if(!m){this.endLine();return}
+   A.epoch++;A.sync();A.updateControls();this.i++;this.advance();
+  },550);
+ },
+ onMove(m){
+  const step=this.mv[this.i];if(!step)return;const prev=A.fens[A.fens.length-2];
+  if(clean(m.san)===clean(step.san)){this.soft=0;this.i++;this.advance();return}
+  const alt=(step.v||[]).find(v=>v[0]&&clean(v[0].san)===clean(m.san));
+  if(alt){this.mv=this.mv.slice(0,this.i).concat(alt);this.soft=0;Chat.say(`✓ <b>${esc(m.san)}</b>: variante válida de tu repertorio.`,'ok');this.i++;this.advance();return}
+  const node=this.tree.get(Rep.key(prev));const other=node&&node[clean(m.san)];
+  this.lock=true;
+  if(other&&this.soft<2){this.soft++;Chat.say(`<b>${esc(m.san)}</b> también está en tu repertorio (en «${esc(other.c)}»), pero esta línea sigue otro camino. Piensa cuál era y vuelve a intentarlo.`,'warn');
+   setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700);return}
+  this.lineFails++;
+  Chat.say(`✗ <b>${esc(m.san)}</b> no es. La jugada de la línea era <b>${esc(step.san)}</b>.${step.h?'<br>Idea: '+step.h:''}`,'bad');
+  setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false;this.showMove(step.san)},700);
+ },
+ showMove(san){const c=new Chess(A.game.fen());const m=c.move(san);if(m){board.arrows=[[m.from,m.to]];board.draw()}},
+ giveUp(){
+  if(!this.active||this.lock||A.game.turn()!==A.userColor)return;const step=this.mv[this.i];if(!step)return;
+  this.lineFails++;this.showMove(step.san);Chat.say(`La jugada era <b>${esc(step.san)}</b> (cuenta como fallo). Juégala para continuar.`,'warn');
+ },
+ endLine(){
+  this.lock=true;const key=this.l.id+'|'+this.ch.id,st=store.get('exam',{});const s=st[key]||{n:0,f:0,t:0};s.n++;if(this.lineFails)s.f++;s.t=Date.now();st[key]=s;store.set('exam',st);
+  this.res.push({title:this.ch.title,fails:this.lineFails,item:this.q[this.qi]});
+  A.status('Línea terminada');if(!this.lineFails)Snd.play('ok',.12);
+  Chat.say(`${this.lineFails?'✗':'✓'} <b>${esc(this.ch.title)}</b> — ${this.lineFails?this.lineFails+' fallo'+(this.lineFails>1?'s':''):'¡línea perfecta!'}`,this.lineFails?'bad':'ok');
+  Chat.chips([{label:this.qi+1<this.q.length?'Siguiente línea ▶':'Ver resultado',pri:true,fn:()=>this.next()},{label:'Analizar posición',fn:analyze}]);
+ },
+ summary(){
+  this.active=false;const ok=this.res.filter(r=>!r.fails).length,n=this.res.length;
+  const h=store.get('exam_hist',[]);h.push({t:Date.now(),n,ok});store.set('exam_hist',h.slice(-40));
+  const bad=this.res.filter(r=>r.fails);
+  Chat.say(`<b>Resultado: ${ok}/${n} líneas perfectas (${Math.round(ok/Math.max(1,n)*100)}%).</b>${bad.length?'<br>Para repasar:<ul>'+bad.map(r=>`<li>${esc(r.title)} (${r.fails} fallo${r.fails>1?'s':''})</li>`).join('')+'</ul>':'<br>¡Examen impecable!'}`,bad.length?'warn':'ok');
+  const chips=[];if(bad.length)chips.push({label:'Repetir las falladas',pri:true,fn:()=>this.start(false,bad.map(r=>r.item))});
+  chips.push({label:'Nuevo examen',pri:!bad.length,fn:()=>this.start(false)},{label:'Ver estadísticas',fn:()=>Mode.set('progress')});Chat.chips(chips);
+  A.status('Examen terminado');Snd.play(ok===n&&n>0?'win':'ok',.2);
+ }
+};
+
 /* =============== PARTIDAS: IMPORTAR PGN Y REVISIÓN =============== */
 function downloadText(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));a.download=name;document.body.appendChild(a);a.click();a.remove()}
 function parsePGN(text){
@@ -2997,32 +3647,37 @@ function fmtStudyComment(raw){
  h=h.replace(/POSICIÓN CLAVE\.?/g,'⭐ <b>POSICIÓN CLAVE</b>').replace(/(Estructura|PLAN BLANCAS|PLAN NEGRAS|ERRORES|CANDIDATAS):/g,'<br><b>$1:</b>');
  return {c:h,a,k};
 }
+function parseMT(rest,fen,allowVars){
+ let c;try{c=fen?new Chess(fen):new Chess()}catch(e){c=new Chess()}
+ const startFen=c.fen(),moves=[];let intro='',i=0,bad=0;
+ const skipBal=()=>{let d=0,j=i;for(;j<rest.length;j++){const ch=rest[j];if(ch==='{'){const e=rest.indexOf('}',j);j=e<0?rest.length:e;continue}if(ch==='(')d++;else if(ch===')'){d--;if(d===0)break}}const inner=rest.slice(i+1,j);i=j+1;return inner};
+ while(i<rest.length){
+  const ch=rest[i];
+  if(ch==='{'){let j=rest.indexOf('}',i);if(j<0)j=rest.length;const t=rest.slice(i+1,j);i=j+1;if(moves.length)moves[moves.length-1].raw+=' '+t;else intro+=' '+t;continue}
+  if(ch==='('){const inner=skipBal();if(allowVars&&moves.length){const sub=parseMT(inner,moves[moves.length-1].fb,false);if(sub.moves.length)moves[moves.length-1].vars.push(sub.moves)}continue}
+  if(ch===')'){i++;continue}
+  if(ch===';'){const j=rest.indexOf('\n',i);i=j<0?rest.length:j+1;continue}
+  if(/\s/.test(ch)){i++;continue}
+  const mm=/^[^\s{}();]+/.exec(rest.slice(i,i+40));let tok=mm?mm[0]:rest[i];i+=tok.length;
+  tok=tok.replace(/^\d+\.+/,'').replace(/[!?]+$/,'');
+  if(!tok||tok[0]==='$'||/^(1-0|0-1|1\/2-1\/2|\*)$/.test(tok))continue;
+  const fb=c.fen();const mv=c.move(tok,{sloppy:true});if(!mv){bad++;break}
+  moves.push({san:mv.san,raw:'',fb,vars:[]});
+ }
+ return {moves,intro,bad,startFen};
+}
 function parseStudyPGN(text){
  const chapters=[],games=[];let bad=0;text=String(text).replace(/\r/g,'').replace(/^﻿/,'');
  const chunks=text.split(/\n(?=\[Event\s)/).map(x=>x.trim()).filter(Boolean);
  chunks.forEach((chunk,gi)=>{
   const hdr={};const rest=chunk.replace(/^\[(\w+)\s+"([^"]*)"\]\s*$/gm,(m,k,v)=>{hdr[k]=v;return ''});
-  let c;try{c=hdr.FEN?new Chess(hdr.FEN):new Chess()}catch(e){c=new Chess()}
-  const startFen=c.fen(),moves=[];let intro='',depth=0,i=0,broke=false;
-  while(i<rest.length&&!broke){
-   const ch=rest[i];
-   if(ch==='{'){let j=rest.indexOf('}',i);if(j<0)j=rest.length;const t=rest.slice(i+1,j);i=j+1;if(!depth){if(moves.length)moves[moves.length-1].raw+=' '+t;else intro+=' '+t}continue}
-   if(ch==='('){depth++;i++;continue}
-   if(ch===')'){depth=Math.max(0,depth-1);i++;continue}
-   if(ch===';'){const j=rest.indexOf('\n',i);i=j<0?rest.length:j+1;continue}
-   if(/\s/.test(ch)){i++;continue}
-   const mm=/^[^\s{}();]+/.exec(rest.slice(i,i+40));let tok=mm?mm[0]:rest[i];i+=tok.length;
-   if(depth)continue;
-   tok=tok.replace(/^\d+\.+/,'').replace(/[!?]+$/,'');
-   if(!tok||tok[0]==='$'||/^(1-0|0-1|1\/2-1\/2|\*)$/.test(tok))continue;
-   const mv=c.move(tok,{sloppy:true});if(!mv){bad++;broke=true;break}
-   moves.push({san:mv.san,raw:''});
-  }
-  if(!moves.length)return;
-  const steps=moves.map(m=>{const f=fmtStudyComment(m.raw);const s={san:m.san};if(f.c)s.c=f.c;if(f.a.length)s.a=f.a;if(f.k.length)s.k=f.k;return s});
+  const r=parseMT(rest,hdr.FEN||null,true);bad+=r.bad;
+  if(!r.moves.length)return;
+  const toStep=m=>{const f=fmtStudyComment(m.raw);const st={san:m.san};if(f.c)st.c=f.c;if(f.a.length)st.a=f.a;if(f.k.length)st.k=f.k;if(m.vars&&m.vars.length)st.v=m.vars.map(v=>v.map(toStep));return st};
+  const steps=r.moves.map(toStep);
   const name=hdr.ChapterName||(hdr.White&&hdr.Black?hdr.White+' – '+hdr.Black+(hdr.Event&&hdr.Event!=='?'?' ('+hdr.Event+(hdr.Date&&!/\?/.test(hdr.Date)?' '+hdr.Date.slice(0,4):'')+')':''):hdr.Event||'Partida '+(gi+1));
-  const chap={id:'c'+hash(name+'|'+steps.length),title:name,intro:fmtStudyComment(intro).c,moves:steps,outro:''};
-  if(hdr.FEN&&startFen!==new Chess().fen())chap.fen=startFen;
+  const chap={id:'c'+hash(name+'|'+steps.length),title:name,intro:fmtStudyComment(r.intro).c,moves:steps,outro:''};
+  if(hdr.FEN&&r.startFen!==new Chess().fen())chap.fen=r.startFen;
   (hdr.ChapterName?chapters:games).push(chap);
  });
  return {chapters,games,bad};
@@ -3089,6 +3744,7 @@ const Games={
   if(an&&an.ev.length===A.fens.length){this.report()}
   else{setEval(null);A.status('');Chat.say(`<b>${esc(g.white)}</b> vs <b>${esc(g.black)}</b> · ${esc(g.result)}${g.event&&g.event!=='?'?'<br>'+esc(g.event):''}<br>Tienes las <b>${A.userColor==='w'?'blancas':'negras'}</b>. Recorre la partida con las flechas del teclado o pulsa «Analizar partida» para que el motor la revise.`);
    Chat.chips([{label:'Analizar partida',pri:true,fn:()=>this.analyze()}])}
+  Rep.noteGame(g,A.userColor);
  },
  del(){
   const g=this.list[this.idx];if(!g)return;const an=this.anAll();delete an[g.id];store.set('games_an',an);
@@ -3203,23 +3859,24 @@ const Prog={
   h+='</table><h3>Repaso espaciado</h3>';
   {const st=SRS.stats();h+=st.total?`<div>Tarjetas: <b>${st.total}</b> · Pendientes ahora: <b>${st.due}</b> · Dominadas (≥21 días): <b>${st.mature}</b> · Fallos acumulados: ${st.lapses}</div>`:'<div class="small">Aún sin tarjetas: practica un capítulo para empezar.</div>'}
   h+='<h3>Táctica por tema</h3>';
-  const themes=[...new Set(PZ().map(p=>p.theme))];let weak=null,wv=2;
+  const themes=[...new Set(ALLPZ().map(p=>p.theme))];let weak=null,wv=2;
   h+='<table>';for(const t of themes){const s=ts[t]||{ok:0,fail:0};const n=s.ok+s.fail,pct=n?s.ok/n:null;
    h+=`<tr><td>${esc(t)}</td><td>${n?Math.round(pct*100)+'%':'—'}</td><td><div class="bar"><i style="width:${n?pct*100:0}%"></i></div></td></tr>`;
    if(n&&pct<wv){wv=pct;weak=t}}
-  h+='</table><h3>Partidas contra Stockfish</h3>'+`<div>Ganadas ${gs.w} · Tablas ${gs.d} · Perdidas ${gs.l}</div><h3>Qué practicar ahora</h3><ul>`;
+  h+='</table><h3>Partidas contra Stockfish</h3>'+`<div>Ganadas ${gs.w} · Tablas ${gs.d} · Perdidas ${gs.l}</div>`;
+  h+=Rep.panel();h+=Struct.panel();h+='<h3>Qué practicar ahora</h3><ul>';
   const pending=[];for(const l of Lesson.all())l.chapters.forEach(c=>{if(!(ps[l.id]||[]).includes(c.id))pending.push(`${l.title}: ${c.title}`)});
   if(pending.length)h+=`<li>Completa el capítulo «${esc(pending[0])}».</li>`;
   if(weak)h+=`<li>Refuerza el tema táctico «${esc(weak)}» (tu acierto es el más bajo).</li>`;
   else h+='<li>Resuelve los problemas de la pestaña Táctica para detectar tus temas débiles.</li>';
   h+='<li>Juega una partida contra Stockfish desde el final de cada capítulo para fijar los planes.</li><li>Crea tus propias lecciones con lo que estés estudiando (estructuras de peones, cálculo, finales) en «Crear lección».</li></ul>';
-  Chat.el.innerHTML='<div class="panel">'+h+'</div>';
+  Chat.el.innerHTML='<div class="panel">'+h+'</div>';Rep.bind(Chat.el);
  },
  leave(){}
 };
 
 /* =============== CONTROL DE PESTAÑAS =============== */
-const MODES={lesson:Lesson,review:Rev,tactics:Tac,games:Games,play:Play,edit:Edit,progress:Prog};
+const MODES={lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,edit:Edit,progress:Prog};
 const Mode={
  set(name,after){
   if(A.mode&&A.mode.leave)A.mode.leave();Engine.stop();anToken++;$('#bStopAn').hidden=true;
@@ -3235,6 +3892,8 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>Mode.set(b.da
 /* Validación de contenido */
 (function validate(){
  for(const l of LESSONS)for(const ch of l.chapters){const g=new Chess(ch.fen||undefined);for(const s of ch.moves){if(!g.move(s.san))console.warn('Lección inválida',l.id,ch.id,s.san)}}
+ for(const x of STRUCTS)for(const p of x.pos){const g=new Chess();for(const t of p.m.replace(/\d+\./g,' ').split(/\s+/).filter(Boolean)){if(!g.move(t)){console.warn('Estructura inválida',x.id,t);break}}}
+ for(const p of PZ_MATE.concat(PZ_POS)){const g=new Chess();if(!g.load(p.fen))console.warn('FEN inválido',p.fen);for(const x of (p.f||[p.best])){if(!new Chess(p.fen).move(x))console.warn('Solución inválida',p.fen,x)}}
  for(const p of PUZZLES){const g=new Chess();if(!g.load(p.fen))console.warn('FEN inválido',p.fen)}
 })();
 
@@ -3248,9 +3907,23 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>Mode.set(b.da
  $('#ctlToggle').onclick=()=>{store.set('ctlHidden',!store.get('ctlHidden',false));apply()};
  apply();
 })();
+
+(function(){
+ $('#sndOn').checked=Snd.on;$('#sndVol').value=Math.round(Snd.vol*100);$('#sndVoice').checked=Snd.voice;$('#sndAnn').checked=Snd.announce;Snd.save();
+ $('#sndBtn').onclick=e=>{e.stopPropagation();Snd.init();$('#sndPop').classList.toggle('open')};
+ $('#sndPop').onclick=e=>e.stopPropagation();
+ document.addEventListener('click',()=>$('#sndPop').classList.remove('open'));
+ $('#sndOn').onchange=e=>{Snd.on=e.target.checked;Snd.save();if(Snd.on)Snd.play('ok')};
+ $('#sndVol').oninput=e=>{Snd.vol=+e.target.value/100;if(Snd.out)Snd.out.gain.value=Snd.vol;Snd.save()};
+ $('#sndVol').onchange=()=>Snd.play('move');
+ $('#sndVoice').onchange=e=>{Snd.voice=e.target.checked;Snd.save();if(Snd.voice)Snd.speak('Voz del entrenador activada')};
+ $('#sndAnn').onchange=e=>{Snd.announce=e.target.checked;Snd.save();if(Snd.announce)Snd.speak('caballo f3')};
+ $('#sndTest').onclick=()=>{Snd.init();const n=['move','capture','castle','check','promote','mate','ok','err','win','lose','draw'];n.forEach((x,i)=>setTimeout(()=>Snd.play(x),i*750))};
+ document.addEventListener('pointerdown',()=>Snd.init(),{passive:true});document.addEventListener('keydown',()=>Snd.init());
+})();
 Engine.init().catch(()=>{});
 Mode.set('lesson');
-window.__app={Games,PZ,parsePGN,SRS,Rev,A,Lesson,Tac,Play,Edit,Engine,PUZZLES,LESSONS,Mode,board,whiteEval};
+window.__app={Snd,PZ_MATE,PZ_POS,MateU,STRUCTS,Struct,Rep,Exam,parseStudyPGN,Games,PZ,parsePGN,SRS,Rev,A,Lesson,Tac,Play,Edit,Engine,PUZZLES,LESSONS,Mode,board,whiteEval};
 </script>
 </body>
 </html>
