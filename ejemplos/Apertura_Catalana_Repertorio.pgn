@@ -1,0 +1,264 @@
+[Event "Catalana abierta: 4...dxc4 con …a6, …b5 y …Ab7"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "01 Catalana abierta: 4...dxc4 con …a6, …b5 y …Ab7"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Catalana abierta: 4...dxc4 con …a6, …b5 y …Ab7"]
+
+1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 dxc4 { Catalana abierta: las negras toman el peón } 5. Nf3 Be7 6. O-O O-O 7. Qc2 { recupera el peón con la dama } 7... a6 8. Qxc4 b5 { gana espacio con tiempo } 9. Qc2 Bb7 { neutraliza al Ag2 } 10. Bd2 Be4 { expulsa a la dama de la diagonal } 11. Qc1 Bb7 { [%cal Gg2b7,Gd2a5,Ga2a4,Rc7c5] POSICIÓN CLAVE. Estructura: Peón blanco en d4 contra los peones negros de c y e (como en la formación eslava, estructura 7, y la formación Caro-Kann, estructura 4). Si las negras logran …c5 y se cambia en d4, la posición se abre del todo. PLAN BLANCAS: Recuperar el peón de c4 con la dama; presionar la gran diagonal contra b7 y a8; minar el peón de b5 con a4; Ad2-a5 o Af4 para atacar c7; Ce5 y e4 para despejar la diagonal del alfil de g2. En muchas líneas las blancas buscan un final con presión en el flanco de dama. PLAN NEGRAS: Desarrollo libre y rápido; alfil a b7 para neutralizar el alfil de g2; la ruptura …c5 para liberar el juego; caballo a d7 o c6; …Tc8. El objetivo es igualar por completo neutralizando la diagonal. ERRORES: Blancas: recuperar el peón con prisa y descuidar el desarrollo. Negras: jugar …b5 sin poder sostenerlo (a4 lo ataca) o retrasar …c5 hasta que la presión en la columna c sea incómoda. CANDIDATAS: Bf4 (+0,2); Rd1 (+0,2); a3 (+0,1) } *
+
+[Event "Catalana abierta: la línea con 10.Af4"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "02 Catalana abierta: la línea con 10.Af4"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Catalana abierta: la línea con 10.Af4"]
+
+1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 dxc4 5. Nf3 Be7 6. O-O O-O 7. Qc2 a6 8. Qxc4 b5 9. Qc2 Bb7 10. Bf4 { desarrolla el alfil apuntando a c7 } 10... Nd5 { busca cambiar el alfil } 11. Nc3 Nxf4 12. gxf4 { estructura dañada pero activa [%cal Gf3e5,Ga1d1,Rc7c5,Rb8d7] POSICIÓN CLAVE. Estructura: Las blancas aceptan peones doblados en f (f2 y f4) a cambio de la pareja de alfiles… del rival: aquí el bando negro gana la pareja de alfiles pero el centro blanco (d4, e2-e4) y la columna g semiabierta dan juego activo. PLAN BLANCAS: Controlar e5 (Ce5), jugar Tfd1 y d5 o e4 en el momento justo; la columna g semiabierta puede servir para atacar. PLAN NEGRAS: Ruptura …c5, desarrollo con …Cd7 y …Tc8; aprovechar la estructura blanca debilitada a largo plazo. ERRORES: Blancas: dejar que las negras liberen con …c5 sin coste. Negras: abrir el juego antes de terminar el desarrollo. CANDIDATAS: Nc6 (+0,3); Nd7 (+0,3); h6 (+0,4) } *
+
+[Event "Catalana abierta: 5...Cc6"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "03 Catalana abierta: 5...Cc6"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Catalana abierta: 5...Cc6"]
+
+1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 dxc4 5. Nf3 Nc6 { presiona d4 y defiende indirectamente c4 } 6. Qa4 { clava el caballo y ataca c4 } 6... Bb4+ 7. Bd2 Nd5 8. Bxb4 { cambia el alfil para recuperar el peón } 8... Nxb4 9. O-O { [%cal Ga4c4,Gg2c6,Ga2a3,Rc8d7] POSICIÓN CLAVE. Estructura: Al recuperar c4, las blancas quedan con un peón central en d4 contra los peones negros de c y e: la misma idea de la Catalana abierta, con piezas menores cambiadas. PLAN BLANCAS: Recuperar c4 (a3 para expulsar el caballo y Dxc4), presión en la gran diagonal contra c6 y b7, y juego en la columna c. PLAN NEGRAS: Mantener el peón de c4 el mayor tiempo posible, completar el desarrollo y preparar …e5 o …b5. ERRORES: Negras: abandonar la defensa del peón de c4 sin compensación. Blancas: perder tiempo con la dama y retrasar el enroque. CANDIDATAS: Rb8 (+0,3); a6 (+0,6); Bd7 (+0,9) } *
+
+[Event "Catalana cerrada: 4...Ae7 con …Cbd7, …c6 y …b6"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "04 Catalana cerrada: 4...Ae7 con …Cbd7, …c6 y …b6"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Catalana cerrada: 4...Ae7 con …Cbd7, …c6 y …b6"]
+
+1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 Be7 { Catalana cerrada: las negras mantienen d5 } 5. Nf3 O-O 6. O-O Nbd7 7. Qc2 { prepara e4 } 7... c6 8. Nbd2 b6 { salida para el alfil de c8 } 9. e4 { la ruptura central } 9... Bb7 10. b3 Rc8 11. Bb2 { [%cal Ge2e4,Gb2a3,Gf1d1,Rc6c5,Rd5e4] POSICIÓN CLAVE. Estructura: Estructura del Gambito de Dama clásico (c4/d4 contra c6/d5/e6). Tras la ruptura e4 y los cambios centrales puede transformarse en peón aislado (estructura 1), peones colgantes (2) o una formación tipo Caro-Kann (4). PLAN BLANCAS: La ruptura e4, preparada con Dc2 y Cbd2 (o Td1); después b3 y Ab2 para completar el desarrollo y ganar espacio en el centro. PLAN NEGRAS: Desarrollo sólido con …b6 y …Ab7 y la contraruptura …c5 (o …dxe4 seguido de …c5). La posición negra es sólida pero algo pasiva: el alfil de b7 tarda en activarse. ERRORES: Blancas: jugar e4 sin preparación y quedarse con un peón débil. Negras: no reaccionar a e4 y quedar con poco espacio. CANDIDATAS: c5 (+0,2); dxe4 (+0,3); Re8 (+0,3) } *
+
+[Event "La Bogo-Catalana: 4...Ab4+"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "05 La Bogo-Catalana: 4...Ab4+"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "La Bogo-Catalana: 4...Ab4+"]
+
+1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 Bb4+ { jaque intermedio: obliga a decidir dónde va el alfil de c1 } 5. Bd2 Be7 { el alfil vuelve: el blanco de d2 ya no está en su mejor casilla } 6. Nf3 O-O 7. O-O c6 8. Qc2 b6 9. Bf4 { [%cal Gf4b8,Ge2e4,Rc6c5] POSICIÓN CLAVE. Estructura: La misma estructura que la Catalana cerrada (Gambito de Dama clásico). La idea negra es que el alfil de d2 esté peor colocado que en c1. PLAN BLANCAS: Recolocar el alfil (Af4 o Ac3 según la línea), preparar e4 y presionar con Dc2 y Td1. PLAN NEGRAS: Desarrollo sólido; …c6, …b6 y …Ab7, con la ruptura …c5 o …dxc4 en el momento oportuno. ERRORES: Blancas: dejar el alfil de d2 sin función. Negras: entrar en una Catalana cerrada pasiva sin plan de ruptura. CANDIDATAS: Bb7 (+0,1); Nbd7 (+0,2); Ba6 (+0,3) } *
+
+[Event "4...c5: la Tarrasch con g3 (peón aislado para las negras)"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "06 4...c5: la Tarrasch con g3 (peón aislado para las negras)"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "4...c5: la Tarrasch con g3 (peón aislado para las negras)"]
+
+1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 c5 { contraataque central: idea de la Tarrasch } 5. Nf3 Nc6 6. O-O Be7 7. cxd5 { provoca el peón aislado } 7... exd5 8. Nc3 O-O 9. Bg5 { presión sobre el defensor de d5 } 9... cxd4 { aparece el peón aislado en d5 } 10. Nxd4 h6 11. Be3 Re8 { [%cal Gg2d5,Gd4d5,Ga1c1,Rd5d4] POSICIÓN CLAVE. Estructura: Peón aislado de dama de las negras en d5 (estructura 1, con los colores invertidos). El alfil de g2 presiona directamente el peón aislado: por eso g3 es una de las mejores respuestas contra la Tarrasch. PLAN BLANCAS: Bloquear y atacar d5: Cd4, Ag2, Td1 y Dd2 o Db3; cambiar piezas menores y llevar la partida a un final donde d5 sea débil. PLAN NEGRAS: Juego activo con las piezas: Ae6, Dd7, Tad8, la ruptura …d4 y casillas como e4 para los caballos. Si las piezas negras pierden actividad, el peón aislado se convierte en una debilidad. ERRORES: Blancas: permitir …d4 en buenas condiciones. Negras: cambiar piezas sin motivo y quedarse con un peón débil en un final. CANDIDATAS: Rc1 (+0,5); Qa4 (+0,5); Qc2 (+0,5) } *
+
+[Event "Contra la Eslava: el esquema catalán con …c6 y …Af5"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "07 Contra la Eslava: el esquema catalán con …c6 y …Af5"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Contra la Eslava: el esquema catalán con …c6 y …Af5"]
+
+1. d4 d5 2. c4 c6 3. Nf3 Nf6 4. g3 Bf5 { el alfil sale antes de …e6 } 5. Bg2 e6 6. O-O { el esquema catalán completo } 6... Nbd7 { [%cal Gf3h4,Gd1b3,Re6e5] POSICIÓN CLAVE. Estructura: Formación eslava (estructura 7): las negras con c6, d5 y e6 y el alfil de f5 fuera de la cadena. PLAN BLANCAS: Presionar b7 con Db3, perseguir al alfil de f5 con Ch4, preparar Cc3 y e4 o el cambio cxd5 para crear objetivos en el flanco de dama. PLAN NEGRAS: Desarrollo sólido; …Ae7, …O-O y las rupturas …dxc4 o …e5. El alfil de f5 está bien, pero b7 puede quedar débil. ERRORES: Blancas: atacar b7 sin poder mantener la presión. Negras: dejar que Ch4 cambie su alfil bueno sin compensación. CANDIDATAS: Nh4 (+0,0); Nc3 (-0,0); Qb3 (-0,1) } *
+
+[Event "Contra la India de Rey: variante del fianchetto con …Cbd7 y …e5"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "08 Contra la India de Rey: variante del fianchetto con …Cbd7 y …e5"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Contra la India de Rey: variante del fianchetto con …Cbd7 y …e5"]
+
+1. d4 Nf6 2. c4 g6 3. g3 { el fianchetto: la respuesta catalana contra la India de Rey } 3... Bg7 4. Bg2 O-O 5. Nc3 d6 6. Nf3 Nbd7 7. O-O e5 { ruptura central clásica } 8. e4 { las blancas ocupan el centro } 8... c6 9. h3 { impide …Cg4 y prepara Ae3 } 9... Qb6 10. Re1 { [%cal Gd4d5,Ge1e4,Re5d4,Rb6b2] POSICIÓN CLAVE. Estructura: Centro en tensión (d4/e4 contra d6/e5). Si las blancas juegan d5 se llega a la India de Rey cerrada (estructura 16); si las negras cambian en d4, el centro se abre y la casilla d6 y el peón de e4 son los objetivos. PLAN BLANCAS: Mantener la tensión con Te1 y h3 (impide …Cg4), defender b2 y d4; jugar d5 solo cuando el ataque negro en el flanco de rey no sea posible. El alfil de g2 frena las ideas negras en la gran diagonal. PLAN NEGRAS: …exd4 y presión sobre e4 con …Te8 y …Cc5; …Db6 contra b2 y d4; …a5-a4 en algunas líneas. Las negras buscan juego en el centro, no el ataque al rey clásico. ERRORES: Blancas: cerrar con d5 demasiado pronto y dejar que el negro ataque con …f5. Negras: lanzar …f5 sin preparación contra un rey bien defendido por el fianchetto. CANDIDATAS: exd4 (+0,6); Qb4 (+0,8); Re8 (+0,8) } *
+
+[Event "Contra la India de Rey: la variante Panno (…Cc6, …a6, …Tb8)"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "09 Contra la India de Rey: la variante Panno (…Cc6, …a6, …Tb8)"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Contra la India de Rey: la variante Panno (…Cc6, …a6, …Tb8)"]
+
+1. d4 Nf6 2. c4 g6 3. g3 Bg7 4. Bg2 O-O 5. Nc3 d6 6. Nf3 Nc6 { variante Panno } 7. O-O a6 8. d5 { gana espacio y expulsa al caballo } 8... Na5 { ataca c4 } 9. Nd2 c5 { estructura tipo Benoni } 10. Qc2 Rb8 11. b3 b5 12. Bb2 { [%cal Gg2a8,Gc3b5,Rb7b5,Ra5b7] POSICIÓN CLAVE. Estructura: Estructura tipo Benoni (peón blanco en d5, peón negro en c5): se parece a la Benoni moderna (estructura 14) con el caballo negro en a5. PLAN BLANCAS: Fijar el flanco de dama (b3, Ab2, Dc2), aprovechar el caballo de a5 mal colocado y cerrar el juego negro en el flanco de dama; después e4 o un juego central. PLAN NEGRAS: La ruptura …b5 para abrir la columna b; recolocar el caballo de a5 (vía b7) y presionar con el alfil de g7 en la gran diagonal. ERRORES: Blancas: abrir el flanco de dama cuando las piezas negras están listas. Negras: dejar el caballo de a5 fuera de juego. CANDIDATAS: e5 (+0,5); Bh6 (+0,5); h5 (+0,5) } *
+
+[Event "Contra la Grünfeld: el fianchetto con e4 y Ce2"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "10 Contra la Grünfeld: el fianchetto con e4 y Ce2"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Contra la Grünfeld: el fianchetto con e4 y Ce2"]
+
+1. d4 Nf6 2. c4 g6 3. g3 d5 { Grünfeld } 4. cxd5 Nxd5 5. Bg2 Bg7 6. e4 { las blancas toman el centro } 6... Nb6 7. Ne2 { el caballo apoya d4 sin clavadas } 7... O-O 8. O-O c5 9. d5 { gana espacio } 9... e6 10. Nec3 { [%cal Gd5d6,Gg2d5,Re6d5,Rg7c3] POSICIÓN CLAVE. Estructura: Centro móvil blanco (d4/e4) contra la presión negra; con d5 se llega a una estructura con peón pasado potencial en d5, emparentada con el centro Grünfeld (estructura 9). PLAN BLANCAS: Ocupar el centro con e4, Ce2 (para no permitir clavadas y apoyar d4) y avanzar d5 en el momento justo; el peón de d5, apoyado por el alfil de g2, puede ser muy fuerte. PLAN NEGRAS: Presionar d4 y luego d5 con …c5, …e6 y el alfil de g7; cambiar en d5 para dejar a las blancas con un peón aislado y bloquearlo. ERRORES: Blancas: avanzar d5 sin apoyo suficiente. Negras: permitir un peón pasado bien apoyado en d5. CANDIDATAS: Na6 (+0,3); Re8 (+0,6); h5 (+0,6) } *
+
+[Event "Contra la Benoni: el fianchetto"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "11 Contra la Benoni: el fianchetto"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Contra la Benoni: el fianchetto"]
+
+1. d4 Nf6 2. c4 c5 3. d5 { las blancas ganan espacio } 3... e6 4. Nc3 exd5 5. cxd5 d6 6. Nf3 g6 7. g3 { el fianchetto contra la Benoni } 7... Bg7 8. Bg2 O-O 9. O-O Na6 10. Nd2 { rumbo a c4 } 10... Nc7 11. a4 { frena …b5 [%cal Gd2c4,Ga2a4,Rb7b5,Rf6h5] POSICIÓN CLAVE. Estructura: Benoni moderna (estructura 14): peón blanco en d5, peones negros en c5 y d6. El alfil de g2 refuerza d5 y frena la ruptura …b5. PLAN BLANCAS: Cd2-c4 para atacar d6, a4 para frenar …b5 y, más adelante, e4-e5 o f4. PLAN NEGRAS: La ruptura …b5 (preparada con …a6, …Tb8 y …Cc7), presión con el alfil de g7 y, en algunos casos, …Ch5 y …f5. ERRORES: Blancas: permitir …b5 en buenas condiciones. Negras: quedarse pasivas mientras el caballo de c4 ataca d6. CANDIDATAS: b6 (+0,6); Nd7 (+0,6); Nce8 (+0,9) } *
+
+[Event "Contra la Holandesa Leningrado"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "12 Contra la Holandesa Leningrado"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Contra la Holandesa Leningrado"]
+
+1. d4 f5 { Holandesa } 2. g3 Nf6 3. Bg2 g6 4. Nf3 Bg7 { Leningrado } 5. O-O O-O 6. c4 d6 7. Nc3 Qe8 { prepara …e5 } 8. d5 { gana espacio contra …e5 } 8... a5 9. Be3 { [%cal Gd4d5,Ge3d4,Re7e5,Re8f7] POSICIÓN CLAVE. Estructura: Estructura de India de Rey invertida: con d5 y …e5 aparece una cadena parecida a la India de Rey cerrada (estructura 16); el alfil de g2 frena las ideas negras en la gran diagonal. PLAN BLANCAS: d5 para ganar espacio y cortar el juego negro; Ad4 para cambiar el alfil de g7; juego en el flanco de dama con Tb1 y b4. PLAN NEGRAS: La ruptura …e5, …De8-f7 o …Dh5, presión en el flanco de rey y …Ca6-c5. ERRORES: Blancas: abrir el centro cuando el ataque negro está listo. Negras: jugar …e5 dejando la casilla e6 débil sin compensación. CANDIDATAS: h6 (+0,6); Na6 (+0,7); a4 (+0,8) } *
+
+[Event "Contra la Holandesa Stonewall"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "13 Contra la Holandesa Stonewall"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Contra la Holandesa Stonewall"]
+
+1. d4 f5 2. g3 Nf6 3. Bg2 e6 4. Nf3 d5 { el Stonewall } 5. O-O Bd6 6. c4 c6 7. b3 { prepara Ab2-a3 o Aa3 } 7... Qe7 8. Bb2 O-O 9. Ne5 { ocupa el agujero } 9... b6 10. Nd2 Bb7 { [%cal Gb2a3,Gd2f3,Rf6e4,Rg7g5] POSICIÓN CLAVE. Estructura: Stonewall (estructura 8): las negras con c6, d5, e6 y f5; la casilla e5 es un agujero en su campo. PLAN BLANCAS: Cambiar el alfil bueno negro de casillas oscuras (Aa3), ocupar e5 con un caballo (Ce5 o Ce1-d3) y presionar en el flanco de dama. PLAN NEGRAS: Caballo a e4, ataque en el flanco de rey (…De8-h5, …g5) y resolver el alfil de c8 con …b6 y …Ab7. ERRORES: Blancas: permitir que el caballo de e4 quede intocable. Negras: dejar que las blancas cambien el alfil de d6 sin compensación. CANDIDATAS: Rc1 (+0,3); Nd3 (+0,3); e3 (+0,3) } *
+
+[Event "Contra la India de Dama: 4.g3 Aa6"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "14 Contra la India de Dama: 4.g3 Aa6"]
+[Black "Repertorio Catalana"]
+[Result "*"]
+[ChapterName "Contra la India de Dama: 4.g3 Aa6"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 b6 4. g3 Ba6 { ataca c4 de inmediato } 5. b3 { defiende c4 } 5... Bb4+ { desvía el alfil } 6. Bd2 Be7 7. Bg2 c6 8. Bc3 d5 9. Ne5 { busca cambios } 9... Nfd7 10. Nxd7 Nxd7 11. Nd2 O-O 12. O-O { [%cal Ge2e4,Gc3b4,Rc6c5,Ra6c4] POSICIÓN CLAVE. Estructura: Estructura tipo Gambito de Dama con …c6 (formación eslava, estructura 7, si se cambia en d5); las negras presionan c4 con el alfil de a6. PLAN BLANCAS: Defender c4 con b3, cambiar piezas con Ce5, jugar e4 en el momento justo y aprovechar la gran diagonal. PLAN NEGRAS: …c6 y …d5 sólidos, presión sobre c4 y la ruptura …c5 o …f5. ERRORES: Blancas: descuidar c4. Negras: abrir el juego antes de completar el desarrollo. CANDIDATAS: Rc8 (+0,1); f5 (+0,2); b5 (+0,4) } *
+
+[Event "WCh"]
+[Site "?"]
+[Date "2010.04.25"]
+[Round "?"]
+[White "Anand,V"]
+[Black "Topalov,V"]
+[Result "1-0"]
+[ECO "E04"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 d5 4. g3 dxc4 5. Bg2 a6 6. Ne5 c5 7. Na3 cxd4 8. Naxc4 Bc5 9. O-O O-O 10. Bd2 Nd5 11. Rc1 Nd7 12. Nd3 Ba7 13. Ba5 Qe7 14. Qb3 Rb8 15. Qa3 Qxa3 16. bxa3 N7f6 17. Nce5 Re8 18. Rc2 b6 19. Bd2 Bb7 20. Rfc1 Rbd8 21. f4 Bb8 22. a4 a5 23. Nc6 Bxc6 24. Rxc6 h5 25. R1c4 Ne3 26. Bxe3 dxe3 27. Bf3 g6 28. Rxb6 Ba7 29. Rb3 Rd4 30. Rc7 Bb8 31. Rc5 Bd6 32. Rxa5 Rc8 33. Kg2 Rc2 34. a3 Ra2 35. Nb4 Bxb4 36. axb4 Nd5 37. b5 Raxa4 38. Rxa4 Rxa4 39. Bxd5 exd5 $2 { Error decisivo según el motor. } 40. b6 Ra8 41. b7 Rb8 42. Kf3 d4 43. Ke4 1-0
+
+[Event "Corus A"]
+[Site "?"]
+[Date "2007.01.19"]
+[Round "?"]
+[White "Kramnik,V"]
+[Black "Anand,V"]
+[Result "1-0"]
+[ECO "E05"]
+
+1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 Be7 5. Nf3 O-O 6. O-O dxc4 7. Qc2 a6 8. Qxc4 b5 9. Qc2 Bb7 10. Bd2 Ra7 11. Rc1 Be4 12. Qb3 Nc6 13. e3 Qa8 14. Qd1 Nb8 15. Ba5 Rc8 16. a3 Bd6 17. Nbd2 Bd5 18. Qf1 Nbd7 19. b4 e5 20. dxe5 Bxe5 21. Nxe5 Nxe5 22. f3 Nc4 23. Nxc4 Bxc4 24. Qf2 Re8 25. e4 c6 26. Rd1 Rd7 27. Rxd7 Nxd7 28. Rd1 Qb7 29. Rd6 f6 30. f4 Re6 31. Rd2 Re7 32. Qd4 Nf8 33. Qd8 Rd7 34. Rxd7 Qxd7 35. Qxd7 Nxd7 36. e5 fxe5 37. Bxc6 Nf6 38. Bb7 exf4 39. gxf4 Nd5 40. Kf2 Nxf4 41. Ke3 g5 42. Bxa6 Kf7 43. a4 Ke7 44. Bxb5 Bxb5 45. axb5 Kd7 46. Ke4 Ne2 47. Bb6 g4 $2 { Error decisivo según el motor. } 48. Bf2 Nc3+ 49. Kf5 Nxb5 50. Kxg4 Ke6 51. Kg5 Kf7 52. Kf5 Ke7 53. Bc5+ 1-0
+
+[Event "84th Tata Steel Masters"]
+[Site "?"]
+[Date "2022.01.16"]
+[Round "?"]
+[White "Carlsen,M"]
+[Black "Giri,A"]
+[Result "1-0"]
+[ECO "E06"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 d5 4. g3 Be7 5. Bg2 O-O 6. O-O dxc4 7. Na3 Bxa3 8. bxa3 Bd7 9. a4 Bc6 10. Ba3 Re8 11. Qc2 Nbd7 12. Rac1 a6 13. Qxc4 Nb6 14. Qc3 Nxa4 15. Qb3 Qd5 16. Rxc6 Qxc6 17. Ne5 Qb5 18. Qc2 Nd5 19. Rb1 Qa5 20. Bxd5 exd5 21. Rxb7 c5 22. Qf5 Rf8 23. Nxf7 Qd8 $2 { Error decisivo según el motor. } 24. dxc5 Qf6 25. Qxf6 gxf6 26. Nh6+ Kh8 27. c6 Rfc8 28. c7 Nc3 29. Bb2 d4 30. Nf7+ Kg7 31. Nd6 Kg6 32. Kf1 Nb5 33. Nxc8 Rxc8 34. a4 Nxc7 35. Bxd4 Ne6 36. Be3 1-0
+
+[Event "WCh"]
+[Site "?"]
+[Date "2006.10.08"]
+[Round "?"]
+[White "Kramnik,V"]
+[Black "Topalov,V"]
+[Result "1-0"]
+[ECO "E08"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 d5 4. g3 Bb4+ 5. Bd2 Be7 6. Bg2 O-O 7. O-O c6 8. Bf4 Nbd7 9. Qc2 a5 10. Rd1 Nh5 11. Bc1 b5 12. cxd5 cxd5 13. e4 dxe4 14. Qxe4 Rb8 15. Qe2 Nhf6 16. Bf4 Rb6 17. Ne5 Nd5 18. Bxd5 exd5 19. Nc3 Nf6 20. Nxb5 Ba6 21. a4 Ne4 22. Rdc1 Qe8 23. Rc7 Bd8 24. Ra7 f6 25. Nd7 Rf7 26. Nxb6 Rxa7 27. Nxd5 Rd7 28. Ndc3 Rxd4 29. Re1 f5 30. Qc2 Rb4 31. Nd5 Rxb5 32. axb5 Qxb5 33. Nc7 Qc4 $2 { Error decisivo según el motor. } 34. Qd1 Bxc7 35. Qd7 h6 36. Qxc7 Qb4 37. Qb8+ Qxb8 38. Bxb8 Nd2 39. Ra1 g5 40. f4 Nb3 41. Ra3 Bc4 42. Bc7 g4 43. Bxa5 1-0
+
+[Event "World Championship 31th-KK1"]
+[Site "?"]
+[Date "1984.??.??"]
+[Round "?"]
+[White "Karpov, Anatoly"]
+[Black "Kasparov, Gary"]
+[Result "1-0"]
+[ECO "D34"]
+
+1. d4 d5 2. c4 e6 3. Nf3 c5 4. cxd5 exd5 5. g3 Nf6 6. Bg2 Be7 7. O-O O-O 8. Nc3 Nc6 9. Bg5 cxd4 10. Nxd4 h6 11. Be3 Re8 12. Qb3 Na5 13. Qc2 Bg4 14. Nf5 Rc8 15. Nxe7+ Rxe7 16. Rad1 Qe8 17. h3 Bh5 18. Bxd5 Bg6 19. Qc1 Nxd5 20. Rxd5 Nc4 21. Bd4 Rec7 22. b3 Nb6 23. Re5 Qd7 24. Qe3 f6 $2 { Error decisivo según el motor. } 25. Rc5 Rxc5 26. Bxc5 Qxh3 27. Rd1 h5 28. Rd4 Nd7 29. Bd6 Bf7 30. Nd5 Bxd5 31. Rxd5 a6 32. Bf4 Nf8 33. Qd3 Qg4 34. f3 Qg6 35. Kf2 Rc2 36. Qe3 Rc8 37. Qe7 b5 38. Rd8 Rxd8 39. Qxd8 Qf7 40. Bd6 g5 41. Qa8 Kg7 42. Qxa6 1-0
+
+[Event "Candidats Tournament"]
+[Site "?"]
+[Date "1956.??.??"]
+[Round "?"]
+[White "Smyslov, Vassily"]
+[Black "Petrosian, Tigran V"]
+[Result "1-0"]
+[ECO "E63"]
+
+1. c4 Nf6 2. Nc3 g6 3. d4 Bg7 4. g3 O-O 5. Bg2 d6 6. Nf3 Nc6 7. O-O a6 8. h3 Rb8 9. Be3 b5 10. cxb5 axb5 11. d5 Na5 12. b4 Nc4 13. Ba7 Rb7 14. Bd4 e5 15. dxe6 fxe6 16. Bxf6 Qxf6 17. Rc1 d5 18. e3 Qe7 19. Nd4 Qxb4 20. Qd3 Qc5 21. Nb3 Qe7 22. Nd4 Qc5 $2 { Error decisivo según el motor. } 23. a4 bxa4 24. Nxa4 Qd6 25. h4 Kh8 26. Ne2 Rb4 27. Nac3 Ba6 28. Ra1 Rb2 29. Rfc1 Rfb8 30. Rxa6 Qxa6 31. Nxd5 exd5 32. Bxd5 Rd2 33. Bxc4 Rxd3 34. Bxa6 Ra3 35. Bc4 Ra1 36. Rxa1 Bxa1 37. Kg2 c5 38. Kf3 Rb4 39. Bd5 Kg7 40. Nf4 c4 41. Ng2 Bc3 42. g4 Be5 43. Be4 Rb2 44. Ne1 Rd2 45. g5 c3 46. Kg2 Bd6 47. Nc2 h6 48. Nd4 hxg5 49. hxg5 Be7 50. Kg3 Bd6+ 51. f4 Kf7 52. Kf3 Bc5 53. Nc2 1-0
+
+[Event "Linares"]
+[Site "?"]
+[Date "1991.??.??"]
+[Round "?"]
+[White "Karpov, Anatoly"]
+[Black "Gelfand, Boris"]
+[Result "1-0"]
+[ECO "D79"]
+
+1. d4 Nf6 2. c4 g6 3. Nf3 Bg7 4. g3 O-O 5. Bg2 c6 6. Nc3 d5 7. cxd5 cxd5 8. Ne5 Bf5 9. O-O Ne4 10. Be3 Nxc3 11. bxc3 Nc6 12. Qb3 e6 13. Nxc6 bxc6 14. Qa3 Re8 15. Bf4 e5 16. Bxe5 Bxe5 17. dxe5 Rxe5 18. e3 Be4 19. Rfd1 Qf6 20. Rd4 h5 21. h3 Rb8 22. Rad1 Bxg2 23. Kxg2 Qe7 24. Qxe7 Rxe7 25. R1d2 Rb6 26. c4 dxc4 27. Rxc4 Kg7 28. Rdc2 Rc7 29. g4 hxg4 30. hxg4 Kf6 31. Kg3 Ke6 32. a4 Kd7 33. g5 Ra6 34. Rd4+ Ke8 35. Rc5 Rb6 36. Kf4 Rd7 37. Rxd7 Kxd7 38. Ke5 Ke7 39. f4 Rb4 40. Ra5 Rb7 41. e4 Rc7 42. Rc5 Rc8 43. Rc3 Re8 44. Rc4 Rc8 45. Rb4 Rc7 46. a5 Kd7 47. Rb3 Ke7 48. a6 Kd7 $2 { Error decisivo según el motor. } 49. Kf6 Kc8 50. Rh3 Rd7 51. f5 gxf5 52. exf5 c5 53. Rc3 Rc7 54. g6 fxg6 55. fxg6 Kd7 56. g7 Rc8 57. Rg3 1-0
+
+[Event "26th European Club Cup"]
+[Site "?"]
+[Date "2010.10.19"]
+[Round "?"]
+[White "Aronian,L"]
+[Black "Ivanchuk,V"]
+[Result "1-0"]
+[ECO "A62"]
+
+1. d4 Nf6 2. c4 e6 3. g3 c5 4. d5 exd5 5. cxd5 d6 6. Nf3 g6 7. Nc3 Bg7 8. Bg2 O-O 9. O-O Re8 10. Bf4 Nh5 11. Bg5 Qb6 12. Qc1 Nd7 13. h3 f5 14. e4 fxe4 15. Re1 Nhf6 16. Nd2 e3 17. Rxe3 Rxe3 18. Bxe3 Ne5 19. b3 Bf5 20. Qd1 Re8 21. Rc1 Qa6 22. a4 Bd3 23. g4 Re7 24. Bf4 b6 25. Nb5 Bxb5 26. axb5 Qxb5 27. Bxe5 Rxe5 28. Nc4 Bh6 29. Nxe5 Bxc1 30. Qxc1 dxe5 31. Qg5 Kf7 32. Qxe5 Qe8 33. Qc7+ Qd7 34. d6 Ke6 35. g5 Qxd6 36. Qxd6+ Kxd6 37. gxf6 Ke6 38. Kf1 Kxf6 39. Ke2 Ke5 40. Kd3 b5 41. Bc6 a6 42. Bb7 a5 43. Bc6 c4+ 44. bxc4 bxc4+ 45. Kxc4 Kf4 46. Kb5 g5 47. Kxa5 h5 48. Kb4 g4 49. hxg4 hxg4 $2 { Error decisivo según el motor. } 50. Bh1 1-0
+
+[Event "Niksic"]
+[Site "?"]
+[Date "1983.??.??"]
+[Round "?"]
+[White "Kasparov, Gary"]
+[Black "Petrosian, Tigran V"]
+[Result "1-0"]
+[ECO "A93"]
+
+1. d4 e6 2. c4 f5 3. g3 Nf6 4. Bg2 d5 5. Nf3 Be7 6. O-O O-O 7. b3 c6 8. Qc2 Bd7 9. Bb2 Be8 10. Ne5 Nbd7 11. Nd3 Bh5 12. Nc3 Bd6 13. f3 Bg6 14. e3 Rc8 15. Qe2 Re8 16. Qf2 a6 17. Rac1 Qe7 18. Rfe1 Qf8 19. Rcd1 dxc4 20. bxc4 c5 21. Bf1 Bf7 22. Na4 cxd4 23. exd4 b5 24. cxb5 axb5 25. Nac5 b4 26. Rc1 Qe7 27. Bh3 Qd8 28. Nxb4 Qa5 29. Nc6 Qxa2 30. Nxd7 Nxd7 31. d5 Qxd5 32. Red1 Bc5 33. Rxd5 Bxf2+ 34. Kxf2 exd5 35. Bxf5 Nb6 36. Bxc8 Nxc8 37. Ba3 h6 38. Rb1 Re6 39. Nd4 Ra6 40. Bc5 Nd6 41. Rb8+ Kh7 42. g4 Ra4 43. Ke3 Nc4+ 44. Kf4 g5+ 45. Kg3 Ra2 46. Rb7 Kg6 $2 { Error decisivo según el motor. } 47. Nf5 Ra6 48. h4 gxh4+ 49. Nxh4+ Kg7 50. Nf5+ Kg6 51. Bd4 1-0
+
+[Event "85th Tata Steel Masters"]
+[Site "?"]
+[Date "2023.01.17"]
+[Round "?"]
+[White "Giri,A"]
+[Black "Carlsen,M"]
+[Result "1-0"]
+[ECO "E15"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 b6 4. g3 Ba6 5. Qc2 Bb7 6. Bg2 c5 7. d5 exd5 8. cxd5 Nxd5 9. O-O Be7 10. Rd1 Nc6 11. Qf5 Nf6 12. e4 d6 13. e5 Qd7 14. Qxd7+ Nxd7 15. exd6 Bf6 16. Re1+ Kf8 17. Nc3 Nb4 18. Ne5 Nxe5 19. Bxb7 Rd8 20. Rd1 Nc4 21. d7 Nc2 22. Rb1 Nd4 23. b4 Rxd7 24. Bd5 Nd6 25. bxc5 bxc5 26. Ba3 Ke7 27. Bxc5 Ne6 28. Bb4 a5 29. Bxa5 Rc8 30. Na4 Nc4 $2 { Error decisivo según el motor. } 31. Rbc1 Be5 32. Bb4+ Kf6 33. Nc5 Nxc5 34. Rxc4 Rdc7 35. Ba5 1-0
+
