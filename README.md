@@ -17,8 +17,13 @@ En «Lecciones › Importar PGN…» carga un PGN de estudio: cada `ChapterName`
 ## Estructuras de peones
 Pestaña «Peones»: 8 estructuras (Carlsbad, peón dama aislado, Stonewall, Maroczy, cadena de la Francesa, India de Rey cerrada, Benoni y Catalana abierta), cada una con su explicación, planes de ambos bandos, errores típicos y 2 posiciones. «Adivina el plan» plantea una pregunta de opción múltiple por posición, explica cada respuesta y guarda tu porcentaje por estructura (se ve en Progreso). Desde cualquier posición puedes pulsar «Jugar desde aquí» para practicarla contra Stockfish.
 
+Cada estructura también existe como **lección** (Lecciones → «Estructura: …»; botón «Ver lección» en Peones): una línea hasta la posición típica, con flechas, casillas clave, planes de cada bando, errores típicos y el razonamiento de cada opción del quiz. No entran en el repertorio ni en el examen.
+
 ## Táctica: colecciones de ejercicios
 En «Táctica» elige colección: **Básicos y mis errores**, **Mate en 1** (30), **Mate en 2** (40), **Mate en 3** (24) y **Mejorar la posición** (33). Los mates cubren patrones (pasillo, ahogado, jaque doble, escalera, sacrificios de dama/torre/alfil/caballo y mates con cada pieza); la app acepta cualquier mate válido, no solo el de la solución. Los ejercicios de plan (torre a columna abierta, caballo a un puesto fuerte, rupturas, desarrollo…) explican la idea y muestran la evaluación del motor. Todos se generaron y verificaron con Stockfish; tu porcentaje por patrón aparece en Progreso.
+
+## Finales de peones
+Tres lecciones (Lecciones → «Finales de peones: básico / intermedio / avanzado») con 12 posiciones: regla del cuadrado, rey en 6ª, casillas clave, oposición, peón de torre, defensa, flanqueo, ruptura 3 contra 3, peón pasado alejado, Réti y zugzwang. Las posiciones y las jugadas clave se verificaron con Stockfish 16; si juegas otra jugada que también gana, se acepta como variante. Los datos están en `ENDS` dentro de `src/template.html`.
 
 ## Hoy (plan diario y perfil de debilidades)
 La pestaña **Hoy** es la pantalla inicial. Genera cada día un plan según lo que más necesitas (repaso espaciado, examen de repertorio, táctica del tema más débil, estructura de peones, partidas, lecciones), con sesiones de 15/30/45 min, racha de días y minutos de la semana. Debajo muestra tu perfil de debilidades (temas tácticos, estructuras, fase de la partida donde más pierdes y jugadas olvidadas). Todo se calcula con tu actividad guardada en este navegador.
