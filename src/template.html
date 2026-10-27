@@ -106,6 +106,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;color:var(--mut);font-
 <header>
   <h1>&#9822; Entrenador de Ajedrez</h1>
   <nav id="tabs">
+    <button data-m="today">Hoy</button>
     <button data-m="lesson">Lecciones</button>
     <button data-m="review">Repaso</button>
     <button data-m="exam">Examen</button>
@@ -248,7 +249,7 @@ const PZ_MATE=[{"fen":"8/5Q2/7k/R5p1/4P3/2P1K2P/6P1/5R2 w - - 0 39","n":1,"pat":
 const PZ_POS=[{"fen":"r4rk1/5p1p/1pn2Qp1/2pqp3/P7/1P2PP2/6RP/R1B1K3 w Q - 0 20","best":"Rd2","ev":-28,"sec":[["e4",-170],["Ra3",-203]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"1rq2k1r/3nbppp/4p3/1QpnP3/8/P3BNP1/1P1N1P1P/R3KR2 w Q - 1 18","best":"Qd3","ev":3,"sec":[["Qa5",-65],["Qc4",-91]],"cat":"Actividad de la dama","idea":"La dama pasa a d3, donde ejerce más presión sin exponerse a ataques."},{"fen":"r2qk2r/1b2npp1/p3p2p/1pb5/P7/2PB1N1P/2P1QPP1/R1B2RK1 b kq a3 0 14","best":"O-O","ev":-4,"sec":[["Bxf3",-52],["Qa5",-71]],"cat":"Seguridad del rey","idea":"Enrocar (O-O) pone al rey a salvo y conecta las torres: es la prioridad antes de iniciar cualquier plan."},{"fen":"r1b1k2r/pp1nppbp/2n3p1/2P5/2N5/3BP3/PP1B1PPP/2RK2NR w kq - 3 11","best":"b4","ev":99,"sec":[["Ke2",-19],["Bb1",-24]],"cat":"Ruptura de peones","idea":"El avance b4 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1r2bk1/1b3pp1/1p1qpn1p/1N1pn3/1pP5/PQ2P2P/1B1NBPP1/2RR2K1 b - - 1 20","best":"Qb8","ev":24,"sec":[["Qc6",-121],["Qd8",-196]],"cat":"Actividad de la dama","idea":"La dama pasa a b8, donde ejerce más presión sin exponerse a ataques."},{"fen":"2r2k2/5pp1/1ppqp3/3r1nBQ/P2P4/7P/1P3PP1/R2R2K1 b - - 2 25","best":"Kg8","ev":10,"sec":[["Ke8",-63],["Ne7",-65]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g8): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2qk2r/pp1n2pp/2pp1p2/b3p1Bb/3PP3/1BP2N1P/PP3PP1/R2QK2R w KQkq - 0 12","best":"Be3","ev":35,"sec":[["Bh4",-14],["Bc1",-23]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e3, una diagonal más activa."},{"fen":"3r1rk1/1bp2pb1/pq2p2p/3n2p1/2NP4/3B2PP/PB2QP2/2R2RK1 b - - 8 24","best":"Qa7","ev":19,"sec":[["Qb5",-105],["Qc6",-108]],"cat":"Actividad de la dama","idea":"La dama pasa a a7, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b1k2r/1ppqnp2/p3p2p/4b1p1/3PB3/N1P5/P3QPPP/R1B2RK1 b kq - 0 15","best":"Bg7","ev":-32,"sec":[["Bf6",-106],["Bd6",-129]],"cat":"Alfil a la gran diagonal","idea":"El alfil en g7 domina la gran diagonal y presiona el flanco rival."},{"fen":"2q2k1r/3nbppp/4p3/2pnP3/8/P2QBNP1/1r1N1P1P/R3KR2 w Q - 0 19","best":"Nc4","ev":0,"sec":[["Rc1",-52],["Rh1",-64]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia c4, una casilla más útil para tu plan."},{"fen":"rn1qk2r/pbpp1pbp/1p2p1p1/4P3/3Pn3/3B1N2/PPP1QPP1/RNB1K2R b KQkq - 4 10","best":"f5","ev":-5,"sec":[["d5",-52],["Nc5",-338]],"cat":"Ruptura de peones","idea":"El avance f5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn1qkbnr/pp1bpppp/8/1Bp1P3/P2p4/8/1PPP1PPP/RNBQK1NR w KQkq - 2 6","best":"e6","ev":65,"sec":[["d3",20],["Nf3",20]],"cat":"Ruptura de peones","idea":"El avance e6 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/1B3PPP/R2QK2R b KQ - 2 15","best":"e5","ev":40,"sec":[["Nd7",-18],["Rab8",-38]],"cat":"Ruptura de peones","idea":"El avance e5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1b1kb1r/1p3ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3QK2R b Kkq - 2 16","best":"Bd7","ev":39,"sec":[["Qg5",-30],["Qd8",-56]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bd7) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r3kb1r/1pq1ppp1/p1n2n2/3P3p/B3p2N/1Q2P3/PP3PPP/R1B1K2R b KQkq - 1 12","best":"b5","ev":-7,"sec":[["Rc8",-54],["Rd8",-60]],"cat":"Ruptura de peones","idea":"El avance b5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn3rk1/p3pp1p/2p3p1/q2Pb3/NpP1P1b1/5NP1/P3QPBP/2RR2K1 w - - 2 18","best":"Qc2","ev":14,"sec":[["Nb2",-88],["d6",-249]],"cat":"Actividad de la dama","idea":"La dama pasa a c2, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b2rk1/1p2qpbp/n2p2p1/p3p3/3Pn3/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 12","best":"Nd5","ev":77,"sec":[["Nxe4",28],["Na4",-66]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d5, una casilla más útil para tu plan."},{"fen":"rnbq1rk1/pp3p2/2p2npb/3P3p/3Pp3/PQN1P3/1P1B1PPP/2R1KBNR w K - 1 10","best":"Bc4","ev":71,"sec":[["dxc6",17],["Na4",-43]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bc4) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r1bqkb1r/5ppp/p1p2n2/2Pp4/1P2p3/3BP3/P1P2PPP/RNBQK2R w KQkq - 0 9","best":"Be2","ev":0,"sec":[["Bf1",-45],["Bb2",-285]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e2, una diagonal más activa."},{"fen":"rn2kb1r/p2p1pp1/b1p1p2p/q3P3/2pP4/2P4N/P1Q1BPPP/R1B1K2R b KQkq - 1 11","best":"d5","ev":58,"sec":[["d6",-8],["Bc8",-19]],"cat":"Ruptura de peones","idea":"El avance d5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r2qkb1r/1pp1pp1p/p4n2/3pPbB1/2P5/4P3/PP3PPP/RN1QKB1R b KQkq - 0 8","best":"Ne4","ev":-37,"sec":[["Ng4",-178],["Rg8",-178]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp1b1p2/2n2Pp1/2p1p2p/3pP2q/N1PP2R1/PP2N1Bn/R1BQ2K1 b kq - 6 19","best":"Ng4","ev":56,"sec":[["Bg4",-108],["Qxf6",-344]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a g4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r2k3r/p1p1n3/1p3p2/4n2p/2PpPR2/P6P/P3B1PB/R5K1 b - - 0 19","best":"Nd7","ev":-29,"sec":[["Rf8",-114],["d3",-121]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d7, una casilla más útil para tu plan."},{"fen":"6kr/ppq2p2/6p1/3Q1p1p/3Pr3/P1P2NbP/1P3P2/4RRK1 b - - 0 24","best":"Kg7","ev":-6,"sec":[["Rxe1",-113],["Bd6",-143]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"rnb1k2r/ppqn1ppp/4p3/1NbpP1B1/8/5N2/PPP1BPPP/R2QK2R b KQkq - 3 9","best":"Qb6","ev":-40,"sec":[["Qc6",-101],["Qa5+",-129]],"cat":"Actividad de la dama","idea":"La dama pasa a b6, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1r3k1/1R3pb1/pN2p1pp/2n5/2Pp2P1/4P2P/5P1B/5R1K w - - 2 27","best":"Re7","ev":0,"sec":[["Nxc8",-121],["Rc7",-135]],"cat":"Torre a la séptima","idea":"La torre en la séptima fila (e7) ataca los peones rivales y limita al rey."},{"fen":"rnbqk1nr/1pp1b1pp/p3p3/3p4/3P1Bp1/2N2N2/PPP1PP1P/R2QKB1R w KQkq - 0 7","best":"Ne5","ev":29,"sec":[["Nd2",-67],["Ng1",-97]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e5: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp3ppp/2nb1q2/1Bpp3b/8/1P2PN1P/P2P1PP1/RN1Q1RK1 w kq - 0 11","best":"Nc3","ev":14,"sec":[["Bxc6+",-61],["Na3",-78]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nc3) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r1b1k1nr/pp2ppbp/2n3p1/2P5/2N5/4P3/PP1B1PPP/2RK1BNR b kq - 0 9","best":"Nf6","ev":-21,"sec":[["Be6",-77],["Bf5",-85]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nf6) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r2k3r/p2nq1pp/2pp1p2/4p3/4P3/1BP1QP1P/PP3P2/2KR3R b - - 2 18","best":"Kc7","ev":12,"sec":[["Kc8",-59],["h5",-86]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (c7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2q1rk1/5ppp/1pn1p3/2pp4/P2PN3/1P2PN2/5PbP/R1BQK2R w KQ - 0 14","best":"Rg1","ev":-38,"sec":[["Ng3",-159],["Nxc5",-342]],"cat":"Torre a columna semiabierta","idea":"La torre ocupa la columna g, semiabierta para ti: no tienes peones que la bloqueen y presionas el peón rival."},{"fen":"r3kb1r/1p1b1ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3Q1RK1 b kq - 4 17","best":"Rd8","ev":44,"sec":[["Ba4",-5],["Be7",-5]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/5PPP/R1BQK2R w KQ - 1 15","best":"Bb2","ev":17,"sec":[["Bd2",-34],["Rb1",-39]],"cat":"Alfil a la gran diagonal","idea":"El alfil se desarrolla a b2 y domina la gran diagonal, presionando el flanco rival."}];
 PZ_MATE.forEach(p=>{p.theme=p.pat});PZ_POS.forEach(p=>{p.theme='Posicional: '+p.cat});
 const ALLPZ=()=>PZ().concat(PZ_MATE,PZ_POS);
-const COLS={basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},pos:{n:'Mejorar la posición',get:()=>PZ_POS}};
+const COLS={basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},pos:{n:'Mejorar la posición',get:()=>PZ_POS},theme:{n:'Tema',get:()=>ALLPZ().filter(p=>p.theme===Tac.theme)}};
 const MateU={
  canMate(c){for(const m of c.moves()){c.move(m);const ok=c.in_checkmate();c.undo();if(ok)return true}return false},
  forced(c,k){ // c: mueve el rival; ¿lo mato en k jugadas mías?
@@ -698,7 +699,7 @@ const Lesson={
   else{board.marks=[];board.arrows=[[m.from,m.to]];board.draw();Chat.say(`Es <b>${esc(m.san)}</b>.`,'warn')}
  },
  finish(){
-  this.finished=true;Snd.play('win',.3);A.status('Capítulo completado');const L=this.lesson(),ch=this.ch();
+  this.finished=true;Log.add('les',1);Snd.play('win',.3);A.status('Capítulo completado');const L=this.lesson(),ch=this.ch();
   const ps=store.get('prog',{});ps[L.id]=ps[L.id]||[];if(!ps[L.id].includes(ch.id))ps[L.id].push(ch.id);store.set('prog',ps);
   Chat.say(`<b>¡Capítulo completado!</b><br>${ch.outro||''}`,'ok');
   const chips=[{label:'Practicar vs Stockfish desde aquí',pri:true,fn:()=>Play.fromPosition(A.game.fen(),A.userColor)},
@@ -717,8 +718,8 @@ const Tac={
  label(p,i){return p.n?`${i+1}. Mate en ${p.n}`:p.best?`${i+1}. Mejorar la posición`:`${i+1}. ${p.theme}`},
  fill(){const L=this.list();$('#tpSel').innerHTML=L.map((p,i)=>`<option value="${i}">${esc(this.label(p,i))}</option>`).join('');if(this.i>=L.length)this.i=0;$('#tpSel').value=this.i},
  enter(){
-  this.col=store.get('tcol','basic');if(!COLS[this.col])this.col='basic';
-  $('#ctl').innerHTML=`<div class="g2"><label>Colección<select id="tpCol">${Object.entries(COLS).map(([k,c])=>`<option value="${k}">${esc(c.n)} (${c.get().length})</option>`).join('')}</select></label>
+  this.col=store.get('tcol','basic');if(!COLS[this.col]||(this.col==='theme'&&!this.theme))this.col='basic';
+  $('#ctl').innerHTML=`<div class="g2"><label>Colección<select id="tpCol">${Object.entries(COLS).filter(([k])=>k!=='theme'||Tac.theme).map(([k,c])=>`<option value="${k}">${esc(k==='theme'?'Tema: '+Tac.theme:c.n)} (${c.get().length})</option>`).join('')}</select></label>
   <label>Problema<select id="tpSel"></select></label></div>
   <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpRand">Al azar</button><button id="tpNext" class="pri">Siguiente problema ▶</button></div>`;
   $('#tpCol').value=this.col;this.i=0;this.fill();
@@ -730,6 +731,7 @@ const Tac={
   this.load();
  },
  leave(){},
+ focusTheme(t){this.theme=t;store.set('tcol','theme');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()})},
  load(){
   const p=this.list()[this.i];if(!p)return;A.epoch++;Engine.stop();A.game=new Chess(p.fen);A.startFen=A.game.fen();A.viewIdx=null;
   A.userColor=A.game.turn();board.flipped=A.userColor==='b';board.arrows=[];board.marks=[];
@@ -741,7 +743,7 @@ const Tac={
   else Chat.say(`<b>Problema ${this.i+1} · ${esc(p.theme)}</b><br>Juegan ${who}. Encuentra la mejor jugada.`);
   A.status('Tu turno');Chat.chips([{label:'Pista',fn:()=>this.hint()}]);
  },
- stat(ok){const s=store.get('tstats',{});const t=this.list()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
+ stat(ok){Log.add('tac',1,ok);const s=store.get('tstats',{});const t=this.list()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
  wrong(msg){this.tries++;this.lock=true;if(!this.failed){this.failed=true;this.stat(false)}Chat.say(msg,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
  onMove(m){
   const p=this.list()[this.i];
@@ -918,7 +920,7 @@ const Play={
  },
  finishGame(t,res){
   this.result=res==='d'?'1/2-1/2':((res==='w')===(A.userColor==='w')?'1-0':'0-1');
-  Snd.play(res==='w'?'win':res==='l'?'lose':'draw',.6);
+  Snd.play(res==='w'?'win':res==='l'?'lose':'draw',.6);Log.add('play',1);
   const s=store.get('games',{w:0,l:0,d:0});s[res]++;store.set('games',s);
   let h=`<b>${t}</b>`;
   if(this.notes.length){h+='<br>Momentos a revisar:<ul>'+this.notes.slice(0,6).map(n=>`<li>${n.kind}: ${esc(n.lab)} (mejor ${esc(n.best)})</li>`).join('')+'</ul>';
@@ -1015,7 +1017,7 @@ const SRS={
    c.reps++;if(q==='hard')c.ease=Math.max(1.3,c.ease-.1);
    c.due=now+c.ivl*DAY;
   }
-  c.last=now;d[key]=c;store.set('srs',d);updateBadge();return c;
+  c.last=now;d[key]=c;store.set('srs',d);updateBadge();if(!early)Log.add('srs',1,q!=='again');return c;
  },
  dueList(now=Date.now()){const d=this.all();return Object.keys(d).filter(k=>d[k].due<=now).sort((a,b)=>d[a].due-d[b].due).map(k=>({key:k,card:d[k]}))},
  nextDue(){const d=this.all();const t=Object.values(d).map(c=>c.due).filter(x=>x>Date.now());return t.length?Math.min(...t):null},
@@ -1362,7 +1364,7 @@ const Struct={
  },
  answer(i){
   if(this.answered)return;this.answered=true;const x=this.st(),p=this.cur,o=this.opts[i],good=this.opts.find(q=>q.ok);const L='ABCD';
-  const st=this.stats(),key=x.id+'|'+this.pi;const s=st[key]||{ok:0,n:0};s.n++;if(o.ok)s.ok++;st[key]=s;store.set('struct',st);
+  Log.add('str',1,o.ok);const st=this.stats(),key=x.id+'|'+this.pi;const s=st[key]||{ok:0,n:0};s.n++;if(o.ok)s.ok++;st[key]=s;store.set('struct',st);
   this.load(p,true);
   Chat.me(`${L[i]}) ${esc(o.t)}`);
   if(o.ok)Snd.play('ok');
@@ -1575,7 +1577,7 @@ const Exam={
   this.lineFails++;this.showMove(step.san);Chat.say(`La jugada era <b>${esc(step.san)}</b> (cuenta como fallo). Juégala para continuar.`,'warn');
  },
  endLine(){
-  this.lock=true;const key=this.l.id+'|'+this.ch.id,st=store.get('exam',{});const s=st[key]||{n:0,f:0,t:0};s.n++;if(this.lineFails)s.f++;s.t=Date.now();st[key]=s;store.set('exam',st);
+  Log.add('exam',1,!this.lineFails);this.lock=true;const key=this.l.id+'|'+this.ch.id,st=store.get('exam',{});const s=st[key]||{n:0,f:0,t:0};s.n++;if(this.lineFails)s.f++;s.t=Date.now();st[key]=s;store.set('exam',st);
   this.res.push({title:this.ch.title,fails:this.lineFails,item:this.q[this.qi]});
   A.status('Línea terminada');if(!this.lineFails)Snd.play('ok',.12);
   Chat.say(`${this.lineFails?'✗':'✓'} <b>${esc(this.ch.title)}</b> — ${this.lineFails?this.lineFails+' fallo'+(this.lineFails>1?'s':''):'¡línea perfecta!'}`,this.lineFails?'bad':'ok');
@@ -1589,6 +1591,134 @@ const Exam={
   const chips=[];if(bad.length)chips.push({label:'Repetir las falladas',pri:true,fn:()=>this.start(false,bad.map(r=>r.item))});
   chips.push({label:'Nuevo examen',pri:!bad.length,fn:()=>this.start(false)},{label:'Ver estadísticas',fn:()=>Mode.set('progress')});Chat.chips(chips);
   A.status('Examen terminado');Snd.play(ok===n&&n>0?'win':'ok',.2);
+ }
+};
+
+
+/* =============== HOY: PLAN DIARIO, RACHA Y PERFIL DE DEBILIDADES =============== */
+const Log={
+ key(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},
+ all(){return store.get('daylog',{})},
+ add(kind,n=1,ok=null){
+  try{
+   const L=this.all(),k=this.key();const d=L[k]||(L[k]={min:0,srs:0,exam:0,tac:0,str:0,play:0,les:0,gam:0,ok:0,n:0});
+   d[kind]=(d[kind]||0)+n;if(ok!==null){d.n++;if(ok)d.ok++}
+   const now=Date.now(),last=+store.get('lastAct',0);d.min+=last&&now-last<180000?(now-last)/60000:.3;store.set('lastAct',now);
+   const keys=Object.keys(L).sort();if(keys.length>150)keys.slice(0,keys.length-150).forEach(x=>delete L[x]);
+   store.set('daylog',L);
+  }catch(e){}
+ },
+ today(){return this.all()[this.key()]||{min:0,srs:0,exam:0,tac:0,str:0,play:0,les:0,gam:0,ok:0,n:0}},
+ active(d){return d&&(d.min>=.5||d.srs||d.exam||d.tac||d.str||d.play||d.les||d.gam)},
+ streak(){
+  const L=this.all();let cur=0,d=new Date();if(!this.active(L[this.key(d)]))d.setDate(d.getDate()-1);
+  while(this.active(L[this.key(d)])){cur++;d.setDate(d.getDate()-1)}
+  let best=0,run=0,prev=null;for(const k of Object.keys(L).sort()){if(!this.active(L[k]))continue;const t=new Date(k+'T00:00:00');run=prev&&Math.round((t-prev)/DAY)===1?run+1:1;prev=t;best=Math.max(best,run)}
+  return {cur,best:Math.max(best,cur)};
+ }
+};
+const Today={
+ free:false,tasks:[],weak:[],
+ canMove(){return false},
+ enter(){
+  $('#ctl').innerHTML='<div class="small">Tu plan se genera cada día según lo que más necesitas. Elige la duración de la sesión y pulsa «Ir» en cada tarea.</div>';
+  Chat.clear();A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();A.status('');
+  this.render();
+ },
+ leave(){},
+ themeStats(){
+  const ts=store.get('tstats',{}),out=[];
+  for(const [t,v] of Object.entries(ts)){const n=v.ok+v.fail;if(n>=3)out.push({label:t,acc:v.ok/n,n})}
+  return out;
+ },
+ structStats(){
+  const st=store.get('struct',{}),out=[];
+  STRUCTS.forEach((x,i)=>{let ok=0,n=0;x.pos.forEach((p,j)=>{const s=st[x.id+'|'+j];if(s){ok+=s.ok;n+=s.n}});if(n>=2)out.push({label:x.name,acc:ok/n,n,i})});
+  return out;
+ },
+ examStats(){
+  const st=store.get('exam',{}),names={};Lesson.all().forEach(l=>l.chapters.forEach(c=>names[l.id+'|'+c.id]=c.title));
+  return Object.entries(st).filter(([k,v])=>v.n>=2&&names[k]).map(([k,v])=>({label:names[k],acc:1-v.f/v.n,n:v.n}));
+ },
+ gamePhases(){
+  const gs=store.get('games_pgn',[]),an=store.get('games_an',{});
+  const ph={ap:{l:'Apertura',a:[],e:0},me:{l:'Medio juego',a:[],e:0},fi:{l:'Final',a:[],e:0}};let games=0;
+  for(const g of gs){const a=an[g.id];if(!a||!a.ev)continue;const color=Rep.gameSide(g),sg=color==='w'?1:-1;games++;
+   for(let k=1;k<a.ev.length;k++){if((k%2===1)!==(color==='w'))continue;
+    const loss=Math.max(0,wp(a.ev[k-1]*sg)-wp(a.ev[k]*sg));const acc=Math.max(0,Math.min(100,103.1668*Math.exp(-0.04354*loss)-3.1669));
+    const f=k<=24?ph.ap:k<=60?ph.me:ph.fi;f.a.push(acc);if(loss>=20)f.e++}}
+  return {games,ph:Object.values(ph).map(p=>({l:p.l,acc:p.a.length?p.a.reduce((x,y)=>x+y,0)/p.a.length:null,n:p.a.length,e:p.e}))};
+ },
+ forgotten(){
+  const d=SRS.all(),out=[];
+  for(const [k,c] of Object.entries(d)){if(c.lapses>=2){const f=findCard(k);if(f)out.push({lap:c.lapses,label:`${f.L.title} · ${f.ch.title} — ${Lesson.label(f.game.fen(),f.step.san)}`})}}
+  return out.sort((a,b)=>b.lap-a.lap).slice(0,3);
+ },
+ pick(items,fallbackList){ // más débil con datos; si no, rotación diaria
+  if(items.length)return items.slice().sort((a,b)=>a.acc-b.acc||b.n-a.n)[0];
+  const d=new Date();const idx=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%fallbackList.length;return {label:fallbackList[idx],acc:null,n:0,i:idx};
+ },
+ plan(){
+  const S=+store.get('todayMin',30),T={15:{srs:8,exam:3,tac:3,str:1,les:0,gam:0,play:0},30:{srs:15,exam:5,tac:6,str:2,les:1,gam:1,play:0},45:{srs:25,exam:8,tac:10,str:3,les:1,gam:1,play:1}}[S]||{};
+  const td=Log.today(),tasks=[];
+  const due=SRS.dueList().length,srsTarget=Math.min(T.srs,due+td.srs);
+  if(srsTarget>0)tasks.push({id:'srs',title:'Repaso espaciado',desc:`${due} jugada${due===1?'':'s'} pendiente${due===1?'':'s'} de tu repertorio.`,target:srsTarget,done:td.srs,min:Math.ceil(srsTarget*.4),go:()=>Mode.set('review')});
+  Exam.scope='all';
+  if(Exam.pool().length&&T.exam)tasks.push({id:'exam',title:'Examen de repertorio',desc:'Líneas al azar jugadas de memoria; salen más las que más fallas.',target:T.exam,done:td.exam,min:Math.ceil(T.exam*1),go:()=>{Exam.n=Math.max(5,T.exam);Mode.set('exam',()=>Exam.start(false))}});
+  const themes=[...new Set(ALLPZ().map(p=>p.theme))];const wt=this.pick(this.themeStats(),themes);
+  tasks.push({id:'tac',title:'Táctica: '+wt.label,desc:wt.acc==null?'Tema nuevo para ti hoy.':`Tu tema más débil: acierto ${Math.round(wt.acc*100)}% en ${wt.n} intentos.`,target:T.tac,done:td.tac,min:Math.ceil(T.tac*1),go:()=>Tac.focusTheme(wt.label)});
+  const ws=this.pick(this.structStats(),STRUCTS.map(x=>x.name));
+  if(T.str)tasks.push({id:'str',title:'Estructura de peones: '+ws.label,desc:ws.acc==null?'Una estructura nueva para entrenar el plan.':`Tu acierto aquí es ${Math.round(ws.acc*100)}%: adivina el plan.`,target:T.str,done:td.str,min:T.str*2,go:()=>Mode.set('struct',()=>{Struct.rand=false;Struct.si=ws.i;Struct.pi=0;const sel=$('#stSel');if(sel)sel.value=Struct.si;Struct.ask()})});
+  const gs=store.get('games_pgn',[]),an=store.get('games_an',{});const un=gs.filter(g=>!an[g.id]).length;
+  if(T.gam&&un>0)tasks.push({id:'gam',title:'Analiza una de tus partidas',desc:`${un} partida${un===1?'':'s'} importada${un===1?'':'s'} sin analizar.`,target:1,done:td.gam,min:5,go:()=>Mode.set('games')});
+  const ps=store.get('prog',{});let pend=null;for(const l of Lesson.all()){if(Rep.isGames(l))continue;for(const c of l.chapters)if(!pend&&!(ps[l.id]||[]).includes(c.id))pend={l,c}}
+  if(T.les&&pend)tasks.push({id:'les',title:'Completa un capítulo',desc:`${pend.l.title}: ${pend.c.title}`,target:1,done:td.les,min:8,go:()=>{Lesson.li=Lesson.all().indexOf(pend.l);Lesson.ci=pend.l.chapters.indexOf(pend.c);Mode.set('lesson')}});
+  if(T.play)tasks.push({id:'play',title:'Una partida contra Stockfish',desc:'Aplica lo estudiado en una partida completa.',target:1,done:td.play,min:15,go:()=>Mode.set('play')});
+  return {S,tasks};
+ },
+ render(){
+  const {S,tasks}=this.plan();this.tasks=tasks;const st=Log.streak(),td=Log.today();
+  const tot=tasks.reduce((a,t)=>a+t.target,0),got=tasks.reduce((a,t)=>a+Math.min(t.done,t.target),0),pct=tot?Math.round(got/tot*100):0,doneN=tasks.filter(t=>t.done>=t.target).length;
+  let h=`<h3>Plan de hoy</h3><div class="row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="small">Sesión:</span>${[15,30,45].map(m=>`<button data-sess="${m}" class="${m===S?'pri':''}">${m} min</button>`).join('')}</div>`;
+  h+=`<div style="margin:10px 0 4px"><b>${pct}%</b> completado · ${doneN} de ${tasks.length} tareas · ${Math.round(td.min)} min hoy · racha <b>${st.cur}</b> día${st.cur===1?'':'s'} (mejor: ${st.best})</div><div class="bar"><i style="width:${pct}%"></i></div>`;
+  h+='<table style="margin-top:8px">'+tasks.map((t,i)=>{const ok=t.done>=t.target;return `<tr><td style="width:22px">${ok?'✓':'○'}</td><td><b>${esc(t.title)}</b><br><span class="small">${esc(t.desc)}</span></td><td style="white-space:nowrap">${Math.min(t.done,t.target)}/${t.target}<br><span class="small">~${t.min} min</span></td><td><button data-task="${i}" class="${ok?'':'pri'}">${ok?'Repetir':'Ir'}</button></td></tr>`}).join('')+'</table>';
+  const nxt=tasks.findIndex(t=>t.done<t.target);
+  h+=`<div class="row" style="margin-top:8px"><button data-task="${nxt<0?0:nxt}" class="pri">${nxt<0?'¡Plan completo! Repetir la primera':'Empezar con la primera pendiente'}</button></div>`;
+  // semana
+  const L=Log.all(),days=[],names=['D','L','M','X','J','V','S'];let wk=0;
+  for(let k=6;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);const e=L[Log.key(d)];const m=e?Math.round(e.min):0;wk+=m;days.push({n:names[d.getDay()],m,t:k===0})}
+  const mx=Math.max(10,...days.map(x=>x.m));
+  h+='<h3>Esta semana</h3><div style="display:flex;gap:8px;align-items:flex-end;height:70px">'+days.map(x=>`<div style="flex:1;text-align:center;font-size:11px;color:var(--mut)"><div style="height:${Math.max(3,x.m/mx*52)}px;background:${x.m?'var(--acc)':'var(--line)'};border-radius:3px;opacity:${x.t?1:.7}"></div>${x.n}<br>${x.m}</div>`).join('')+`</div><div class="small">Total: ${wk} min. Meta sugerida: 30 min al día, 5 días a la semana.</div>`;
+  h+=this.profile();
+  Chat.el.innerHTML='<div class="panel">'+h+'</div>';
+  Chat.el.querySelectorAll('[data-sess]').forEach(b=>b.onclick=()=>{store.set('todayMin',+b.dataset.sess);this.render()});
+  Chat.el.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{const t=this.tasks[+b.dataset.task];if(t)t.go()});
+  Chat.el.querySelectorAll('[data-weak]').forEach(b=>b.onclick=()=>{const w=this.weak[+b.dataset.weak];if(w&&w.go)w.go()});
+ },
+ profile(){
+  const weak=[];
+  const fam=t=>/^Posicional/.test(t)?'Plan':/^Mate|Jaque doble|Sacrificio|escalera|pasillo|ahogado/i.test(t)?'Mates':'Táctica';
+  for(const x of this.themeStats())weak.push({...x,area:fam(x.label),go:()=>Tac.focusTheme(x.label)});
+  for(const x of this.structStats())weak.push({...x,area:'Estructuras',go:()=>Mode.set('struct',()=>{Struct.rand=false;Struct.si=x.i;Struct.pi=0;const sel=$('#stSel');if(sel)sel.value=Struct.si;Struct.ask()})});
+  for(const x of this.examStats())weak.push({...x,area:'Repertorio',go:()=>Mode.set('exam',()=>Exam.start(true))});
+  weak.sort((a,b)=>a.acc-b.acc||b.n-a.n);this.weak=weak.slice(0,6);
+  let h='<h3>Perfil de debilidades</h3>';
+  const gp=this.gamePhases(),fg=this.forgotten(),due=SRS.dueList().length;
+  Rep.panel();const dev=(Rep.groups||[]).filter(x=>x.who==='me')[0];
+  const dg=[];
+  if(due>=20)dg.push(`Tienes <b>${due}</b> jugadas pendientes de repaso: es lo más urgente para no olvidar tu repertorio.`);
+  if(this.weak.length&&this.weak[0].acc<.7)dg.push(`Tu punto más débil ahora: <b>${esc(this.weak[0].label)}</b> (${esc(this.weak[0].area)}), acierto ${Math.round(this.weak[0].acc*100)}% en ${this.weak[0].n} intentos.`);
+  const worst=gp.ph.filter(p=>p.acc!=null&&p.n>=8).sort((a,b)=>a.acc-b.acc)[0];
+  if(worst)dg.push(`En tus partidas analizadas (${gp.games}) pierdes más precisión en el <b>${worst.l.toLowerCase()}</b> (${Math.round(worst.acc)}%, ${worst.e} errores).`);
+  if(dev)dg.push(`Te sales de tu repertorio con más frecuencia en: <b>${esc(Rep.lineText(new Chess().fen(),dev.line.concat([dev.played]),200).slice(-60))}</b> (${dev.n}×); esperabas ${esc(dev.expected.join(' / '))}.`);
+  if(!dg.length)dg.push('Aún hay pocos datos. Haz la sesión de hoy y, en unos días, aquí verás tus puntos débiles y qué practicar.');
+  h+='<ul>'+dg.map(x=>`<li>${x}</li>`).join('')+'</ul>';
+  if(this.weak.length){
+   h+='<table>'+this.weak.map((w,i)=>`<tr><td>${esc(w.label)}<br><span class="small">${esc(w.area)}</span></td><td>${Math.round(w.acc*100)}%</td><td><div class="bar"><i style="width:${Math.round(w.acc*100)}%"></i></div></td><td><button data-weak="${i}">Practicar</button></td></tr>`).join('')+'</table>';
+  }
+  if(gp.games){h+='<h3>Tus partidas por fase</h3><table>'+gp.ph.map(p=>`<tr><td>${p.l}</td><td>${p.acc==null?'—':Math.round(p.acc)+'%'}</td><td>${p.n} jugadas · ${p.e} errores</td><td><div class="bar"><i style="width:${p.acc==null?0:Math.round(p.acc)}%"></i></div></td></tr>`).join('')+'</table>'}
+  if(fg.length)h+='<h3>Jugadas que más olvidas</h3><ul>'+fg.map(x=>`<li>${esc(x.label)} <span class="small">(${x.lap} fallos)</span></li>`).join('')+'</ul>';
+  return h;
  }
 };
 
@@ -1740,7 +1870,7 @@ const Games={
    }
    const bar=$('#gmBar');if(bar){bar.style.width=((k+1)/n*100)+'%';$('#gmPct').textContent=(k+1)+' / '+n}
   }}catch(e){Chat.say('El motor no responde. Prueba recargar la página.','bad');return}
-  const an=this.anAll();an[g.id]={ev,best,pv};store.set('games_an',an);this.report();
+  const an=this.anAll();an[g.id]={ev,best,pv};store.set('games_an',an);Log.add('gam',1);this.report();
  },
  compute(an){
   const h=A.hist,out=[],acc={w:[],b:[]};
@@ -1848,7 +1978,7 @@ const Prog={
 };
 
 /* =============== CONTROL DE PESTAÑAS =============== */
-const MODES={lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,edit:Edit,progress:Prog};
+const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,edit:Edit,progress:Prog};
 const Mode={
  set(name,after){
   if(A.mode&&A.mode.leave)A.mode.leave();Engine.stop();anToken++;$('#bStopAn').hidden=true;
@@ -1894,8 +2024,8 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>Mode.set(b.da
  document.addEventListener('pointerdown',()=>Snd.init(),{passive:true});document.addEventListener('keydown',()=>Snd.init());
 })();
 Engine.init().catch(()=>{});
-Mode.set('lesson');
-window.__app={Snd,PZ_MATE,PZ_POS,MateU,STRUCTS,Struct,Rep,Exam,parseStudyPGN,Games,PZ,parsePGN,SRS,Rev,A,Lesson,Tac,Play,Edit,Engine,PUZZLES,LESSONS,Mode,board,whiteEval};
+Mode.set('today');
+window.__app={Log,Today,Snd,PZ_MATE,PZ_POS,MateU,STRUCTS,Struct,Rep,Exam,parseStudyPGN,Games,PZ,parsePGN,SRS,Rev,A,Lesson,Tac,Play,Edit,Engine,PUZZLES,LESSONS,Mode,board,whiteEval};
 </script>
 </body>
 </html>

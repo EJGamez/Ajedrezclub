@@ -20,6 +20,9 @@ Pestaña «Peones»: 8 estructuras (Carlsbad, peón dama aislado, Stonewall, Mar
 ## Táctica: colecciones de ejercicios
 En «Táctica» elige colección: **Básicos y mis errores**, **Mate en 1** (30), **Mate en 2** (40), **Mate en 3** (24) y **Mejorar la posición** (33). Los mates cubren patrones (pasillo, ahogado, jaque doble, escalera, sacrificios de dama/torre/alfil/caballo y mates con cada pieza); la app acepta cualquier mate válido, no solo el de la solución. Los ejercicios de plan (torre a columna abierta, caballo a un puesto fuerte, rupturas, desarrollo…) explican la idea y muestran la evaluación del motor. Todos se generaron y verificaron con Stockfish; tu porcentaje por patrón aparece en Progreso.
 
+## Hoy (plan diario y perfil de debilidades)
+La pestaña **Hoy** es la pantalla inicial. Genera cada día un plan según lo que más necesitas (repaso espaciado, examen de repertorio, táctica del tema más débil, estructura de peones, partidas, lecciones), con sesiones de 15/30/45 min, racha de días y minutos de la semana. Debajo muestra tu perfil de debilidades (temas tácticos, estructuras, fase de la partida donde más pierdes y jugadas olvidadas). Todo se calcula con tu actividad guardada en este navegador.
+
 ## Sonido
 Botón del altavoz en la cabecera: sonidos sintetizados (sin archivos) para jugada, captura, enroque, coronación, jaque, mate, aciertos, errores y fin de partida; volumen ajustable. Opcionalmente, voz en español (leer al entrenador y/o anunciar cada jugada) con el sintetizador del navegador. Todo se guarda en el navegador.
 
