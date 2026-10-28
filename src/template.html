@@ -80,7 +80,8 @@ aside{background:var(--panel);border:1px solid var(--line);border-radius:12px;di
 #ctlToggle{flex:none;background:var(--panel2);border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--mut);padding:4px;font:inherit;font-size:12px;cursor:pointer;width:100%}
 #ctlToggle:hover{color:var(--txt)}
 #ctl label{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
-#ctl select,#ctl input,#ctl textarea{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit}
+#ctl select,#ctl input{max-width:100%;min-width:0}
+#ctl select,#ctl input,#ctl textarea,.panel select,.panel input[type=text],.panel input[type=date],.panel input[type=number]{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit}
 #ctl .row{display:flex;flex-wrap:wrap;gap:6px}
 .seg{display:flex}.seg button{border-radius:0}.seg button:first-child{border-radius:8px 0 0 8px}.seg button:last-child{border-radius:0 8px 8px 0}
 .seg button.on{background:var(--acc);color:#102000;border-color:var(--acc)}
@@ -115,6 +116,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;color:var(--mut);font-
     <button data-m="games">Partidas</button>
     <button data-m="play">Jugar</button>
     <button data-m="edit">Crear</button>
+    <button data-m="coach" id="tabCoach" hidden>Entrenador</button>
     <button data-m="progress">Progreso</button>
   </nav>
   <label id="sizeBox" title="Tamaño del tablero (doble clic para restablecer)">Tablero <input type="range" id="sizeK" min="60" max="140" step="5" value="100"></label>
@@ -161,7 +163,7 @@ __CHESSJS__
 'use strict';
 const $=(s,r=document)=>r.querySelector(s);
 const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));if(store.hook)store.hook(k)}catch(e){}}};
 const FILES='abcdefgh';
 const pieceSvg=ch=>{const t=ch.toLowerCase();return `<svg viewBox="1.5 1 42 42"><use href="#s_${t}" class="o"/><use href="#s_${t}" class="i"/><use href="#d_${t}" class="d"/></svg>`};
 const clean=s=>String(s).replace(/[+#!?]/g,'');
@@ -575,10 +577,24 @@ function showLines(fen,lines){
 $('#bAnalyze').onclick=analyze;
 $('#bStopAn').onclick=()=>{anToken++;Engine.stop();$('#bStopAn').hidden=true};
 
+
+/* Repertorios incluidos (PGN de estudio analizado con el mismo importador) */
+const BUILTIN_PGN=[{key:'carokann',name:'Defensa Caro-Kann',side:'b',pgn:"[Event \"Variante clásica: 4...Af5\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"01 Variante clásica: 4...Af5\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Variante clásica: 4...Af5\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Bf5 { el alfil sale antes de …e6 } 5. Ng3 { ataca al alfil } 5... Bg6 6. h4 h6 { da la casilla h7 al alfil } 7. Nf3 Nd7 8. h5 { gana espacio } 8... Bh7 9. Bd3 { busca cambiar el alfil bueno negro } 9... Bxd3 10. Qxd3 e6 { estructura sólida } 11. Bd2 Ngf6 12. O-O-O Be7 13. Kb1 O-O { [%cal Rc6c5,Rd8c7,Rf6e4,Gg3f5,Gh5h6] POSICIÓN CLAVE. Estructura: Formación Caro-Kann (estructura 4): peón blanco en d4 contra los peones negros de c6 y e6. Las negras no tienen debilidades; las blancas tienen más espacio y el peón de h5, que puede ser fuerte en el ataque o débil en el final. PLAN NEGRAS: Completar el desarrollo y liberar el juego con …c5 (la ruptura principal) o …Dc7 + …c5; caballo a e4 o d5; con el enroque blanco largo, …b5 puede iniciar el contraataque. En el final, atacar el peón de h5. PLAN BLANCAS: Más espacio y ataque en el flanco de rey (Ce4, Ce5, g4-g5) o en el centro con Ce5; el enroque largo prepara la lucha en el flanco contrario. ERRORES: Negras: no jugar …h6 a tiempo (h5 atraparía el alfil) o quedarse pasivas sin romper con …c5. Blancas: atacar sin haber completado el desarrollo. CANDIDATAS: Ne4 (+0,2); Qe2 (+0,0); Rhg1 (+0,0) } *\n\n[Event \"Variante Karpov: 4...Cd7\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"02 Variante Karpov: 4...Cd7\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Variante Karpov: 4...Cd7\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Nd7 { prepara …Cgf6 sin doblar peones } 5. Ng5 { idea de ataque contra f7 y e6 } 5... Ngf6 6. Bd3 e6 7. N1f3 Bd6 { desarrollo natural } 8. Qe2 h6 { expulsa al caballo } 9. Ne4 Nxe4 10. Qxe4 Qc7 { [%cal Rc6c5,Re6e5,Ge4g6,Gc1d2] POSICIÓN CLAVE. Estructura: Formación Caro-Kann (estructura 4) con el alfil de c8 todavía en casa: las negras preparan …e5 o …c5 y luego desarrollan el alfil. PLAN NEGRAS: Prepara …Cgf6 con seguridad, después …c5 o …e5 para liberar; el alfil de c8 sale a d7, b7 (tras …b6) o directamente tras …e5. PLAN BLANCAS: Desarrollo rápido, enroque y presión en la diagonal b1-h7; Ad2 y O-O-O en algunas líneas; ataque si las negras se retrasan. ERRORES: Negras: 4…Cd7 5.De2 Cgf6?? 6.Cd6# (mate ahogado): primero …Cgf6 solo cuando sea seguro. Blancas: no aprovechar el retraso del alfil negro. CANDIDATAS: Qg4 (+0,5); O-O (+0,4); a4 (+0,4) } *\n\n[Event \"Variante del Avance: el sistema Short (4.Cf3 e6 5.Ae2)\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"03 Variante del Avance: el sistema Short (4.Cf3 e6 5.Ae2)\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Variante del Avance: el sistema Short (4.Cf3 e6 5.Ae2)\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d4 d5 3. e5 { Avance } 3... Bf5 { el alfil sale antes de cerrar con …e6 } 4. Nf3 e6 5. Be2 c5 { ataca la base de la cadena } 6. Be3 cxd4 7. Nxd4 Ne7 { rumbo a f5 o c6 } 8. O-O Nbc6 { [%cal Rc5d4,Rf7f6,Re7f5,Gf2f4] POSICIÓN CLAVE. Estructura: Cadena de peones (estructura 5, como en la Francesa del Avance) pero con el alfil negro de casillas blancas ya fuera de la cadena: esa es la gran ventaja de la Caro-Kann sobre la Francesa. PLAN NEGRAS: Atacar la base de la cadena con …c5 (y la cabeza con …f6), presionar e5 y d4 con …Cc6 y …Ce7-f5 o …Cg6. PLAN BLANCAS: Mantener el peón de e5 (f4 en algunas líneas), juego en el flanco de rey y presión en el centro con las piezas. ERRORES: Negras: jugar …e6 y olvidar …c5: sin rupturas, la ventaja de espacio blanca pesa. Blancas: perder el peón de e5 por falta de defensores. CANDIDATAS: Bb5 (+0,4); c3 (+0,2); Nc3 (+0,0) } *\n\n[Event \"Avance agresivo: 4.Cc3 e6 5.g4\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"04 Avance agresivo: 4.Cc3 e6 5.g4\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Avance agresivo: 4.Cc3 e6 5.g4\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d4 d5 3. e5 Bf5 4. Nc3 e6 5. g4 { persigue al alfil } 5... Bg6 6. Nge2 { prepara Cf4 y h4 } 6... c5 { contraataque central [%cal Rc5d4,Rb8c6,Gh2h4,Ge2f4] POSICIÓN CLAVE. Estructura: Cadena de peones con el flanco de rey blanco avanzado: posición muy aguda. PLAN NEGRAS: Contraataque central inmediato con …c5 y …Cc6: un ataque de flanco se castiga en el centro. El alfil de g6 debe tener siempre una casilla de retirada (…h5 o …h6 en el momento justo). PLAN BLANCAS: Ataque con h4-h5 para atrapar o expulsar al alfil, Cf4 y presión en el flanco de rey. ERRORES: Negras: responder pasivamente al avance de peones. Blancas: avanzar peones sin desarrollar y dejar el centro expuesto. CANDIDATAS: Be3 (+0,3); h4 (+0,1); h3 (-0,6) } *\n\n[Event \"Avance con 4.h4\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"05 Avance con 4.h4\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Avance con 4.h4\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d4 d5 3. e5 Bf5 4. h4 { amenaza h5 } 4... h5 { frena el avance } 5. c4 { ataca d5 } 5... e6 6. Nc3 { [%cal Rd5c4,Rg8e7,Gc4d5] POSICIÓN CLAVE. Estructura: Cadena de peones con los peones de h ya avanzados: la casilla g5 se debilita para las blancas y g4 para las negras. PLAN NEGRAS: …h5 detiene el avance; luego …e6, …Ce7 o …dxc4 y desarrollo rápido; el alfil de f5 está bien colocado. PLAN BLANCAS: Ganar espacio, presionar d5 con c4 y Cc3, y aprovechar la casilla g5 (Ag5) en algunas líneas. ERRORES: Negras: permitir h5 atrapando el alfil. Blancas: debilitar el centro con c4 sin terminar el desarrollo. CANDIDATAS: dxc4 (+0,1); Ne7 (+0,2); Bb4 (+0,4) } *\n\n[Event \"Variante del Cambio: 4.Ad3\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"06 Variante del Cambio: 4.Ad3\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Variante del Cambio: 4.Ad3\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d4 d5 3. exd5 cxd5 4. Bd3 { variante del Cambio } 4... Nc6 5. c3 Nf6 6. Bf4 { desarrollo activo } 6... Bg4 { activa el alfil antes de …e6 } 7. Qb3 { ataca b7 } 7... Qd7 8. Nd2 e6 9. Ngf3 Bxf3 10. Nxf3 Bd6 { busca cambiar el alfil de f4 [%cal Rb7b5,Rb5b4,Gf3e5,Gd1h5] POSICIÓN CLAVE. Estructura: Estructura Carlsbad con los colores invertidos (estructura 3): las negras pueden hacer el ataque de minorías con …b5-b4; las blancas usan la casilla e5 y juegan en el flanco de rey. PLAN NEGRAS: Ataque de minorías (…b5-b4) contra el peón de c3, columna c y cambio del alfil de f4 con …Ad6. PLAN BLANCAS: Caballo a e5, presión en el flanco de rey y en b7 con Db3. ERRORES: Negras: dejar b7 sin defensa ante Db3. Blancas: jugar pasivamente y permitir el ataque de minorías sin contrajuego. CANDIDATAS: Bxd6 (+0,3); Bc1 (+0,2); Be5 (+0,2) } *\n\n[Event \"Ataque Panov: 4.c4 (peón aislado para las blancas)\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"07 Ataque Panov: 4.c4 (peón aislado para las blancas)\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Ataque Panov: 4.c4 (peón aislado para las blancas)\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d4 d5 3. exd5 cxd5 4. c4 { Ataque Panov } 4... Nf6 5. Nc3 e6 6. Nf3 Be7 7. cxd5 { aparece el peón aislado } 7... Nxd5 8. Bd3 Nc6 9. O-O O-O 10. Re1 { torre a la columna e } 10... Bf6 { presión sobre d4 [%cal Rf6d4,Rc8d7,Gd4d5,Gf3e5] POSICIÓN CLAVE. Estructura: Peón aislado de dama de las blancas en d4 (estructura 1): las negras juegan contra él. PLAN NEGRAS: Bloquear en d5 con un caballo, presionar d4 (…Af6, …Cc6, …Td8), cambiar piezas menores y llevar la partida al final. PLAN BLANCAS: Juego activo: Ce5, ataque al rey con Ad3 y Dc2/Dd3, ruptura d4-d5. ERRORES: Negras: cambiar en d5 permitiendo que el peón se libere, o abrir el juego cuando las piezas blancas están activas. Blancas: jugar pasivo. CANDIDATAS: Be4 (+0,3); Bb1 (+0,2); a3 (+0,2) } *\n\n[Event \"Variante de los Dos Caballos: 2.Cc3 y 3.Cf3\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"08 Variante de los Dos Caballos: 2.Cc3 y 3.Cf3\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Variante de los Dos Caballos: 2.Cc3 y 3.Cf3\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. Nc3 { Dos Caballos } 2... d5 3. Nf3 Bg4 { clava el caballo } 4. h3 Bxf3 5. Qxf3 { pareja de alfiles para las blancas } 5... e6 6. d3 Nf6 7. Be2 Nbd7 8. O-O Bd6 { [%cal Re6e5,Rd5d4,Gf2f4] POSICIÓN CLAVE. Estructura: Centro con tensión (e4 contra d5/e6): si las negras juegan …dxe4 o …d4 la estructura se define; las blancas tienen la pareja de alfiles a cambio de un desarrollo más lento. PLAN NEGRAS: Desarrollo sólido, …e5 o …d4 para cerrar y restar fuerza a los alfiles; buscar casillas para los caballos. PLAN BLANCAS: Aprovechar la pareja de alfiles abriendo la posición (f4, g4 en algunas líneas, d4). ERRORES: Negras: abrir la posición y dar vida a los alfiles blancos. Blancas: jugar lento sin usar la pareja de alfiles. CANDIDATAS: d4 (+0,4); Qe3 (+0,2); a4 (+0,1) } *\n\n[Event \"Variante Fantasía: 3.f3\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"09 Variante Fantasía: 3.f3\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Variante Fantasía: 3.f3\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d4 d5 3. f3 { Fantasía } 3... e6 { respuesta sólida } 4. Nc3 Bb4 { presión sobre e4 } 5. Bd2 Ne7 { [%cal Rc6c5,Rd5e4,Ga2a3] POSICIÓN CLAVE. Estructura: Centro blanco amplio (d4/e4/f3); si las negras cambian en e4, la estructura se abre y el peón de e4 puede quedar débil. PLAN NEGRAS: Presionar el centro con …c5 o …dxe4, aprovechar las casillas oscuras debilitadas por f3 (…Ab4, …Db6) y el desarrollo rápido. PLAN BLANCAS: Mantener el centro con f3 y desarrollar rápido; en algunas líneas, enroque largo y ataque. ERRORES: Negras: jugar …dxe4 sin preparación y dar a las blancas un centro móvil. Blancas: quedarse con el rey en el centro. CANDIDATAS: h4 (+0,4); a3 (+0,3); Bd3 (+0,2) } *\n\n[Event \"Contra el Ataque Indio de Rey: 2.d3\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"10 Contra el Ataque Indio de Rey: 2.d3\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Contra el Ataque Indio de Rey: 2.d3\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. d3 { Ataque Indio de Rey } 2... d5 3. Nd2 e5 { centro clásico } 4. Ngf3 Bd6 5. g3 Nf6 6. Bg2 O-O 7. O-O Re8 { [%cal Rd5d4,Ra7a5] POSICIÓN CLAVE. Estructura: Centro abierto o en tensión con espacio para las negras: las negras se quedan con un centro clásico (d5/e5). PLAN NEGRAS: Centro fuerte, …a5-a4 para ganar espacio en el flanco de dama y …dxe4 o …d4 en el momento justo. PLAN BLANCAS: Esquema del Ataque Indio de Rey: Te1, Cf1, h3 y ataque lento en el flanco de rey o la ruptura d4. ERRORES: Negras: abrir el centro con …dxe4 demasiado pronto y dejar d5 sin función. Blancas: jugar sin plan en un esquema demasiado lento. CANDIDATAS: d4 (-0,3); Re1 (-0,3); a4 (-0,4) } *\n\n[Event \"Contra 2.c4 (Panov acelerado)\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"11 Contra 2.c4 (Panov acelerado)\"]\n[Black \"Repertorio Caro-Kann\"]\n[Result \"*\"]\n[ChapterName \"Contra 2.c4 (Panov acelerado)\"]\n[Orientation \"black\"]\n\n1. e4 c6 2. c4 { Panov acelerado } 2... d5 3. exd5 cxd5 4. cxd5 { cambio en d5 } 4... Nf6 5. Nc3 Nxd5 6. Nf3 Nc6 7. d4 Bg4 { presión sobre d4 [%cal Rg4f3,Rf8e7,Gd1b3] POSICIÓN CLAVE. Estructura: Se llega a estructuras de peón aislado de las blancas (estructura 1) si se juega d4: las mismas ideas que en el Ataque Panov. PLAN NEGRAS: Presión sobre d4 con …Ag4 y …Cc6, bloqueo en d5 y cambios. PLAN BLANCAS: Db3 para presionar b7 y d5, juego activo con las piezas y d4-d5. ERRORES: Negras: dejar b7 sin defensa ante Db3. Blancas: perder el peón de d4. CANDIDATAS: Qb3 (+0,2); h3 (+0,1); Bc4 (-0,0) } *\n\n[Event \"Sparkassen sf\"]\n[Site \"?\"]\n[Date \"2002.07.14\"]\n[Round \"?\"]\n[White \"Topalov,V\"]\n[Black \"Bareev,E\"]\n[Result \"0-1\"]\n[ECO \"B19\"]\n\n1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Bf5 5. Ng3 Bg6 6. h4 h6 7. Nf3 Nd7 8. h5 Bh7 9. Bd3 Bxd3 10. Qxd3 e6 11. Bf4 Ngf6 12. O-O-O Be7 13. Kb1 O-O 14. Ne5 Qa5 15. Ne4 Nxe4 16. Qxe4 Rad8 17. c4 Nxe5 18. Bxe5 Bd6 19. f3 Rd7 20. Bxd6 Rxd6 21. Qe5 Qd8 22. Rd3 b5 23. b3 bxc4 24. bxc4 Qe7 25. Kc2 Rfd8 26. Qc5 R8d7 27. Rhd1 Qh4 28. g4 f6 29. Qb4 f5 30. Qb8+ Kh7 31. Qe8 Qf6 32. c5 Rd5 33. Re1 Re7 34. Qxc6 fxg4 35. fxg4 Qf2+ 36. Kd1 Rxd4 37. Rxd4 Qxd4+ 38. Kc2 Qc4+ 39. Kd2 Qxa2+ 40. Ke3 Qb3+ 41. Ke2 Qc2+ 42. Ke3 Qc3+ 43. Ke2 Qe5+ 44. Kd2 Qd4+ 45. Kc2 Qc4+ 46. Kd2 Qb4+ 47. Ke2 Qb2+ 48. Ke3 Qc3+ 49. Ke2 Qe5+ 50. Kd2 Qd4+ 51. Kc2 Qc4+ 52. Kd2 Qb4+ 53. Ke2 Rf7 54. Qxe6 Rf6 55. Qd5 Qxg4+ 56. Kd3 Rf5 57. Re5 $2 { Error decisivo de las blancas según el motor. } 57... Qg3+ 58. Kd4 Qf2+ 0-1\n\n[Event \"8th Norway Chess 2020\"]\n[Site \"?\"]\n[Date \"2020.10.05\"]\n[Round \"?\"]\n[White \"Duda,J\"]\n[Black \"Firouzja,Alireza\"]\n[Result \"0-1\"]\n[ECO \"B19\"]\n\n1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Bf5 5. Ng3 Bg6 6. h4 h6 7. Nf3 Nd7 8. h5 Bh7 9. Bd3 Bxd3 10. Qxd3 e6 11. Bd2 Ngf6 12. O-O-O Be7 13. Kb1 O-O 14. Ne4 c5 15. Be3 Nxe4 16. Qxe4 Nf6 17. Qxb7 Nd5 18. Qa6 Rb8 19. Bd2 cxd4 20. Nxd4 Bf6 21. Nb3 Qc7 22. Rhe1 Rfc8 23. Rc1 Nb6 24. Re4 Nc4 25. Bf4 Qb6 26. Qxb6 Rxb6 27. Be3 Rb4 28. f3 a5 29. Rxc4 Rcxc4 30. Bd2 Rb5 31. Bxa5 Rxh5 32. Rg1 Rb5 33. Bd2 h5 34. c3 g5 35. Kc2 g4 36. Nc1 g3 37. b3 Rc8 38. a4 Rf5 39. Ne2 h4 40. c4 e5 41. Be3 Bg5 42. Bxg5 Rxg5 43. Rh1 Rh5 44. Kc3 f5 45. b4 f4 46. a5 h3 47. gxh3 e4 48. fxe4 $2 { Error decisivo de las blancas según el motor. } 48... g2 49. Rg1 Rxh3+ 50. Kd4 f3 51. c5 Kf7 52. Nf4 f2 0-1\n\n[Event \"Las Palmas\"]\n[Site \"?\"]\n[Date \"1996.12.12\"]\n[Round \"?\"]\n[White \"Topalov, Veselin\"]\n[Black \"Ivanchuk, Vassily\"]\n[Result \"0-1\"]\n[ECO \"B17\"]\n\n1. e4 c6 2. d4 d5 3. Nd2 dxe4 4. Nxe4 Nd7 5. Ng5 Ngf6 6. Bd3 e6 7. N1f3 Bd6 8. Qe2 h6 9. Ne4 Nxe4 10. Qxe4 Nf6 11. Qe2 Qc7 12. Bd2 b6 13. O-O-O Bb7 14. Kb1 Rd8 15. Rhg1 c5 16. dxc5 Qxc5 17. a3 O-O 18. g4 Qd5 19. g5 Qxf3 20. gxf6 g6 21. Bxh6 Bxh2 22. Rh1 Qxe2 23. Bxe2 Rxd1+ 24. Rxd1 Rc8 25. f3 Bg3 26. Bg7 g5 27. Rd7 Bc6 28. Rxa7 Rd8 29. a4 Be5 30. a5 Rd2 31. Bc4 b5 32. Bb3 Bxf3 33. Re7 Rd6 34. Re8+ $2 { Error decisivo de las blancas según el motor. } 34... Kh7 35. Bf8 Rd1+ 36. Ka2 Bxf6 37. a6 g4 38. c4 Rd2 39. cxb5 g3 40. b6 g2 41. Bc5 Bxb2 0-1\n\n[Event \"Linares16th\"]\n[Site \"?\"]\n[Date \"1999.03.06\"]\n[Round \"?\"]\n[White \"Topalov, Veselin\"]\n[Black \"Anand, Viswanathan\"]\n[Result \"0-1\"]\n[ECO \"B12\"]\n\n1. e4 c6 2. d4 d5 3. e5 Bf5 4. Nc3 e6 5. g4 Bg6 6. Nge2 Ne7 7. Nf4 c5 8. h4 cxd4 9. Nb5 Nec6 10. h5 Be4 11. f3 a6 12. Nd6+ Bxd6 13. exd6 g5 14. Nh3 h6 15. fxe4 dxe4 16. Bg2 f5 17. O-O O-O 18. c3 Qxd6 19. gxf5 exf5 20. Qb3+ Kh8 21. Bxe4 fxe4 22. Rxf8+ Qxf8 23. Qe6 Nd7 24. Qxd7 Rd8 25. Qg4 $2 { Error decisivo de las blancas según el motor. } 25... e3 26. b3 Ne5 27. Qe4 Qf6 28. Kg2 e2 29. Bxg5 hxg5 30. cxd4 Qc6 31. d5 Qxd5 32. Qxd5 Rxd5 33. Re1 Rd2 34. Kf2 Rxa2 35. Rxe2 Nd3+ 36. Ke3 Rxe2+ 37. Kxe2 g4 38. Ng5 Nc1+ 39. Ke3 Nxb3 40. h6 a5 41. Kf4 Nd4 42. Kxg4 a4 43. Kh5 Nc6 0-1\n\n[Event \"WCC\"]\n[Site \"?\"]\n[Date \"2005.12.08\"]\n[Round \"?\"]\n[White \"Carlsen,M\"]\n[Black \"Bareev,E\"]\n[Result \"0-1\"]\n[ECO \"B12\"]\n\n1. e4 c6 2. d4 d5 3. e5 Bf5 4. Nc3 e6 5. g4 Bg6 6. Nge2 c5 7. h4 h5 8. Nf4 Bh7 9. Nxh5 cxd4 10. Nb5 Nc6 11. Nxd4 Nge7 12. c3 Nxe5 13. Bb5+ Nd7 14. Bg5 a6 15. Bxd7+ Qxd7 16. Qe2 O-O-O 17. Rh3 Bg6 18. Nf4 e5 19. Nxg6 Nxg6 20. Bxd8 Kxd8 21. Nf5 Nf4 22. Qxe5 Nxh3 23. O-O-O Kc8 24. Qg3 g6 25. Ne3 Nxf2 26. Nxd5 Bc5 27. Nb6+ Bxb6 28. Rxd7 Kxd7 29. Qf3 Kc8 30. Qxf7 Rd8 31. Kc2 Kb8 32. Qxg6 Be3 33. g5 Rd2+ 34. Kb3 Nd1 35. a4 b5 36. axb5 axb5 37. Kb4 Rxb2+ 38. Ka5 Nxc3 39. Qe8+ Kc7 40. Qe5+ Kb7 41. Qg7+ Kb8 42. g6 Bf4 43. Qf8+ $2 { Error decisivo de las blancas según el motor. } 43... Kb7 44. Qf7+ Bc7+ 45. Qxc7+ Kxc7 46. h5 Rg2 0-1\n\n[Event \"8th Norway Chess 2020\"]\n[Site \"?\"]\n[Date \"2020.10.11\"]\n[Round \"?\"]\n[White \"Tari,A\"]\n[Black \"Firouzja,Alireza\"]\n[Result \"0-1\"]\n[ECO \"B13\"]\n\n1. e4 c6 2. d4 d5 3. exd5 cxd5 4. Bd3 Nf6 5. c3 Bg4 6. Qb3 Qc7 7. h3 Bd7 8. Nf3 Nc6 9. O-O e6 10. Re1 Bd6 11. Bg5 O-O 12. Nbd2 Nh5 13. Qd1 f6 14. Be3 Nf4 15. Bf1 g5 16. c4 Kh8 17. Rc1 Rg8 18. Bxf4 Bxf4 19. b4 Qd6 20. b5 Ne7 21. c5 Qc7 22. g3 g4 23. hxg4 Rxg4 24. Bh3 Rg7 25. Kh1 e5 26. Bxd7 Qxd7 27. Nh2 Qh3 28. Rg1 Rag8 29. Qe2 e4 30. Rc3 Nf5 31. Nxe4 $2 { Error decisivo de las blancas según el motor. } 31... dxe4 32. Qxe4 Bxg3 33. Rg2 Re7 34. Qb1 Rge8 0-1\n\n[Event \"Linares\"]\n[Site \"?\"]\n[Date \"1994.??.??\"]\n[Round \"?\"]\n[White \"Gelfand, Boris\"]\n[Black \"Karpov, Anatoly\"]\n[Result \"0-1\"]\n[ECO \"E54\"]\n\n1. e4 c6 2. d4 d5 3. exd5 cxd5 4. c4 Nf6 5. Nc3 e6 6. Nf3 Bb4 7. Bd3 dxc4 8. Bxc4 O-O 9. O-O b6 10. Bg5 Bb7 11. Re1 Bxc3 12. bxc3 Nbd7 13. Bd3 Qc7 14. Rc1 Qd6 15. Bh4 Rfc8 16. Bg3 Qa3 17. c4 Nf8 18. Ne5 Ng6 19. Re3 Qf8 20. f4 Qd8 21. Bb1 Ne7 22. Bh4 Ng6 23. Bg5 b5 24. Bxg6 hxg6 25. Rh3 Rc7 26. d5 exd5 27. c5 Bc8 28. Rb3 Qe8 29. Qd4 Bf5 30. Re3 Qf8 31. Bxf6 gxf6 32. Nf3 Be4 33. Nd2 f5 34. Rec3 a5 35. c6 Qb4 36. Nb3 Qd6 37. Qf2 b4 38. Rc5 a4 39. Nd4 Bd3 40. Qd2 Bc4 41. Qxb4 Qxf4 42. Qc3 Re8 43. Rd1 Re3 44. Qc1 Qe4 45. Qa1 Rc8 46. Ra5 Ra3 47. Qb1 Qe3+ 48. Kh1 Rxa2 49. Nf3 Bb3 50. Qc1 f4 51. Re1 Rc2 52. Qa1 $2 { Error decisivo de las blancas según el motor. } 52... Qb6 0-1\n\n[Event \"ARM-ch\"]\n[Site \"?\"]\n[Date \"1946.??.??\"]\n[Round \"?\"]\n[White \"Kasparian, Genrikh\"]\n[Black \"Petrosian, Tigran V\"]\n[Result \"0-1\"]\n[ECO \"B11\"]\n\n1. e4 c6 2. Nc3 d5 3. Nf3 Bg4 4. Be2 e6 5. d4 Nf6 6. e5 Nfd7 7. O-O Be7 8. Ne1 Bxe2 9. Nxe2 c5 10. f4 g6 11. dxc5 Nxc5 12. Be3 Nc6 13. Bxc5 Bxc5+ 14. Kh1 Qb6 15. Rf3 Rd8 16. a3 O-O 17. Nd3 Be7 18. Qd2 f5 19. h3 Rc8 20. c3 Na5 21. Nd4 Nb3 22. Nxb3 Qxb3 23. Nc1 Qb6 24. Ne2 Rc4 25. Nd4 Bc5 26. b3 Rxc3 27. Nxe6 Rxf3 28. Nxf8 Rf2 29. Qxd5+ Kxf8 30. Rc1 Be7 31. Kh2 Qe3 32. Rc8+ Kg7 33. Rc4 Rd2 34. Qxb7 Kf7 35. Qb8 Rd1 36. e6+ Qxe6 37. Qxa7 Qe1 38. Rd4 $2 { Error decisivo de las blancas según el motor. } 38... Qg1+ 0-1"}];
+let _bpl=null;
+function builtinLessons(){
+ if(_bpl)return _bpl;_bpl=[];
+ for(const b of BUILTIN_PGN){
+  const r=parseStudyPGN(b.pgn);
+  if(r.chapters.length)_bpl.push({id:'b_'+b.key,title:b.name+' (con negras)',side:b.side,intro:'Repertorio completo de la '+b.name+': '+r.chapters.length+' capítulos con planes, errores típicos y posiciones clave.',chapters:r.chapters});
+  if(r.games.length)_bpl.push({id:'b_'+b.key+'_g',title:b.name+' — partidas modelo',side:b.side,kind:'games',intro:'Partidas de maestros en la '+b.name+'. Recomendado: modo Estudio.',chapters:r.games});
+ }
+ return _bpl;
+}
+
 /* =============== MODO LECCIÓN =============== */
 const Lesson={
  free:false,lock:false,li:0,ci:0,i:0,fails:0,hint:0,study:false,cur:null,
- all(){return [...LESSONS,...structLessons(),...endLessons(),...store.get('custom',[])]},
+ all(){return [...LESSONS,...builtinLessons(),...structLessons(),...endLessons(),...store.get('custom',[])]},
  lesson(){return this.all()[this.li]||this.all()[0]},
  ch(){return this.lesson().chapters[this.ci]||this.lesson().chapters[0]},
  canMove(){return !this.lock&&!this.study&&A.game.turn()===A.userColor&&!this.finished},
@@ -590,8 +606,9 @@ const Lesson={
   <div class="row"><button id="lsImpBtn">Importar PGN…</button><button id="lsDel">Borrar lección</button></div>
   <div id="lsImp" hidden><label>Archivo PGN de estudio<input type="file" id="lsFile" accept=".pgn,.txt"></label>
   <label>…o pega el PGN<textarea id="lsTxt" rows="3" placeholder="[Event ...] [ChapterName ...] 1. d4 Nf6 {comentario [%cal Gg2b7]} ..."></textarea></label>
-  <div class="g2"><label>Nombre de la lección<input id="lsName" value="Mi repertorio"></label><label>Juegas con<select id="lsSide"><option value="w">Blancas</option><option value="b">Negras</option></select></label></div>
-  <label style="flex-direction:row;gap:6px;align-items:center"><input type="checkbox" id="lsGames" checked> Crear también una lección con las partidas modelo (sin ChapterName)</label>
+  <div class="g2"><label>Nombre de la lección<input id="lsName" value="Mi repertorio"></label><label>Juegas con<select id="lsSide"><option value="auto">Automático (según el PGN)</option><option value="w">Blancas</option><option value="b">Negras</option></select></label></div>
+  <label>Tratar las partidas como<select id="lsMode"><option value="auto">Automático</option><option value="chap">Capítulos de repertorio</option><option value="game">Partidas modelo</option></select></label>
+  <label style="flex-direction:row;gap:6px;align-items:center"><input type="checkbox" id="lsGames" checked> Crear también una lección con las partidas completas (sin ChapterName)</label>
   <div class="row"><button id="lsDoImp" class="pri">Importar</button></div><div id="lsImpMsg" class="muted"></div></div>`;
   $('#lsSel').value=this.li;
   $('#lsImpBtn').onclick=()=>{const d=$('#lsImp');d.hidden=!d.hidden};
@@ -611,16 +628,39 @@ const Lesson={
   if(!confirm('¿Borrar la lección «'+L.title+'»?'))return;
   store.set('custom',store.get('custom',[]).filter(x=>x.id!==L.id));this.li=0;this.ci=0;this.enter();
  },
+
+ /* Construye lecciones a partir de texto PGN. opts: {name,side:'auto'|'w'|'b',mode:'auto'|'chap'|'game',games:bool} */
+ buildFromText(txt,opts){
+  let r;try{r=parseStudyPGN(txt)}catch(e){return {err:'No pude leer el archivo: '+e.message}}
+  if(!r.chapters.length&&!r.games.length)return {err:r.bad?`No encontré jugadas válidas: hay ${r.bad} jugada(s) que no son legales en la posición. Revisa que el PGN esté en notación estándar (inglesa: N B R Q K) o española (C A T D R) y que no tenga jugadas con errores.`:'No encontré partidas en el archivo. Debe ser un PGN con jugadas (por ejemplo «1. e4 e5 2. Nf3…»).'}
+  let chaps=r.chapters.slice(),gms=r.games.slice();
+  const mode=opts.mode||'auto';
+  if(mode==='chap'){chaps=chaps.concat(gms);gms=[]}
+  else if(mode==='game'){gms=chaps.concat(gms);chaps=[]}
+  else if(!chaps.length&&gms.length&&gms.filter(g=>g.hasC).length>=gms.length/2){chaps=gms;gms=[]}
+  let side=opts.side||'auto';
+  if(side==='auto')side=r.sides.b>r.sides.w?'b':'w';
+  const cs=store.get('custom',[]),made=[];const name=(opts.name||'Mi repertorio').trim();
+  const strip=l=>l.map(c=>{const x={...c};delete x.hasC;if(x.side===side)delete x.side;return x});
+  const put=L=>{const k=cs.findIndex(x=>x.id===L.id);if(k>=0)cs[k]=L;else cs.push(L);made.push(L)};
+  if(chaps.length)put({id:'p'+hash(name),title:name,side,custom:true,intro:'Repertorio importado desde PGN: '+chaps.length+' capítulos.',chapters:strip(chaps)});
+  if(gms.length&&opts.games!==false)put({id:'p'+hash(name+'|modelo'),title:name+' — partidas modelo',side,custom:true,kind:'games',intro:'Partidas completas de maestros. Recomendado: modo Estudio.',chapters:strip(gms)});
+  if(!made.length)return {err:'El archivo solo tiene partidas completas y la opción «crear también partidas modelo» estaba desmarcada.'};
+  store.set('custom',cs);
+  return {made,r,side,chaps:chaps.length,games:gms.length};
+ },
+ reportText(o){
+  let h=`Importé <b>${o.made.length}</b> lección(es): ${o.made.map(l=>esc(l.title)+' ('+l.chapters.length+' cap.)').join(', ')}. Juegas con <b>${o.side==='w'?'blancas':'negras'}</b>${o.r.sides.b+o.r.sides.w?' (detectado en el PGN)':''}.`;
+  if(o.r.spanish)h+=' Detecté notación española y la convertí.';
+  if(o.r.issues.length)h+=`<br>Aviso: ${o.r.issues.length} capítulo(s) tenían una jugada ilegal y quedaron cortados: ${o.r.issues.slice(0,4).map(x=>esc(x.name)+' (hasta la jugada '+x.ok+')').join('; ')}.`;
+  return h;
+ },
  importPGN(){
   const txt=$('#lsTxt').value,msg=$('#lsImpMsg');
-  const r=parseStudyPGN(txt);if(!r.chapters.length&&!r.games.length){msg.textContent='No encontré partidas válidas en ese PGN.';return}
-  const name=($('#lsName').value||'Mi repertorio').trim(),side=$('#lsSide').value;const cs=store.get('custom',[]);let made=[];
-  const put=L=>{const k=cs.findIndex(x=>x.id===L.id);if(k>=0)cs[k]=L;else cs.push(L);made.push(L)};
-  if(r.chapters.length)put({id:'p'+hash(name),title:name,side,custom:true,intro:'Repertorio importado desde PGN: '+r.chapters.length+' capítulos.',chapters:r.chapters});
-  if(r.games.length&&$('#lsGames').checked)put({id:'p'+hash(name+'|modelo'),title:name+' — partidas modelo',side,custom:true,kind:'games',intro:'Partidas completas de maestros. Recomendado: modo Estudio.',chapters:r.games});
-  store.set('custom',cs);
-  this.li=this.all().findIndex(x=>x.id===made[0].id);this.ci=0;this.enter();
-  Chat.say(`Importé <b>${made.length}</b> lección(es): ${made.map(l=>esc(l.title)+' ('+l.chapters.length+' cap.)').join(', ')}.${r.bad?' Aviso: '+r.bad+' jugada(s) ilegales truncaron algún capítulo.':''}`,'ok');
+  const o=this.buildFromText(txt,{name:$('#lsName').value,side:$('#lsSide').value,mode:$('#lsMode').value,games:$('#lsGames').checked});
+  if(o.err){msg.innerHTML='<span style="color:#d9594c">'+o.err+'</span>';return}
+  this.li=this.all().findIndex(x=>x.id===o.made[0].id);this.ci=0;this.enter();
+  Chat.say(this.reportText(o),'ok');
  },
  mv(){return this.cm||this.ch().moves},
  varChips(){const lv=this.lastV;if(!lv)return[];return lv.v.map((v,i)=>({label:'↪ Seguir variante '+(i+1)+': '+v[0].san,fn:()=>this.branch(i)}))},
@@ -712,8 +752,8 @@ const Lesson={
 
 /* =============== MODO TÁCTICA =============== */
 const Tac={
- free:false,i:0,s:0,tries:0,failed:false,done:false,col:'basic',mq:0,
- canMove(){return !this.done&&!this.lock},
+ free:false,i:0,s:0,tries:0,failed:false,done:false,col:'basic',mq:0,calc:false,
+ canMove(){return !this.calc&&!this.done&&!this.lock},
  list(){return (COLS[this.col]||COLS.basic).get()},
  label(p,i){return p.n?`${i+1}. Mate en ${p.n}`:p.best?`${i+1}. Mejorar la posición`:`${i+1}. ${p.theme}`},
  fill(){const L=this.list();$('#tpSel').innerHTML=L.map((p,i)=>`<option value="${i}">${esc(this.label(p,i))}</option>`).join('');if(this.i>=L.length)this.i=0;$('#tpSel').value=this.i},
@@ -721,7 +761,10 @@ const Tac={
   this.col=store.get('tcol','basic');if(!COLS[this.col]||(this.col==='theme'&&!this.theme))this.col='basic';
   $('#ctl').innerHTML=`<div class="g2"><label>Colección<select id="tpCol">${Object.entries(COLS).filter(([k])=>k!=='theme'||Tac.theme).map(([k,c])=>`<option value="${k}">${esc(k==='theme'?'Tema: '+Tac.theme:c.n)} (${c.get().length})</option>`).join('')}</select></label>
   <label>Problema<select id="tpSel"></select></label></div>
+  <div class="row"><label style="flex-direction:row;gap:6px;align-items:center"><input type="checkbox" id="tpCalc"> Calcular sin mover piezas</label><select id="tpNot" title="Notación al escribir las jugadas"><option value="es">R D T A C (español)</option><option value="en">K Q R B N (inglés)</option></select></div>
   <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpRand">Al azar</button><button id="tpNext" class="pri">Siguiente problema ▶</button></div>`;
+  this.calc=!!store.get('tcalc',false);$('#tpCalc').checked=this.calc;$('#tpNot').value=store.get('tnot','es');
+  $('#tpCalc').onchange=e=>{this.calc=e.target.checked;store.set('tcalc',this.calc);this.load()};$('#tpNot').onchange=e=>{store.set('tnot',e.target.value);this.load()};
   $('#tpCol').value=this.col;this.i=0;this.fill();
   $('#tpCol').onchange=e=>{this.col=e.target.value;store.set('tcol',this.col);this.i=0;this.fill();this.load()};
   $('#tpSel').onchange=e=>{this.i=+e.target.value;this.load()};
@@ -741,9 +784,86 @@ const Tac={
   if(p.n)Chat.say(`<b>Problema ${this.i+1} · Mate en ${p.n}</b><br>Juegan ${who}. Da mate en ${p.n} jugada${p.n>1?'s':''}, pase lo que pase el rival.`);
   else if(p.best)Chat.say(`<b>Problema ${this.i+1} · Mejorar la posición</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`);
   else Chat.say(`<b>Problema ${this.i+1} · ${esc(p.theme)}</b><br>Juegan ${who}. Encuentra la mejor jugada.`);
-  A.status('Tu turno');Chat.chips([{label:'Pista',fn:()=>this.hint()}]);
+  A.status(this.calc?'Calcula la línea sin mover piezas':'Tu turno');Chat.chips([{label:'Pista',fn:()=>this.hint()}]);
+  if(this.calc)this.calcUI(p);
  },
- stat(ok){Log.add('tac',1,ok);const s=store.get('tstats',{});const t=this.list()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
+
+ /* ---------- Calcular sin mover piezas ---------- */
+ sample(){return store.get('tnot','es')==='es'?'Dd8+ Rxd8 Cf7#':'Qd8+ Rxd8 Nf7#'},
+ fmt(t){if(store.get('tnot','es')==='en')return t;const M={K:'R',Q:'D',R:'T',B:'A',N:'C'};return String(t).replace(/(^|[\s.])([KQRBN])(?=[a-h1-8x])/g,(m,a,c)=>a+M[c]).replace(/=([QRBN])/g,(m,c)=>'='+M[c])},
+ norm(t){return t.replace(/[x:+#!?=\-]/g,'')},
+ toEn(t){t=t.replace(/0/g,'O');if(store.get('tnot','es')==='en')return t;const M={R:'K',D:'Q',T:'R',A:'B',C:'N'};return t.replace(/^[RDTAC]/,c=>M[c]).replace(/=([DTAC])/,(m,c)=>'='+M[c])},
+ parseTok(c,tok){
+  const co=/^([a-h][1-8])[-x]?([a-h][1-8])([qrbnQRBN])?$/.exec(tok);
+  const ms=c.moves({verbose:true});let f;
+  if(co)f=ms.filter(m=>m.from===co[1]&&m.to===co[2]&&(!co[3]||(m.promotion||'')===co[3].toLowerCase()));
+  else{const en=this.norm(this.toEn(tok));f=ms.filter(m=>this.norm(m.san)===en)}
+  if(f.length===1)return {m:f[0]};
+  if(f.length>1)return {err:`«${esc(tok)}» es ambigua: indica desde qué columna o fila juega la pieza (por ejemplo Tad1).`};
+  return {err:`No entendí «${esc(tok)}»: no es una jugada legal en ese momento. Escribe con notación ${store.get('tnot','es')==='es'?'española (R, D, T, A, C)':'inglesa (K, Q, R, B, N)'}.`};
+ },
+ calcUI(p){
+  Chat.say(`<b>Modo cálculo:</b> el tablero está bloqueado. ${p.best?'Escribe la mejor jugada.':`Escribe la <b>línea completa</b> (tus jugadas y las respuestas del rival)${p.n?' hasta el mate':''}. Ejemplo: <i>${this.sample()}</i>`}<div class="row" style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><input type="text" id="calcIn" placeholder="${p.best?'Tu jugada':'Tu línea'}" style="flex:1;min-width:140px"><button class="pri" id="calcOk">Comprobar</button><button id="calcShow">Ver solución</button></div>`);
+  const inp=Chat.el.querySelector('#calcIn');if(!inp)return;inp.focus();
+  inp.onkeydown=e=>{if(e.key==='Enter')this.calcCheck(inp.value)};
+  Chat.el.querySelector('#calcOk').onclick=()=>this.calcCheck(inp.value);
+  Chat.el.querySelector('#calcShow').onclick=()=>this.calcShow();
+ },
+ calcRun(p,text){
+  const toks=text.replace(/\d+\.(\.\.)?/g,' ').replace(/[,;]/g,' ').split(/\s+/).filter(Boolean);
+  if(!toks.length)return {st:'empty'};
+  const c=new Chess(p.fen),san=[];let rem=p.n||0,first=false;
+  for(let i=0;i<toks.length;i++){
+   const r=this.parseTok(c,toks[i]);if(r.err)return {st:'err',msg:r.err,first};
+   const m=c.move(r.m.san);san.push(m.san);const mine=i%2===0;
+   if(!mine)continue;
+   let good;
+   if(p.n){
+    if(rem===1)good=c.in_checkmate();else if(rem===2)good=MateU.forced(c,1);else good=i===0&&p.f.map(clean).includes(clean(m.san));
+    if(!good)return {st:i===0?'wrong':'first',san,msg:i===0?`<b>${esc(this.fmt(m.san))}</b> no fuerza el mate en ${p.n}.`:`Tu primera jugada es correcta, pero <b>${esc(this.fmt(m.san))}</b> no continúa el mate forzado.`};
+    first=true;rem--;if(rem===0)return {st:'full',san};
+   }else if(p.best){
+    if(clean(m.san)===clean(p.best))return {st:'full',san};
+    const sc=(p.sec||[]).find(x=>clean(x[0])===clean(m.san));
+    return {st:'wrong',san,msg:`<b>${esc(this.fmt(m.san))}</b> ${sc?`es razonable (≈${fmtEv(sc[1])} para ti), pero no es la mejor.`:'no es la mejor jugada.'}`};
+   }else{
+    const exp=p.sol[i];good=exp==='#'?c.in_checkmate():(exp?(Array.isArray(exp)?exp:[exp]).map(clean).includes(clean(m.san)):false);
+    if(!good&&i===p.sol.length-1&&c.in_checkmate())good=true;
+    if(!good)return {st:i===0?'wrong':'first',san,msg:i===0?`<b>${esc(this.fmt(m.san))}</b> no es la mejor jugada.`:`Tu primera jugada es correcta, pero <b>${esc(this.fmt(m.san))}</b> no es la continuación.`};
+    first=true;if(i>=p.sol.length-1)return {st:'full',san};
+   }
+  }
+  return {st:first?'first':'wrong',san,msg:first?`Tu primera jugada es correcta, pero la línea no llega al final: ${p.n?`faltan ${rem} jugada${rem>1?'s':''} tuya${rem>1?'s':''} hasta el mate`:'faltan jugadas'}.`:'Esa jugada no resuelve el problema.'};
+ },
+ calcCheck(text){
+  if(this.done)return;const p=this.list()[this.i],r=this.calcRun(p,text);
+  if(r.st==='empty'){Chat.say('Escribe tu línea antes de comprobar.','warn');return}
+  if(r.st==='err'){Chat.say(r.msg,'bad');return}
+  this.tries++;
+  if(r.st==='full'){const w=this.failed;Chat.say(`✓ Tu línea es correcta: <b>${esc(this.fmt(r.san.join(' ')))}</b>`,'ok');this.solved();if(w)Chat.say('Cuenta como fallo porque habías fallado antes en este problema.','warn');return}
+  if(!this.failed){this.failed=true;this.stat(false)}
+  Chat.say(r.msg+(r.st==='first'?' Puedes corregirla o pulsar «Ver solución».':' Inténtalo otra vez o pulsa «Ver solución».'),r.st==='first'?'warn':'bad');
+ },
+ solLine(p){
+  const c=new Chess(p.fen),out=[];
+  if(p.n)return p.line.replace(/\d+\.(\.\.)?/g,' ').split(/\s+/).filter(Boolean);
+  if(p.best)return [p.best];
+  for(let i=0;i<p.sol.length;i++){let e=p.sol[i],m=null;
+   if(Array.isArray(e))e=e[0];
+   if(e==='#'){m=c.moves().find(x=>{c.move(x);const k=c.in_checkmate();c.undo();return k})}
+   else if(e)m=e;else m=c.moves()[0];
+   const mv=m&&c.move(m);if(!mv)break;out.push(mv.san)}
+  return out;
+ },
+ calcShow(){
+  const p=this.list()[this.i];if(!this.done){if(!this.failed){this.failed=true;this.stat(false)}this.done=true}
+  const L=this.solLine(p);
+  let h=`<b>Solución:</b> ${esc(this.fmt(L.join(' ')))}<br>${p.expl||p.idea||''}`;
+  Chat.say(h,'ok');A.status('Solución');
+  let k=0;const step=()=>{const m=A.game.move(L[k]);if(!m)return;k++;A.sync();A.updateControls();board.arrows=[[m.from,m.to]];board.draw();Chat.chips(k<L.length?[{label:'Siguiente jugada ▶',pri:true,fn:step},{label:'Reiniciar',fn:()=>this.load()}]:[{label:'Siguiente problema ▶',pri:true,fn:()=>$('#tpNext').click()},{label:'Repetir este',fn:()=>this.load()}])};
+  Chat.chips([{label:'Ver la línea en el tablero ▶',pri:true,fn:step},{label:'Siguiente problema ▶',fn:()=>$('#tpNext').click()}]);
+ },
+ stat(ok){if(this.calc){const q=store.get('cstats',{n:0,ok:0});q.n++;if(ok)q.ok++;store.set('cstats',q);Log.add('cal',1,ok)}Log.add('tac',1,ok);const s=store.get('tstats',{});const t=this.list()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
  wrong(msg){this.tries++;this.lock=true;if(!this.failed){this.failed=true;this.stat(false)}Chat.say(msg,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
  onMove(m){
   const p=this.list()[this.i];
@@ -946,59 +1066,192 @@ const Play={
 
 /* =============== MODO CREAR LECCIÓN =============== */
 const Edit={
- free:true,notes:{},sel:null,
- canMove(){return true},
+ free:true,started:false,d:null,ci:0,notes:{},extra:{},sel:null,
+ canMove(){return A.live()},
+ blank(){return {id:null,title:'',side:'w',intro:'',chapters:[{id:'c1',title:'Capítulo 1',intro:'',outro:'',fen:'',moves:[]}]}},
+ loadDraft(){const d=store.get('edit_draft',null);this.d=d&&Array.isArray(d.chapters)&&d.chapters.length?d:this.blank();if(this.ci>=this.d.chapters.length)this.ci=0},
+ persist(){store.set('edit_draft',this.d)},
+ dec(t){return String(t||'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,'&')},
+ san(t){return esc(t).replace(/&lt;(\/?)(b|i|u|br|ul|li)&gt;/g,'<$1$2>')},
+ msg(h,bad){const m=$('#edMsg');if(m)m.innerHTML=bad?'<span style="color:#d9594c">'+h+'</span>':h},
  enter(){
-  $('#ctl').innerHTML=`<label>Título de la lección<input id="edTitle" placeholder="Ej.: Catalana: plan con Dc2"></label>
-  <label>Juegas con<select id="edSide"><option value="w">Blancas</option><option value="b">Negras</option></select></label>
-  <label>Comentario de la jugada seleccionada<textarea id="edNote" rows="3" placeholder="Explica la idea de esta jugada…"></textarea></label>
-  <div class="row"><button id="edUndo">Deshacer</button><button id="edReset">Tablero nuevo</button><button id="edSave" class="pri">Guardar lección</button></div>
-  <label>Pegar jugadas (SAN o PGN con comentarios {entre llaves})<textarea id="edPaste" rows="3" placeholder="1. d4 Nf6 {Desarrolla} 2. c4 e6 3. g3"></textarea></label>
-  <div class="row"><button id="edLoad">Cargar jugadas</button><button id="edExport">Exportar mis lecciones</button><button id="edImport">Importar</button></div>`;
-  $('#edNote').oninput=e=>{if(this.sel!=null)this.notes[this.sel]=e.target.value};
-  $('#edUndo').onclick=()=>{A.game.undo();delete this.notes[A.hist.length];this.after()};
-  $('#edReset').onclick=()=>this.reset();
-  $('#edSave').onclick=()=>this.save();
-  $('#edLoad').onclick=()=>this.loadText($('#edPaste').value);
-  $('#edExport').onclick=()=>this.exp();$('#edImport').onclick=()=>this.imp();
-  if(!this.started)this.reset();else this.after();
+  this.loadDraft();
+  const cust=store.get('custom',[]),inc=[...LESSONS,...builtinLessons(),...structLessons(),...endLessons()];
+  $('#ctl').innerHTML=`<details open><summary><b>Lección</b></summary>
+  <label>Abrir para editar<select id="edMine"><option value="">— lección nueva —</option>${cust.length?'<optgroup label="Mis lecciones">'+cust.map(l=>`<option value="c:${esc(l.id)}">${esc(l.title)}</option>`).join('')+'</optgroup>':''}<optgroup label="Incluidas (se edita una copia)">${inc.map(l=>`<option value="i:${esc(l.id)}">${esc(l.title)}</option>`).join('')}</optgroup></select></label>
+  <label>Título<input id="edTitle" placeholder="Ej.: Defensa Caro-Kann"></label>
+  <div class="g2"><label>Juegas con<select id="edSide"><option value="w">Blancas</option><option value="b">Negras</option></select></label><label>&nbsp;<button id="edDelL">Borrar esta lección</button></label></div>
+  <label>Descripción<textarea id="edIntro" rows="2" placeholder="De qué trata la lección…"></textarea></label></details>
+  <details open><summary><b>Capítulo</b></summary>
+  <div class="g2"><label>Capítulo<select id="edCh"></select></label><label>Título del capítulo<input id="edChTitle"></label></div>
+  <div class="row"><button id="edAddCh">+ Capítulo</button><button id="edDelCh">Borrar capítulo</button><button id="edUp" title="Subir">↑</button><button id="edDn" title="Bajar">↓</button></div>
+  <label>Introducción del capítulo<textarea id="edChIntro" rows="2"></textarea></label>
+  <label>Ideas clave (al terminar)<textarea id="edChOutro" rows="2"></textarea></label>
+  <label>Posición inicial (FEN, opcional)<input id="edFen" placeholder="vacío = posición inicial"></label></details>
+  <details open><summary><b>Jugadas</b></summary>
+  <div id="edSelLbl" class="small">Juega las jugadas en el tablero (blancas y negras). Pulsa una jugada de la lista para comentarla.</div>
+  <label>Comentario de la jugada seleccionada <span class="small">(admite &lt;b&gt;negrita&lt;/b&gt;)</span><textarea id="edNote" rows="3" placeholder="Explica la idea de esta jugada…"></textarea></label>
+  <div class="row"><button id="edUndo">Deshacer</button><button id="edTrunc">Cortar aquí</button><button id="edClear">Limpiar capítulo</button></div>
+  <label>Pegar jugadas o PGN<textarea id="edPaste" rows="3" placeholder="1. d4 Nf6 {Desarrolla} 2. c4 e6 …  (también PGN con varias partidas o capítulos)"></textarea></label>
+  <div class="row"><button id="edLoad">Cargar texto</button></div></details>
+  <div class="row"><button id="edSave" class="pri">Guardar lección</button><button id="edTry">Guardar y practicar</button></div>
+  <details><summary><b>Importar y exportar</b></summary><div class="row"><button id="edImpFile">Importar PGN o JSON…</button><button id="edExpL">Exportar esta (JSON)</button><button id="edExpPgn">Exportar esta (PGN)</button><button id="edExpAll">Exportar todas mis lecciones</button></div></details>
+  <div id="edMsg" class="small"></div>`;
+  const on=(id,ev,fn)=>{const e=$('#'+id);if(e)e['on'+ev]=fn};
+  ['edTitle','edSide','edIntro','edChTitle','edChIntro','edChOutro'].forEach(id=>on(id,'change',()=>{this.commit();if(id==='edSide'){board.flipped=this.d.side==='b';board.draw()}if(id==='edChTitle')this.fillChapters()}));
+  on('edFen','change',()=>this.setFen($('#edFen').value.trim()));
+  on('edNote','input',e=>{if(this.sel!=null){const t=this.san(e.target.value);if(t.trim())this.notes[this.sel]=t;else delete this.notes[this.sel];this.commit();this.renderMoves()}});
+  on('edCh','change',e=>{this.commit();this.openChapter(+e.target.value)});
+  on('edAddCh','click',()=>{this.commit();this.d.chapters.push({id:'c'+Date.now().toString(36),title:'Capítulo '+(this.d.chapters.length+1),intro:'',outro:'',fen:'',moves:[]});this.persist();this.openChapter(this.d.chapters.length-1)});
+  on('edDelCh','click',()=>{if(this.d.chapters.length<2){this.msg('Una lección necesita al menos un capítulo.',true);return}if(!confirm('¿Borrar este capítulo?'))return;this.d.chapters.splice(this.ci,1);this.persist();this.openChapter(Math.max(0,this.ci-1))});
+  on('edUp','click',()=>this.moveCh(-1));on('edDn','click',()=>this.moveCh(1));
+  on('edUndo','click',()=>{if(!A.hist.length)return;A.viewIdx=null;A.game.undo();delete this.notes[A.hist.length];A.epoch++;this.after()});
+  on('edTrunc','click',()=>{const k=this.sel==null?A.hist.length:this.sel;A.viewIdx=null;while(A.game.history().length>k){const n=A.game.history().length;A.game.undo();delete this.notes[n]}A.epoch++;this.after()});
+  on('edClear','click',()=>{if(A.hist.length&&!confirm('¿Borrar todas las jugadas de este capítulo?'))return;this.setFen($('#edFen').value.trim(),true)});
+  on('edLoad','click',()=>this.loadText($('#edPaste').value));
+  on('edSave','click',()=>this.save());on('edTry','click',()=>this.save(true));
+  on('edMine','change',e=>this.openLesson(e.target.value));
+  on('edDelL','click',()=>this.delLesson());
+  on('edImpFile','click',()=>this.impFile());on('edExpL','click',()=>this.exportOne('json'));on('edExpPgn','click',()=>this.exportOne('pgn'));on('edExpAll','click',()=>this.exportAll());
+  this.openChapter(this.ci);
  },
- leave(){},
- reset(){this.started=true;Engine.stop();A.epoch++;A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;A.userColor='w';this.notes={};this.sel=null;board.arrows=[];setEval(null);$('#engineLines').innerHTML='';this.after();
-  Chat.clear();Chat.say('<b>Crea tu propia lección.</b> Juega las jugadas en el tablero (blancas y negras). Haz clic en una jugada de la lista para escribir su explicación. También puedes pegar una línea en notación SAN/PGN.<br>Al guardar, la lección aparece en la pestaña «Lecciones» con chat de entrenador, práctica y estudio.');
-  A.status('Modo edición: mueve ambos colores');},
- after(){A.sync();A.updateControls();this.select(A.hist.length||null);},
- select(i){this.sel=i||null;$('#edNote').value=this.sel!=null?(this.notes[this.sel]||''):'';},
- onMove(){this.after()},
+ leave(){if(this.d)this.commit()},
+ fillForm(){
+  const d=this.d,ch=d.chapters[this.ci];
+  $('#edTitle').value=d.title;$('#edSide').value=d.side;$('#edIntro').value=this.dec(d.intro);
+  $('#edChTitle').value=ch.title;$('#edChIntro').value=this.dec(ch.intro);$('#edChOutro').value=this.dec(ch.outro);$('#edFen').value=ch.fen||'';
+  this.fillChapters();
+  const cust=store.get('custom',[]);$('#edMine').value=d.id&&cust.some(l=>l.id===d.id)?'c:'+d.id:'';
+ },
+ fillChapters(){const sel=$('#edCh');sel.innerHTML=this.d.chapters.map((c,i)=>`<option value="${i}">${i+1}. ${esc(c.title)} (${c.moves.length})</option>`).join('');sel.value=this.ci},
+ commit(){
+  if(!this.d||A.mode!==Edit||!$('#edTitle'))return;
+  const d=this.d,ch=d.chapters[this.ci];if(!ch)return;
+  d.title=$('#edTitle').value.trim();d.side=$('#edSide').value;d.intro=this.san($('#edIntro').value);
+  ch.title=$('#edChTitle').value.trim()||('Capítulo '+(this.ci+1));ch.intro=this.san($('#edChIntro').value);ch.outro=this.san($('#edChOutro').value);
+  ch.fen=A.startFen!==new Chess().fen()?A.startFen:'';
+  ch.moves=A.hist.map((m,i)=>{const st={san:m.san},n=this.notes[i+1];if(n)st.c=n;const x=this.extra[i+1];if(x&&x.san===m.san)Object.assign(st,x.f);return st});
+  this.persist();
+ },
+ openChapter(i){
+  this.ci=i;const ch=this.d.chapters[i];A.epoch++;Engine.stop();
+  let g;try{g=ch.fen?new Chess(ch.fen):new Chess()}catch(e){g=new Chess()}
+  A.game=g;A.startFen=g.fen();A.viewIdx=null;board.flipped=this.d.side==='b';A.userColor=g.turn();
+  this.notes={};this.extra={};let n=0,bad=null;
+  for(const st of ch.moves){const m=g.move(st.san,{sloppy:true});if(!m){bad=st.san;break}n++;if(st.c)this.notes[n]=st.c;const f={};['a','k','v','h','wrong'].forEach(k=>{if(st[k]!==undefined)f[k]=st[k]});if(Object.keys(f).length)this.extra[n]={san:m.san,f}}
+  board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';this.fillForm();this.after();
+  if(bad)this.msg(`La jugada «${esc(bad)}» de este capítulo no es legal y se omitió desde ahí.`,true);
+ },
+ moveCh(dir){const j=this.ci+dir,a=this.d.chapters;if(j<0||j>=a.length)return;this.commit();[a[this.ci],a[j]]=[a[j],a[this.ci]];this.ci=j;this.persist();this.fillChapters()},
+ setFen(fen,clear){
+  let g;try{g=fen?new Chess(fen):new Chess();if(fen&&!g.fen())throw 0}catch(e){this.msg('FEN no válido.',true);return}
+  if(fen&&g.fen()===undefined){this.msg('FEN no válido.',true);return}
+  A.epoch++;A.game=g;A.startFen=g.fen();A.viewIdx=null;this.notes={};this.extra={};board.arrows=[];board.marks=[];this.after();
+ },
+ after(){A.sync();A.updateControls();this.select(A.hist.length||null);this.commit();this.renderMoves();this.fillChapters()},
+ select(i,go){
+  this.sel=i||null;const lbl=$('#edSelLbl'),n=$('#edNote');
+  if(this.sel!=null&&A.hist[this.sel-1]){const m=A.hist[this.sel-1];lbl.innerHTML=`Jugada seleccionada: <b>${m.color==='w'?Math.ceil(this.sel/2)+'. ':Math.ceil(this.sel/2)+'... '}${esc(m.san)}</b>`;n.disabled=false;n.value=this.dec(this.notes[this.sel]||'')}
+  else{lbl.textContent='Juega las jugadas en el tablero (blancas y negras). Pulsa una jugada de la lista para comentarla.';n.value='';n.disabled=true}
+  if(go&&this.sel!=null){A.goto(this.sel)}
+ },
+ onMove(){A.viewIdx=null;this.after()},
+ renderMoves(){
+  const d=this.d,ch=d.chapters[this.ci];let h=`<div class="panel"><b>${esc(d.title||'Lección sin título')}</b> · capítulo ${this.ci+1} de ${d.chapters.length}: <b>${esc(ch.title)}</b> · ${A.hist.length} jugada${A.hist.length===1?'':'s'}<div style="margin-top:8px;line-height:2">`;
+  if(!A.hist.length)h+='<span class="small">Aún no hay jugadas. Muévelas en el tablero, pega un PGN en el panel o importa un archivo.</span>';
+  A.hist.forEach((m,i)=>{const p=i+1;if(m.color==='w')h+=` <span class="small">${Math.ceil(p/2)}.</span>`;else if(i===0)h+=` <span class="small">${Math.ceil(p/2)}...</span>`;
+   const ex=this.extra[p]&&(this.extra[p].f.a||this.extra[p].f.k)?'↗':'';
+   h+=` <button data-p="${p}" class="${this.sel===p?'pri':''}" style="padding:2px 7px">${esc(m.san)}${this.notes[p]?' •':''}${ex}</button>`});
+  h+='</div><div class="small" style="margin-top:8px">• = tiene comentario · ↗ = tiene flechas o casillas marcadas (se conservan al guardar).</div>';
+  if(this.sel!=null&&this.notes[this.sel])h+=`<div style="margin-top:8px;border-left:3px solid var(--acc);padding-left:10px">${this.notes[this.sel]}</div>`;
+  h+='</div>';Chat.el.innerHTML=h;
+  Chat.el.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{this.select(+b.dataset.p,true);this.renderMoves()});
+ },
  loadText(t){
-  const toks=t.match(/\{[^}]*\}|\d+\.(\.\.)?|\S+/g)||[];this.reset();
-  for(const k of toks){
-   if(k[0]==='{'){if(A.hist.length)this.notes[A.hist.length]=k.slice(1,-1).trim();continue}
-   if(/^\d+\.(\.\.)?$/.test(k)||/^(1-0|0-1|1\/2-1\/2|\*)$/.test(k))continue;
-   const m=A.game.move(k,{sloppy:true});if(!m){Chat.say(`No entendí «${esc(k)}» y me detuve ahí.`,'bad');break}
+  if(!String(t).trim()){this.msg('Pega primero las jugadas o el PGN.',true);return}
+  const r=parseStudyPGN(t),all=r.chapters.concat(r.games);
+  if(!all.length){this.msg(r.bad?`No pude leer el texto: hay ${r.bad} jugada(s) ilegal(es). Revisa la notación.`:'No encontré jugadas en ese texto.',true);return}
+  this.commit();const cur=this.d.chapters[this.ci];
+  const mk=c=>({id:c.id||('c'+Date.now().toString(36)),title:c.title,intro:c.intro||'',outro:c.outro||'',fen:c.fen||'',moves:c.moves,...(c.side?{side:c.side}:{})});
+  if(all.length===1&&!cur.moves.length||all.length===1){const c=all[0];Object.assign(cur,{moves:c.moves,fen:c.fen||'',intro:cur.intro||c.intro||''});if(!cur.title||/^Capítulo \d+$/.test(cur.title))cur.title=c.title}
+  else{this.d.chapters.splice(this.ci+1,0,...all.map(mk))}
+  if(r.sides.b>r.sides.w&&!this.d.title&&!this.d.chapters.some((c,i)=>i!==this.ci&&c.moves.length))this.d.side='b';
+  this.persist();$('#edPaste').value='';this.openChapter(all.length===1?this.ci:this.ci+1);
+  this.msg(all.length===1?'Jugadas cargadas en este capítulo.':`Añadí ${all.length} capítulos después del actual.`+(r.issues.length?` Aviso: ${r.issues.length} con jugada ilegal (cortados).`:''));
+ },
+ build(){
+  this.commit();const d=this.d;
+  const chapters=d.chapters.filter(c=>c.moves.length).map((c,i)=>{const o={id:c.id||('c'+(i+1)),title:c.title,intro:c.intro||'',moves:c.moves,outro:c.outro||''};if(c.fen)o.fen=c.fen;if(c.side)o.side=c.side;return o});
+  return {chapters,l:{id:d.id||('u'+Date.now()),title:d.title,side:d.side,custom:true,intro:d.intro||'Lección creada por ti.',chapters}};
+ },
+ save(practice){
+  this.commit();if(!this.d.title.trim()){this.msg('Ponle un título a la lección.',true);$('#edTitle').focus();return}
+  const {chapters,l}=this.build();
+  if(!chapters.length){this.msg('Añade jugadas al menos a un capítulo (los capítulos vacíos no se guardan).',true);return}
+  const empty=this.d.chapters.length-chapters.length;
+  const cs=store.get('custom',[]),k=cs.findIndex(x=>x.id===l.id);if(k>=0)cs[k]=l;else cs.push(l);
+  store.set('custom',cs);this.d.id=l.id;this.persist();
+  const n=chapters.reduce((a,c)=>a+c.moves.length,0);
+  this.msg(`✓ Lección «${esc(l.title)}» guardada: ${chapters.length} capítulo(s), ${n} jugadas${empty?` (${empty} capítulo(s) vacío(s) omitido(s))`:''}.`);
+  const go=()=>{Lesson.li=Lesson.all().findIndex(x=>x.id===l.id);Lesson.ci=0;Lesson.study=false;Mode.set('lesson')};
+  if(practice)return go();
+  const cu=store.get('custom',[]);const sel=$('#edMine');if(sel)this.enter();
+  Chat.chips([{label:'Practicar en Lecciones',pri:true,fn:go},{label:'Seguir editando',fn:()=>{}}]);
+ },
+ openLesson(v){
+  this.commit();
+  if(!v){this.d=this.blank();this.persist();this.openChapter(0);return}
+  const [k,id]=[v.slice(0,1),v.slice(2)];
+  const L=k==='c'?store.get('custom',[]).find(x=>x.id===id):Lesson.all().find(x=>x.id===id);if(!L)return;
+  const copy=k==='i';
+  this.d={id:copy?null:L.id,title:copy?L.title+' (copia)':L.title,side:L.side||'w',intro:L.intro||'',chapters:JSON.parse(JSON.stringify(L.chapters)).map(c=>({id:c.id,title:c.title,intro:c.intro||'',outro:c.outro||'',fen:c.fen||'',moves:c.moves,...(c.side?{side:c.side}:{})}))};
+  this.ci=0;this.persist();this.openChapter(0);
+  this.msg(copy?'Abrí una copia de la lección incluida: al guardar se creará una lección tuya.':'Lección abierta para editar. Al guardar se sobrescribe.');
+ },
+ delLesson(){
+  const id=this.d.id,cs=store.get('custom',[]);
+  if(!id||!cs.some(x=>x.id===id)){if(confirm('Esta lección aún no está guardada. ¿Vaciar el borrador?')){this.d=this.blank();this.persist();this.enter()}return}
+  if(!confirm('¿Borrar la lección «'+this.d.title+'»? Esto no se puede deshacer.'))return;
+  store.set('custom',cs.filter(x=>x.id!==id));this.d=this.blank();this.persist();this.ci=0;this.enter();this.msg('Lección borrada.');
+ },
+ /* ---- importar / exportar ---- */
+ impFile(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.pgn,.txt,.json';inp.multiple=true;
+  inp.onchange=async()=>{for(const f of inp.files){const t=await f.text();this.importText(t,f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' '))}};inp.click();
+ },
+ importText(t,name){
+  const tt=t.replace(/^﻿/,'').trim();
+  if(/^[\[{]/.test(tt)&&!/^\[Event\s/.test(tt)&&!/^\[\w+\s+"/.test(tt)){
+   try{let x=JSON.parse(tt);if(x&&x.lessons)x=x.lessons;if(!Array.isArray(x))x=[x];x=x.filter(l=>l&&Array.isArray(l.chapters)&&l.title);if(!x.length)throw 0;
+    const cs=store.get('custom',[]);x.forEach((l,i)=>{l.custom=true;l.id='u'+Date.now().toString(36)+i+Math.random().toString(36).slice(2,4);cs.push(l)});store.set('custom',cs);
+    this.msg(`✓ Importé ${x.length} lección(es) desde JSON: ${x.map(l=>esc(l.title)).join(', ')}.`);this.enter();return}
+   catch(e){this.msg('Ese JSON no tiene el formato de lecciones de esta app (debe ser una lista de lecciones con título y capítulos).',true);return}
   }
-  this.after();
+  const o=Lesson.buildFromText(t,{name,side:'auto',mode:'auto',games:true});
+  if(o.err){this.msg(o.err,true);return}
+  this.msg(Lesson.reportText(o));this.enter();
+  Chat.chips([{label:'Ir a Lecciones',pri:true,fn:()=>{Lesson.li=Lesson.all().findIndex(x=>x.id===o.made[0].id);Lesson.ci=0;Mode.set('lesson')}},{label:'Editar la primera',fn:()=>{this.openLesson('c:'+o.made[0].id)}}]);
  },
- save(){
-  const title=$('#edTitle').value.trim();if(!title){Chat.say('Ponle un título a la lección.','warn');return}
-  if(!A.hist.length){Chat.say('Primero juega o pega algunas jugadas.','warn');return}
-  const moves=A.hist.map((m,i)=>({san:m.san,c:esc(this.notes[i+1]||'')}));
-  const side=$('#edSide').value;
-  const les={id:'u'+Date.now(),title,side,custom:true,intro:'Lección creada por ti.',chapters:[{id:'main',title:'Línea principal',intro:'Tu propia línea. ¡A practicarla!',moves,outro:'Has completado tu lección. Repítela hasta que salga sin pistas.'}]};
-  const cs=store.get('custom',[]);cs.push(les);store.set('custom',cs);
-  Chat.say(`✓ Lección «${esc(title)}» guardada (${moves.length} jugadas). Ábrela en la pestaña «Lecciones».`,'ok');
-  Chat.chips([{label:'Ir a Lecciones',pri:true,fn:()=>{Lesson.li=Lesson.all().length-1;Lesson.ci=0;Mode.set('lesson')}}]);
+ toPGN(d){
+  const strip=t=>this.dec(String(t||'').replace(/<br\s*\/?>/g,' ').replace(/<\/?[a-z]+>/g,'')).replace(/[{}]/g,'').replace(/\s+/g,' ').trim();
+  return d.chapters.filter(c=>c.moves.length).map(c=>{
+   const g=c.fen?new Chess(c.fen):new Chess();let out=`[Event "${d.title.replace(/"/g,"'")}"]\n[ChapterName "${c.title.replace(/"/g,"'")}"]\n[Orientation "${(c.side||d.side)==='b'?'black':'white'}"]\n[Result "*"]\n`;
+   if(c.fen)out+=`[SetUp "1"]\n[FEN "${c.fen}"]\n`;out+='\n';const parts=[];if(c.intro)parts.push('{'+strip(c.intro)+'}');
+   for(const st of c.moves){const w=g.turn()==='w',n=g.history().length;const m=g.move(st.san,{sloppy:true});if(!m)break;
+    let tok=(w?(Math.floor(n/2)+1)+'. ':(parts.length&&/^\{/.test(parts[parts.length-1])||true?'':'')+(parts.length&&!/\.$/.test(parts[parts.length-1])?'':'')) + m.san;
+    if(!w&&(!parts.length||/^\{/.test(parts[parts.length-1])))tok=(Math.floor(n/2)+1)+'... '+m.san;
+    let cm=strip(st.c);const cal=(st.a||[]).map(a=>'G'+a[0]+a[1]).join(','),csl=(st.k||[]).map(k=>'G'+k).join(',');
+    const tag=(cal?`[%cal ${cal}]`:'')+(csl?`[%csl ${csl}]`:'');if(cm||tag)tok+=` {${(tag?tag+' ':'')+cm}}`;parts.push(tok)}
+   return out+parts.join(' ')+' *\n';
+  }).join('\n');
  },
- exp(){
-  const data=JSON.stringify(store.get('custom',[]),null,1);
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='mis-lecciones-ajedrez.json';a.click();
+ exportOne(fmt){
+  this.commit();const {chapters,l}=this.build();if(!chapters.length){this.msg('No hay nada que exportar: añade jugadas.',true);return}
+  const nm=(l.title||'leccion').replace(/[^\wáéíóúñÁÉÍÓÚÑ-]+/g,'_');
+  if(fmt==='pgn')downloadText(nm+'.pgn',this.toPGN(l));else downloadText(nm+'.json',JSON.stringify([l],null,1));
+  this.msg('✓ Archivo descargado.');
  },
- imp(){
-  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
-  inp.onchange=()=>{const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{
-   try{const arr=JSON.parse(r.result);if(!Array.isArray(arr))throw 0;const cs=store.get('custom',[]);arr.forEach(l=>{l.id='u'+Date.now()+Math.random().toString(36).slice(2,5);cs.push(l)});store.set('custom',cs);Chat.say(`Importadas ${arr.length} lecciones.`,'ok')}catch(e){Chat.say('Archivo no válido.','bad')}};r.readAsText(f)};
-  inp.click();
- }
+ exportAll(){const c=store.get('custom',[]);if(!c.length){this.msg('Todavía no tienes lecciones propias.',true);return}downloadText('mis-lecciones-ajedrez.json',JSON.stringify(c,null,1));this.msg('✓ Archivo descargado.')}
 };
 
 /* =============== REPASO ESPACIADO =============== */
@@ -1695,7 +1948,7 @@ const Today={
   const d=new Date();const idx=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%fallbackList.length;return {label:fallbackList[idx],acc:null,n:0,i:idx};
  },
  plan(){
-  const S=+store.get('todayMin',30),T={15:{srs:8,exam:3,tac:3,str:1,les:0,gam:0,play:0},30:{srs:15,exam:5,tac:6,str:2,les:1,gam:1,play:0},45:{srs:25,exam:8,tac:10,str:3,les:1,gam:1,play:1}}[S]||{};
+  const S=+store.get('todayMin',30),T={15:{srs:8,exam:3,tac:3,str:1,les:0,gam:0,play:0,cal:0},30:{srs:15,exam:5,tac:6,str:2,les:1,gam:1,play:0,cal:2},45:{srs:25,exam:8,tac:10,str:3,les:1,gam:1,play:1,cal:4}}[S]||{};
   const td=Log.today(),tasks=[];
   const due=SRS.dueList().length,srsTarget=Math.min(T.srs,due+td.srs);
   if(srsTarget>0)tasks.push({id:'srs',title:'Repaso espaciado',desc:`${due} jugada${due===1?'':'s'} pendiente${due===1?'':'s'} de tu repertorio.`,target:srsTarget,done:td.srs,min:Math.ceil(srsTarget*.4),go:()=>Mode.set('review')});
@@ -1703,6 +1956,7 @@ const Today={
   if(Exam.pool().length&&T.exam)tasks.push({id:'exam',title:'Examen de repertorio',desc:'Líneas al azar jugadas de memoria; salen más las que más fallas.',target:T.exam,done:td.exam,min:Math.ceil(T.exam*1),go:()=>{Exam.n=Math.max(5,T.exam);Mode.set('exam',()=>Exam.start(false))}});
   const themes=[...new Set(ALLPZ().map(p=>p.theme))];const wt=this.pick(this.themeStats(),themes);
   tasks.push({id:'tac',title:'Táctica: '+wt.label,desc:wt.acc==null?'Tema nuevo para ti hoy.':`Tu tema más débil: acierto ${Math.round(wt.acc*100)}% en ${wt.n} intentos.`,target:T.tac,done:td.tac,min:Math.ceil(T.tac*1),go:()=>Tac.focusTheme(wt.label)});
+  if(T.cal)tasks.push({id:'cal',title:'Cálculo sin mover piezas',desc:'Mate en 2: escribe la línea completa (con las respuestas del rival) antes de comprobar.',target:T.cal,done:td.cal||0,min:T.cal*3,go:()=>{store.set('tcalc',true);store.set('tcol','m2');Mode.set('tactics')}});
   const ws=this.pick(this.structStats(),STRUCTS.map(x=>x.name));
   if(T.str)tasks.push({id:'str',title:'Estructura de peones: '+ws.label,desc:ws.acc==null?'Una estructura nueva para entrenar el plan.':`Tu acierto aquí es ${Math.round(ws.acc*100)}%: adivina el plan.`,target:T.str,done:td.str,min:T.str*2,go:()=>Mode.set('struct',()=>{Struct.rand=false;Struct.si=ws.i;Struct.pi=0;const sel=$('#stSel');if(sel)sel.value=Struct.si;Struct.ask()})});
   const gs=store.get('games_pgn',[]),an=store.get('games_an',{});const un=gs.filter(g=>!an[g.id]).length;
@@ -1715,7 +1969,7 @@ const Today={
  render(){
   const {S,tasks}=this.plan();this.tasks=tasks;const st=Log.streak(),td=Log.today();
   const tot=tasks.reduce((a,t)=>a+t.target,0),got=tasks.reduce((a,t)=>a+Math.min(t.done,t.target),0),pct=tot?Math.round(got/tot*100):0,doneN=tasks.filter(t=>t.done>=t.target).length;
-  let h=`<h3>Plan de hoy</h3><div class="row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="small">Sesión:</span>${[15,30,45].map(m=>`<button data-sess="${m}" class="${m===S?'pri':''}">${m} min</button>`).join('')}</div>`;
+  let h=Backup.banner()+Coach.todayCard()+`<h3>Plan de hoy</h3><div class="row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="small">Sesión:</span>${[15,30,45].map(m=>`<button data-sess="${m}" class="${m===S?'pri':''}">${m} min</button>`).join('')}</div>`;
   h+=`<div style="margin:10px 0 4px"><b>${pct}%</b> completado · ${doneN} de ${tasks.length} tareas · ${Math.round(td.min)} min hoy · racha <b>${st.cur}</b> día${st.cur===1?'':'s'} (mejor: ${st.best})</div><div class="bar"><i style="width:${pct}%"></i></div>`;
   h+='<table style="margin-top:8px">'+tasks.map((t,i)=>{const ok=t.done>=t.target;return `<tr><td style="width:22px">${ok?'✓':'○'}</td><td><b>${esc(t.title)}</b><br><span class="small">${esc(t.desc)}</span></td><td style="white-space:nowrap">${Math.min(t.done,t.target)}/${t.target}<br><span class="small">~${t.min} min</span></td><td><button data-task="${i}" class="${ok?'':'pri'}">${ok?'Repetir':'Ir'}</button></td></tr>`}).join('')+'</table>';
   const nxt=tasks.findIndex(t=>t.done<t.target);
@@ -1728,6 +1982,7 @@ const Today={
   h+=this.profile();
   Chat.el.innerHTML='<div class="panel">'+h+'</div>';
   Chat.el.querySelectorAll('[data-sess]').forEach(b=>b.onclick=()=>{store.set('todayMin',+b.dataset.sess);this.render()});
+  Backup.bind(Chat.el,()=>this.render());Coach.bind(Chat.el,()=>this.render());
   Chat.el.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{const t=this.tasks[+b.dataset.task];if(t)t.go()});
   Chat.el.querySelectorAll('[data-weak]').forEach(b=>b.onclick=()=>{const w=this.weak[+b.dataset.weak];if(w&&w.go)w.go()});
  },
@@ -1804,21 +2059,37 @@ function parseMT(rest,fen,allowVars){
  }
  return {moves,intro,bad,startFen};
 }
-function parseStudyPGN(text){
- const chapters=[],games=[];let bad=0;text=String(text).replace(/\r/g,'').replace(/^﻿/,'');
+function spanishToEn(text){
+ const M={R:'K',D:'Q',T:'R',A:'B',C:'N'};
+ return text.split(/(\{[^}]*\}|^\[[^\n]*\]$)/m).map((seg,k)=>k%2?seg:seg.replace(/(^|[\s(.])([RDTAC])(?=[a-h]?[1-8]?x?[a-h][1-8])/g,(m,a,c)=>a+M[c]).replace(/=([DTAC])/g,(m,c)=>'='+M[c])).join('');
+}
+function parseStudyCore(text){
+ const chapters=[],games=[],issues=[],sides={w:0,b:0};let bad=0;
  const chunks=text.split(/\n(?=\[Event\s)/).map(x=>x.trim()).filter(Boolean);
  chunks.forEach((chunk,gi)=>{
   const hdr={};const rest=chunk.replace(/^\[(\w+)\s+"([^"]*)"\]\s*$/gm,(m,k,v)=>{hdr[k]=v;return ''});
   const r=parseMT(rest,hdr.FEN||null,true);bad+=r.bad;
+  const name=hdr.ChapterName||(hdr.White&&hdr.Black?hdr.White+' – '+hdr.Black+(hdr.Event&&hdr.Event!=='?'?' ('+hdr.Event+(hdr.Date&&!/\?/.test(hdr.Date)?' '+hdr.Date.slice(0,4):'')+')':''):hdr.Event||'Partida '+(gi+1));
+  if(r.bad)issues.push({name,ok:r.moves.length});
   if(!r.moves.length)return;
   const toStep=m=>{const f=fmtStudyComment(m.raw);const st={san:m.san};if(f.c)st.c=f.c;if(f.a.length)st.a=f.a;if(f.k.length)st.k=f.k;if(m.vars&&m.vars.length)st.v=m.vars.map(v=>v.map(toStep));return st};
   const steps=r.moves.map(toStep);
-  const name=hdr.ChapterName||(hdr.White&&hdr.Black?hdr.White+' – '+hdr.Black+(hdr.Event&&hdr.Event!=='?'?' ('+hdr.Event+(hdr.Date&&!/\?/.test(hdr.Date)?' '+hdr.Date.slice(0,4):'')+')':''):hdr.Event||'Partida '+(gi+1));
-  const chap={id:'c'+hash(name+'|'+steps.length),title:name,intro:fmtStudyComment(r.intro).c,moves:steps,outro:''};
+  const chap={id:'c'+hash(name+'|'+steps.length),title:name,intro:fmtStudyComment(r.intro).c,moves:steps,outro:'',hasC:steps.some(x=>x.c)};
   if(hdr.FEN&&r.startFen!==new Chess().fen())chap.fen=r.startFen;
+  const o=/black|negr/i.test(hdr.Orientation||'')?'b':/white|blanc/i.test(hdr.Orientation||'')?'w':null;
+  if(o){chap.side=o;sides[o]++}
   (hdr.ChapterName?chapters:games).push(chap);
  });
- return {chapters,games,bad};
+ return {chapters,games,bad,issues,sides};
+}
+function parseStudyPGN(text){
+ text=String(text).replace(/\r/g,'').replace(/^﻿/,'').replace(/[“”]/g,'"');
+ let r=parseStudyCore(text);
+ if(r.bad||(!r.chapters.length&&!r.games.length)){
+  const t2=spanishToEn(text);
+  if(t2!==text){const r2=parseStudyCore(t2);if(r2.bad<r.bad||(r2.chapters.length+r2.games.length)>(r.chapters.length+r.games.length)){r2.spanish=true;r=r2}}
+ }
+ return r;
 }
 const wp=cp=>{cp=Math.max(-1000,Math.min(1000,cp));return 50+50*(2/(1+Math.exp(-0.00368208*cp))-1)};
 const CLS_TXT={best:'Mejor jugada',good:'Buena jugada',inacc:'Imprecisión',mistake:'Error',blunder:'Error grave'};
@@ -1989,7 +2260,7 @@ function hash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(
 const Prog={
  free:false,canMove(){return false},
  enter(){
-  $('#ctl').innerHTML='<div class="small">Tu avance se guarda automáticamente en este navegador.</div>';Chat.clear();
+  $('#ctl').innerHTML='<div class="small">Tu avance se guarda automáticamente en este navegador. Abajo puedes respaldarlo o sincronizarlo.</div>';Chat.clear();
   A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();A.status('');
   const ps=store.get('prog',{}),ts=store.get('tstats',{}),gs=store.get('games',{w:0,l:0,d:0});
   let h='<h3>Lecciones</h3><table>';
@@ -2001,20 +2272,320 @@ const Prog={
   h+='<table>';for(const t of themes){const s=ts[t]||{ok:0,fail:0};const n=s.ok+s.fail,pct=n?s.ok/n:null;
    h+=`<tr><td>${esc(t)}</td><td>${n?Math.round(pct*100)+'%':'—'}</td><td><div class="bar"><i style="width:${n?pct*100:0}%"></i></div></td></tr>`;
    if(n&&pct<wv){wv=pct;weak=t}}
+  {const cs=store.get('cstats',{n:0,ok:0});if(cs.n)h+=`</table><div style="margin-top:6px">Cálculo sin mover piezas: <b>${Math.round(cs.ok/cs.n*100)}%</b> (${cs.ok}/${cs.n})</div><table>`}
   h+='</table><h3>Partidas contra Stockfish</h3>'+`<div>Ganadas ${gs.w} · Tablas ${gs.d} · Perdidas ${gs.l}</div>`;
-  h+=Rep.panel();h+=Struct.panel();h+='<h3>Qué practicar ahora</h3><ul>';
+  h+=Rep.panel();h+=Struct.panel();h+=Backup.panel();h+=Coach.panel();h+='<h3>Qué practicar ahora</h3><ul>';
   const pending=[];for(const l of Lesson.all())l.chapters.forEach(c=>{if(!(ps[l.id]||[]).includes(c.id))pending.push(`${l.title}: ${c.title}`)});
   if(pending.length)h+=`<li>Completa el capítulo «${esc(pending[0])}».</li>`;
   if(weak)h+=`<li>Refuerza el tema táctico «${esc(weak)}» (tu acierto es el más bajo).</li>`;
   else h+='<li>Resuelve los problemas de la pestaña Táctica para detectar tus temas débiles.</li>';
   h+='<li>Juega una partida contra Stockfish desde el final de cada capítulo para fijar los planes.</li><li>Crea tus propias lecciones con lo que estés estudiando (estructuras de peones, cálculo, finales) en «Crear lección».</li></ul>';
-  Chat.el.innerHTML='<div class="panel">'+h+'</div>';Rep.bind(Chat.el);
+  Chat.el.innerHTML='<div class="panel">'+h+'</div>';Rep.bind(Chat.el);Backup.bind(Chat.el,()=>this.enter());Coach.bind(Chat.el,()=>this.enter());
  },
  leave(){}
 };
 
+
+/* =============== RESPALDO Y SINCRONIZACIÓN =============== */
+const Backup={
+ FILE:'entrenador-ajedrez-progreso.json',
+ EXCL:['lastAct','lastBackup','lastChange','lastSync','flash','dev'],
+ h:null,needs:false,ready:false,timer:null,
+ supported(){return typeof window.showDirectoryPicker==='function'},
+ dump(){const d={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(this.EXCL.includes(k))continue;try{d[k]=JSON.parse(localStorage.getItem(k))}catch(e){}}}catch(e){}return d},
+ pack(){return {app:'entrenador-ajedrez',format:1,exported:Date.now(),data:this.dump()}},
+ valid(x){return !!x&&x.app==='entrenador-ajedrez'&&typeof x.format==='number'&&x.format<=1&&x.data&&typeof x.data==='object'&&typeof x.exported==='number'},
+ summary(d){const n=o=>o&&typeof o==='object'?Object.keys(o).length:0;return {lecciones:(d.custom||[]).length,tarjetas:n(d.srs),dias:n(d.daylog),partidas:(d.games_pgn||[]).length}},
+
+ uni(a,b,key){const m=new Map();[...(a||[]),...(b||[])].forEach(x=>{const k=key(x);if(!m.has(k))m.set(k,x);else{const o=m.get(k);if(JSON.stringify(x).length>JSON.stringify(o).length)m.set(k,x)}});return [...m.values()]},
+ best(x,y,f){return f(y)>f(x)?y:x},
+ mergeKey(k,x,v){
+  const isO=o=>o&&typeof o==='object'&&!Array.isArray(o);
+  switch(k){
+   case 'daylog':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [d,e] of Object.entries(v)){if(!o[d])o[d]=e;else{const r={...o[d]};for(const f of Object.keys(e))r[f]=Math.max(+r[f]||0,+e[f]||0);o[d]=r}}return o}
+   case 'prog':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [l,a] of Object.entries(v))o[l]=[...new Set([...(o[l]||[]),...(a||[])])];return o}
+   case 'custom':case 'games_pgn':return Array.isArray(x)&&Array.isArray(v)?this.uni(x,v,g=>g&&g.id!=null?String(g.id):JSON.stringify(g)):x;
+   case 'mypuz':return Array.isArray(x)&&Array.isArray(v)?this.uni(x,v,g=>JSON.stringify(g)):x;
+   case 'exam_hist':return Array.isArray(x)&&Array.isArray(v)?this.uni(x,v,g=>String(g&&g.t)).sort((a,b)=>a.t-b.t).slice(-40):x;
+   case 'srs':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [c,d] of Object.entries(v))o[c]=o[c]?this.best(o[c],d,q=>+q.last||0):d;return o}
+   case 'tstats':case 'struct':case 'exam':{if(!isO(x)||!isO(v))return x;const f=q=>(+q.n||0)+(+q.ok||0)+(+q.fail||0)+(+q.f||0);const o={...x};for(const [c,d] of Object.entries(v))o[c]=o[c]?this.best(o[c],d,f):d;return o}
+   case 'games':return isO(x)&&isO(v)?this.best(x,v,q=>(+q.w||0)+(+q.l||0)+(+q.d||0)):x;
+   case 'games_an':return isO(x)&&isO(v)?{...v,...x}:x;
+   default:return x;
+  }
+ },
+ merge(a,b){const o={...a};for(const [k,v] of Object.entries(b)){o[k]=(k in a)?this.mergeKey(k,a[k],v):v}return o},
+ write(data,replace){
+  try{if(replace){const del=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!this.EXCL.includes(k))del.push(k)}del.forEach(k=>localStorage.removeItem(k))}
+   for(const [k,v] of Object.entries(data))localStorage.setItem(k,JSON.stringify(v))}catch(e){return false}return true},
+ apply(pk,mode){const ok=this.write(mode==='replace'?pk.data:this.merge(this.dump(),pk.data),mode==='replace');return ok},
+ stamp(k){try{localStorage.setItem(k,JSON.stringify(Date.now()))}catch(e){}},
+ touch(k){
+  if(this.EXCL.includes(k))return;
+  const now=Date.now();if(now-(this._lc||0)>5000){this._lc=now;this.stamp('lastChange')}
+  if(this.ready){clearTimeout(this.timer);this.timer=setTimeout(()=>this.save(),15000)}
+ },
+ stampStr(){return new Date().toISOString().slice(0,10)},
+ download(){
+  const pk=this.pack(),blob=new Blob([JSON.stringify(pk)],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='entrenador-ajedrez-respaldo-'+this.stampStr()+'.json';document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);this.stamp('lastBackup');return pk;
+ },
+ parse(txt){let x;try{x=JSON.parse(txt)}catch(e){return {err:'El archivo no es un JSON válido.'}}
+  if(!this.valid(x))return {err:'Este archivo no es un respaldo de Entrenador de Ajedrez (o es de una versión más nueva).'};return {pk:x}},
+ /* carpeta */
+ idb(){return new Promise((res,rej)=>{const r=indexedDB.open('cgfs',1);r.onupgradeneeded=()=>r.result.createObjectStore('h');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})},
+ async hget(){try{const db=await this.idb();return await new Promise(res=>{const q=db.transaction('h').objectStore('h').get('dir');q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}catch(e){return null}},
+ async hset(h){try{const db=await this.idb();await new Promise((res,rej)=>{const t=db.transaction('h','readwrite');h?t.objectStore('h').put(h,'dir'):t.objectStore('h').delete('dir');t.oncomplete=res;t.onerror=()=>rej(t.error)})}catch(e){}},
+ async perm(h,ask){try{const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;if(ask&&await h.requestPermission(o)==='granted')return true}catch(e){}return false},
+ async readFolder(){try{const f=await this.h.getFileHandle(this.FILE);const r=this.parse(await (await f.getFile()).text());return r.pk||null}catch(e){return null}},
+ async save(){
+  if(!this.h||!this.ready)return false;
+  try{const f=await this.h.getFileHandle(this.FILE,{create:true}),w=await f.createWritable();await w.write(JSON.stringify(this.pack()));await w.close();this.stamp('lastSync');this.stamp('lastBackup');return true}
+  catch(e){this.ready=false;this.needs=true;return false}
+ },
+ async pull(){
+  const pk=await this.readFolder();if(!pk)return false;
+  if(pk.exported>(+store.get('lastSync',0))){if(this.apply(pk,'merge')){store.set('flash','Combiné el progreso guardado en tu carpeta de sincronización.');return true}}
+  return false;
+ },
+ async init(){
+  try{
+   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
+   if(!this.supported())return;
+   const h=await this.hget();if(!h)return;this.h=h;
+   if(await this.perm(h,false)){this.ready=true;await this.pull();await this.save()}else this.needs=true;
+  }catch(e){}
+  addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&this.ready)this.save()});
+ },
+ async choose(){
+  if(!this.supported())return {err:'Tu navegador no permite elegir carpeta (usa Chrome o Edge).'};
+  let h;try{h=await window.showDirectoryPicker({mode:'readwrite'})}catch(e){return {err:null}}
+  this.h=h;this.ready=true;this.needs=false;await this.hset(h);
+  const had=await this.readFolder();let merged=false;
+  if(had){this.apply(had,'merge');merged=true}
+  await this.save();return {ok:true,merged,name:h.name};
+ },
+ async reactivate(){if(!this.h)return false;if(await this.perm(this.h,true)){this.ready=true;this.needs=false;await this.pull();await this.save();return true}return false},
+ async disconnect(){this.h=null;this.ready=false;this.needs=false;await this.hset(null)},
+ /* interfaz */
+ ago(t){if(!t)return 'nunca';const d=Math.floor((Date.now()-t)/864e5);return d<1?'hoy':d===1?'ayer':'hace '+d+' días'},
+ stale(){const lb=+store.get('lastBackup',0),lc=+store.get('lastChange',0);if(!lc)return false;if(this.ready)return false;return lc>lb&&(!lb||Date.now()-lb>14*864e5)},
+ banner(){
+  let h='';const fl=store.get('flash',null);
+  if(fl){h+=`<div class="panel" style="border-color:var(--acc);margin-bottom:10px">✓ ${esc(fl)}</div>`;try{localStorage.removeItem('flash')}catch(e){}}
+  if(this.needs)h+=`<div class="panel" style="margin-bottom:10px">La sincronización con tu carpeta <b>${esc(this.h&&this.h.name||'')}</b> está en pausa hasta que la reactives.<div class="row" style="margin-top:6px"><button class="pri" data-bk="perm">Reactivar</button></div></div>`;
+  else if(this.stale())h+=`<div class="panel" style="margin-bottom:10px">Tu último respaldo fue <b>${this.ago(+store.get('lastBackup',0))}</b>. Guarda una copia de tu progreso para no perderlo.<div class="row" style="margin-top:6px"><button class="pri" data-bk="export">Descargar respaldo</button><button data-bk="more">Más opciones</button></div></div>`;
+  return h;
+ },
+ panel(){
+  const lb=+store.get('lastBackup',0),ls=+store.get('lastSync',0),sm=this.summary(this.dump());
+  let h=`<h3>Respaldo y sincronización</h3><div class="small">Tu progreso vive en este navegador: ${sm.tarjetas} tarjetas de repaso, ${sm.dias} días de actividad, ${sm.lecciones} lecciones propias y ${sm.partidas} partidas guardadas. Último respaldo: <b>${this.ago(lb)}</b>.</div>`;
+  h+=`<div class="row" style="margin-top:8px"><button class="pri" data-bk="export">Descargar respaldo</button><button data-bk="import">Importar respaldo…</button></div><input type="file" id="bkFile" accept=".json,application/json" hidden><div id="bkMsg" class="small" style="margin-top:6px"></div>`;
+  if(this.supported()){
+   h+=`<h3>Carpeta sincronizada</h3><div class="small">Elige una carpeta (por ejemplo dentro de Dropbox, OneDrive o Google Drive): el progreso se guarda ahí solo y, en tu otra PC, se combina al abrir la app.</div><div class="row" style="margin-top:6px">`;
+   if(this.h){h+=`<span class="small">Carpeta: <b>${esc(this.h.name)}</b> · ${this.ready?'activa · última sincronización '+this.ago(ls):'en pausa'}</span>`;h+=this.ready?`<button data-bk="now">Sincronizar ahora</button>`:`<button class="pri" data-bk="perm">Reactivar</button>`;h+=`<button data-bk="off">Desconectar</button>`}
+   else h+=`<button data-bk="folder">Elegir carpeta…</button>`;
+   h+='</div>';
+  }else h+='<div class="small" style="margin-top:8px">La sincronización con carpeta requiere Chrome o Edge. Mientras tanto usa el respaldo manual.</div>';
+  return '<div id="bkPanel">'+h+'</div>';
+ },
+ bind(root,rerender){
+  const msg=t=>{const m=root.querySelector('#bkMsg');if(m)m.innerHTML=t};
+  const act={
+   export:()=>{this.download();msg('✓ Respaldo descargado. Guárdalo en un lugar seguro y cárgalo en tu otra PC con «Importar respaldo».');rerender&&rerender()},
+   import:()=>{const f=root.querySelector('#bkFile');if(f)f.click()},
+   more:()=>Mode.set('progress'),
+   perm:async()=>{if(await this.reactivate())rerender&&rerender();else msg('No se pudo reactivar. Vuelve a elegir la carpeta.')},
+   now:async()=>{const ok=await this.save();msg(ok?'✓ Sincronizado.':'No se pudo escribir en la carpeta.');rerender&&rerender()},
+   off:async()=>{await this.disconnect();rerender&&rerender()},
+   folder:async()=>{const r=await this.choose();if(r.err){msg(r.err);return}if(r.ok){store.set('flash','Carpeta «'+r.name+'» conectada'+(r.merged?' y combinada con el progreso que ya había en ella.':'.'));rerender&&rerender()}}
+  };
+  root.querySelectorAll('[data-bk]').forEach(b=>b.onclick=()=>act[b.dataset.bk]&&act[b.dataset.bk]());
+  const f=root.querySelector('#bkFile');
+  if(f)f.onchange=e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>this.askImport(root,r.result,rerender);r.readAsText(file)};
+ },
+ askImport(root,txt,rerender){
+  const m=root.querySelector('#bkMsg'),r=this.parse(txt);
+  if(r.err){m.textContent=r.err;return}
+  const sm=this.summary(r.pk.data),d=new Date(r.pk.exported).toLocaleString();
+  m.innerHTML=`Respaldo del <b>${esc(d)}</b>: ${sm.tarjetas} tarjetas, ${sm.dias} días de actividad, ${sm.lecciones} lecciones propias, ${sm.partidas} partidas.<div class="row" style="margin-top:6px"><button class="pri" id="bkMerge">Combinar con lo que tengo</button><button id="bkRepl">Reemplazar todo</button><button id="bkCancel">Cancelar</button></div><div class="small">Combinar conserva lo mejor de ambos lados (recomendado). Reemplazar borra lo que tienes aquí.</div>`;
+  const done=t=>{store.set('flash',t);setTimeout(()=>location.reload(),300)};
+  m.querySelector('#bkMerge').onclick=()=>{if(this.apply(r.pk,'merge'))done('Respaldo combinado correctamente.');else m.textContent='No se pudo guardar (¿almacenamiento lleno?).'};
+  m.querySelector('#bkRepl').onclick=()=>{if(confirm('Esto borrará el progreso actual de este navegador y lo sustituirá por el del respaldo. ¿Continuar?')){if(this.apply(r.pk,'replace'))done('Respaldo restaurado.');else m.textContent='No se pudo guardar.'}};
+  m.querySelector('#bkCancel').onclick=()=>{m.textContent=''};
+ }
+};
+store.hook=k=>Backup.touch(k);
+
+
+/* =============== ENTRENADOR Y ALUMNOS (intercambio por archivos) =============== */
+const CO_KINDS={tac:'Problemas de táctica',str:'Preguntas de estructuras de peones',exam:'Líneas del examen de repertorio',srs:'Tarjetas de repaso',play:'Partidas contra Stockfish',gam:'Partidas analizadas',cal:'Ejercicios de cálculo (sin mover piezas)',les:'Capítulos completados'};
+const CO_MODE={tac:'tactics',str:'struct',exam:'exam',srs:'review',play:'play',gam:'games',cal:'tactics',les:'lesson'};
+const Coach={
+ free:false,canMove(){return false},sel:null,
+ on(){return !!store.get('coachMode',false)},
+ syncTab(){const b=$('#tabCoach');if(b)b.hidden=!this.on()},
+ sid(){let x=store.get('sid',null);if(!x){x='s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);store.set('sid',x)}return x},
+ courses(){return store.get('assign',{})},
+ since(kind,since){let n=0;for(const [d,e] of Object.entries(Log.all()))if(d>=since)n+=+e[kind]||0;return n},
+ prog(it){
+  if(it.type==='lesson'){const L=Lesson.all().find(l=>l.id===it.ref);if(!L)return {done:0,target:1,miss:true,txt:'lección no encontrada'};
+   const done=Math.min((store.get('prog',{})[it.ref]||[]).length,L.chapters.length);return {done,target:L.chapters.length,txt:done+'/'+L.chapters.length+' capítulos'}}
+  const t=Math.max(1,+it.target||1),done=Math.min(t,this.since(it.type,it.since||Log.key()));return {done,target:t,txt:done+'/'+t}
+ },
+ itemTitle(it){if(it.type==='lesson'){const L=Lesson.all().find(l=>l.id===it.ref);return 'Completar la lección: '+(L?L.title:it.title||it.ref)}return (CO_KINDS[it.type]||it.type)+(it.target?' ('+it.target+')':'')},
+ fmtDue(d){if(!d)return '';const left=Math.round((new Date(d+'T23:59:59')-Date.now())/864e5);return left<0?`<span style="color:var(--bad,#d9594c)">vencida (${d})</span>`:`hasta ${d}`},
+ /* ---------- alumno: tarjeta en Hoy ---------- */
+ todayCard(){
+  const cs=Object.values(this.courses());if(!cs.length)return '';
+  let h='';
+  for(const c of cs){
+   h+=`<div class="panel" style="margin-bottom:10px;border:1px solid var(--line);border-radius:10px"><b>${esc(c.title)}</b>${c.author?` <span class="small">· de ${esc(c.author)}</span>`:''}${c.note?`<div class="small" style="margin-top:4px">${esc(c.note)}</div>`:''}<table style="margin-top:6px">`;
+   c.items.forEach((it,i)=>{const pg=this.prog(it),ok=pg.done>=pg.target;
+    h+=`<tr><td style="width:22px">${ok?'✓':'○'}</td><td>${esc(this.itemTitle(it))}<br><span class="small">${pg.txt}${it.due?' · '+this.fmtDue(it.due):''}${it.note?' · '+esc(it.note):''}</span></td><td style="white-space:nowrap">${pg.miss?'':`<button data-co="go" data-c="${esc(c.cid)}" data-i="${i}" class="${ok?'':'pri'}">${ok?'Repetir':'Ir'}</button>`}</td></tr>`});
+   h+=`</table><div class="row" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><input type="text" id="coName" placeholder="Tu nombre" value="${esc(store.get('sname',''))}" style="max-width:150px"><button data-co="send">Enviar resultados</button><button data-co="drop" data-c="${esc(c.cid)}">Quitar curso</button></div><div id="coMsg" class="small" style="margin-top:4px"></div></div>`;
+  }
+  return h;
+ },
+ go(cid,i){
+  const c=this.courses()[cid];if(!c)return;const it=c.items[i];if(!it)return;
+  if(it.type==='lesson'){const all=Lesson.all(),li=all.findIndex(l=>l.id===it.ref);if(li<0)return;const L=all[li],ps=store.get('prog',{})[it.ref]||[];
+   Lesson.li=li;Lesson.ci=Math.max(0,L.chapters.findIndex(ch=>!ps.includes(ch.id)));Mode.set('lesson')}
+  else{if(it.type==='cal'){store.set('tcalc',true);store.set('tcol','m2')}Mode.set(CO_MODE[it.type]||'today')}
+ },
+ report(){
+  const L=Log.all(),days={};Object.keys(L).sort().slice(-30).forEach(k=>days[k]=L[k]);
+  const weak=[...Today.themeStats().map(x=>({src:'Táctica',...x})),...Today.structStats().map(x=>({src:'Peones',label:x.label,acc:x.acc,n:x.n})),...Today.examStats().map(x=>({src:'Repertorio',...x}))].sort((a,b)=>a.acc-b.acc).slice(0,8).map(x=>({src:x.src,label:x.label,acc:Math.round(x.acc*100)/100,n:x.n}));
+  const cs=Object.values(this.courses()).map(c=>({cid:c.cid,title:c.title,items:c.items.map(it=>{const pg=this.prog(it);return {id:it.id,title:this.itemTitle(it),type:it.type,done:pg.done,target:pg.target,due:it.due||''}})}));
+  return {app:'entrenador-ajedrez',kind:'report',format:1,sid:this.sid(),name:(store.get('sname','')||'Alumno').trim()||'Alumno',exported:Date.now(),courses:cs,days,streak:Log.streak(),weak,srs:SRS.stats(),games:store.get('games',{w:0,l:0,d:0})};
+ },
+ sendReport(root){
+  const inp=root.querySelector('#coName');if(inp)store.set('sname',inp.value.trim());
+  const r=this.report(),blob=new Blob([JSON.stringify(r)],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='resultados-'+r.name.replace(/[^\wáéíóúñÁÉÍÓÚÑ-]+/g,'_')+'-'+Backup.stampStr()+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+  const m=root.querySelector('#coMsg');if(m)m.textContent='✓ Archivo de resultados descargado: envíaselo a tu entrenador.';
+ },
+ /* ---------- importar archivos (curso / resultados) ---------- */
+ askFile(root,txt,rerender){
+  const m=root.querySelector('#coMsg');let x;try{x=JSON.parse(txt)}catch(e){m.textContent='El archivo no es un JSON válido.';return}
+  if(x&&x.app==='entrenador-ajedrez'&&x.kind==='course')return this.askCourse(root,x,rerender);
+  if(x&&x.app==='entrenador-ajedrez'&&x.kind==='report')return this.askReport(root,x,rerender);
+  m.textContent='Ese archivo no es un curso ni unos resultados. Si es un respaldo de progreso, impórtalo en Progreso → Respaldo y sincronización.';
+ },
+ askCourse(root,pk,rerender){
+  const m=root.querySelector('#coMsg');
+  if(!pk.cid||!Array.isArray(pk.items)||typeof pk.title!=='string'){m.textContent='Curso inválido.';return}
+  m.innerHTML=`Curso <b>${esc(pk.title)}</b>${pk.author?' de '+esc(pk.author):''}: ${pk.items.length} tarea(s) y ${(pk.lessons||[]).length} lección(es) incluida(s).<div class="row" style="margin-top:6px"><button class="pri" id="coOk">Añadir curso</button><button id="coNo">Cancelar</button></div>`;
+  m.querySelector('#coNo').onclick=()=>{m.textContent=''};
+  m.querySelector('#coOk').onclick=()=>{this.applyCourse(pk);store.set('flash','Curso «'+pk.title+'» añadido. Tus tareas aparecen en «Hoy».');Mode.set('today')};
+ },
+ applyCourse(pk){
+  const cs=store.get('custom',[]);for(const l of (pk.lessons||[])){if(!l||!l.id||!Array.isArray(l.chapters))continue;l.custom=true;const k=cs.findIndex(x=>x.id===l.id);if(k>=0)cs[k]=l;else cs.push(l)}
+  store.set('custom',cs);
+  const as=store.get('assign',{}),old=as[pk.cid];
+  as[pk.cid]={cid:pk.cid,title:pk.title,author:pk.author||'',note:pk.note||'',items:pk.items.map((it,i)=>{const o=old&&old.items.find(q=>q.id===it.id);return {id:it.id||('t'+i),type:it.type,ref:it.ref||null,title:it.title||'',target:+it.target||0,due:it.due||'',note:it.note||'',since:o&&o.since||Log.key()}})};
+  store.set('assign',as);
+ },
+ askReport(root,r,rerender){
+  const m=root.querySelector('#coMsg');if(!r.sid||!r.days){m.textContent='Resultados inválidos.';return}
+  const doIt=()=>{const all=store.get('coach_reports',{});const a=all[r.sid]||[];if(!a.some(x=>x.exported===r.exported))a.push(r);a.sort((x,y)=>x.exported-y.exported);all[r.sid]=a.slice(-10);store.set('coach_reports',all);this.sel=r.sid;store.set('flash','Resultados de '+r.name+' añadidos.');rerender&&rerender()};
+  if(this.on()){doIt();return}
+  m.innerHTML=`Son resultados de <b>${esc(r.name)}</b>. Para verlos hay que activar el modo entrenador.<div class="row" style="margin-top:6px"><button class="pri" id="coOk">Activar e importar</button><button id="coNo">Cancelar</button></div>`;
+  m.querySelector('#coNo').onclick=()=>{m.textContent=''};
+  m.querySelector('#coOk').onclick=()=>{store.set('coachMode',true);this.syncTab();doIt();Mode.set('coach')};
+ },
+ /* ---------- bloque en Progreso ---------- */
+ panel(){
+  const n=Object.keys(this.courses()).length;
+  return `<h3>Entrenador y alumnos</h3><div class="small">Sin servidor: el entrenador crea un curso (tareas + lecciones) y lo envía como archivo; el alumno lo importa, entrena y devuelve un archivo de resultados.</div>
+  <div class="row" style="margin-top:8px"><button data-co="import">Importar curso o resultados…</button><button data-co="toggle">${this.on()?'Desactivar':'Activar'} modo entrenador</button>${n?'<button data-co="send">Enviar mis resultados</button>':''}</div>
+  <div class="row" style="margin-top:6px">${n?`<input type="text" id="coName" placeholder="Tu nombre" value="${esc(store.get('sname',''))}" style="max-width:160px">`:''}</div><input type="file" id="coFile" accept=".json,application/json" hidden><div id="coMsg" class="small" style="margin-top:6px"></div>`;
+ },
+ bind(root,rerender){
+  const act={
+   import:()=>{const f=root.querySelector('#coFile');if(f)f.click()},
+   toggle:()=>{store.set('coachMode',!this.on());this.syncTab();rerender&&rerender()},
+   send:()=>this.sendReport(root),
+   drop:b=>{if(confirm('¿Quitar este curso y sus tareas? Las lecciones ya importadas se conservan.')){const as=store.get('assign',{});delete as[b.dataset.c];store.set('assign',as);rerender&&rerender()}},
+   go:b=>this.go(b.dataset.c,+b.dataset.i),
+   stu:b=>{this.sel=b.dataset.s;rerender&&rerender()},
+   del:b=>{if(confirm('¿Borrar los resultados guardados de este alumno?')){const a=store.get('coach_reports',{});delete a[b.dataset.s];store.set('coach_reports',a);this.sel=null;rerender&&rerender()}}
+  };
+  root.querySelectorAll('[data-co]').forEach(b=>b.onclick=()=>act[b.dataset.co]&&act[b.dataset.co](b));
+  const f=root.querySelector('#coFile');
+  if(f)f.onchange=async e=>{for(const file of e.target.files){await new Promise(res=>{const r=new FileReader();r.onload=()=>{this.askFile(root,r.result,rerender);res()};r.readAsText(file)})}};
+ },
+ /* ---------- modo entrenador ---------- */
+ draft(){return store.get('coach_draft',{title:'',note:'',author:store.get('sname',''),items:[],inc:[]})},
+ saveDraft(d){store.set('coach_draft',d)},
+ enter(){
+  const d=this.draft(),lessons=Lesson.all(),own=lessons.filter(l=>l.custom);
+  $('#ctl').innerHTML=`<div class="small"><b>Crear curso</b> para un alumno: añade tareas, elige lecciones propias a incluir y exporta el archivo.</div>
+  <label>Título del curso<input id="cTitle" value="${esc(d.title)}"></label>
+  <label>Tu nombre<input id="cAuth" value="${esc(d.author)}"></label>
+  <label>Mensaje para el alumno<textarea id="cNote" rows="2">${esc(d.note)}</textarea></label>
+  <div class="g2"><label>Tipo de tarea<select id="cType"><option value="lesson">Completar una lección</option>${Object.entries(CO_KINDS).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join('')}</select></label>
+  <label id="cRefL">Lección<select id="cRef">${lessons.map(l=>`<option value="${esc(l.id)}">${esc(l.title)}</option>`).join('')}</select></label>
+  <label id="cTgL" hidden>Cantidad<input type="number" id="cTarget" value="10" min="1"></label></div>
+  <div class="g2"><label>Fecha límite<input type="date" id="cDue"></label><label>Nota (opcional)<input id="cIN"></label></div>
+  <div class="row"><button id="cAdd">Añadir tarea</button></div><div id="cList"></div>
+  ${own.length?`<label>Incluir también mis lecciones</label><div id="cInc">${own.map(l=>`<label style="flex-direction:row;gap:6px;align-items:center"><input type="checkbox" data-inc="${esc(l.id)}" ${d.inc.includes(l.id)?'checked':''}> ${esc(l.title)}</label>`).join('')}</div>`:''}
+  <div class="row"><button id="cExp" class="pri">Exportar curso</button><button id="cClear">Vaciar</button></div><div id="cMsg" class="small"></div>`;
+  const upd=()=>{const t=$('#cType').value;$('#cRefL').hidden=t!=='lesson';$('#cTgL').hidden=t==='lesson'};upd();$('#cType').onchange=upd;
+  const read=()=>{const x=this.draft();x.title=$('#cTitle').value;x.author=$('#cAuth').value;x.note=$('#cNote').value;x.inc=[...document.querySelectorAll('[data-inc]')].filter(c=>c.checked).map(c=>c.dataset.inc);return x};
+  ['cTitle','cAuth','cNote'].forEach(i=>$('#'+i).onchange=()=>this.saveDraft(read()));
+  document.querySelectorAll('[data-inc]').forEach(c=>c.onchange=()=>this.saveDraft(read()));
+  const list=()=>{const x=this.draft();$('#cList').innerHTML=x.items.length?'<table>'+x.items.map((it,i)=>`<tr><td>${esc(this.itemTitle(it))}<br><span class="small">${it.due?'hasta '+esc(it.due):''} ${esc(it.note||'')}</span></td><td><button data-rm="${i}">✕</button></td></tr>`).join('')+'</table>':'<div class="small">Aún no hay tareas.</div>';
+   $('#cList').querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{const y=read();y.items.splice(+b.dataset.rm,1);this.saveDraft(y);list()})};list();
+  $('#cAdd').onclick=()=>{const y=read(),t=$('#cType').value,it={id:'t'+Date.now().toString(36)+y.items.length,type:t,due:$('#cDue').value,note:$('#cIN').value.trim()};
+   if(t==='lesson'){it.ref=$('#cRef').value;const L=Lesson.all().find(l=>l.id===it.ref);it.title=L?L.title:''}else it.target=Math.max(1,+$('#cTarget').value||1);
+   y.items.push(it);this.saveDraft(y);list();$('#cIN').value=''};
+  $('#cClear').onclick=()=>{if(confirm('¿Vaciar el borrador del curso?')){this.saveDraft({title:'',note:'',author:$('#cAuth').value,items:[],inc:[]});this.enter()}};
+  $('#cExp').onclick=()=>{
+   const y=read();this.saveDraft(y);const m=$('#cMsg');
+   if(!y.title.trim()){m.textContent='Ponle un título al curso.';return}
+   if(!y.items.length&&!y.inc.length){m.textContent='Añade al menos una tarea o una lección.';return}
+   const ids=new Set([...y.inc,...y.items.filter(i=>i.type==='lesson').map(i=>i.ref)]);
+   const embed=Lesson.all().filter(l=>l.custom&&ids.has(l.id));
+   const pk={app:'entrenador-ajedrez',kind:'course',format:1,cid:'c'+Date.now().toString(36),title:y.title.trim(),author:y.author.trim(),note:y.note.trim(),created:Date.now(),items:y.items,lessons:embed};
+   const blob=new Blob([JSON.stringify(pk)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);
+   a.download='curso-'+pk.title.replace(/[^\wáéíóúñÁÉÍÓÚÑ-]+/g,'_')+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+   m.textContent='✓ Curso exportado ('+pk.items.length+' tareas, '+embed.length+' lecciones propias incluidas). Envíaselo al alumno.';
+  };
+  A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();A.status('');
+  this.render();
+ },
+ leave(){},
+ render(){
+  const all=store.get('coach_reports',{}),ids=Object.keys(all);
+  let h=Backup.banner();
+  h+=`<h3>Alumnos</h3><div class="row" style="display:flex;gap:6px"><button data-co="import" class="pri">Importar resultados…</button></div><input type="file" id="coFile" accept=".json,application/json" multiple hidden><div id="coMsg" class="small" style="margin:6px 0"></div>`;
+  if(!ids.length)h+='<div class="small">Aún no has importado resultados. El alumno los descarga con «Enviar resultados» (en su pestaña Hoy) y te los manda; tú los cargas aquí.</div>';
+  else{
+   const rows=ids.map(sid=>{const a=all[sid],r=a[a.length-1];const dk=Object.keys(r.days).sort();const last=dk.length?dk[dk.length-1]:'—';
+    let m7=0;const lim=Log.key(new Date(Date.now()-6*864e5));for(const [d,e] of Object.entries(r.days))if(d>=lim)m7+=e.min||0;
+    let tot=0,dn=0;r.courses.forEach(c=>c.items.forEach(i=>{tot++;if(i.done>=i.target)dn++}));
+    return {sid,r,last,m7:Math.round(m7),tot,dn,weak:r.weak.slice(0,2).map(w=>w.label).join(', ')||'—'}});
+   h+='<table><tr><th align="left">Alumno</th><th>Última actividad</th><th>Min 7 d</th><th>Racha</th><th>Tareas</th><th align="left">Puntos débiles</th></tr>'+rows.map(x=>`<tr style="cursor:pointer;${x.sid===this.sel?'background:var(--bg)':''}"><td><button data-co="stu" data-s="${esc(x.sid)}">${esc(x.r.name)}</button></td><td align="center">${esc(x.last)}</td><td align="center">${x.m7}</td><td align="center">${x.r.streak?x.r.streak.cur:0}</td><td align="center">${x.tot?x.dn+'/'+x.tot:'—'}</td><td class="small">${esc(x.weak)}</td></tr>`).join('')+'</table>';
+   if(this.sel&&all[this.sel])h+=this.detail(all[this.sel]);
+  }
+  Chat.el.innerHTML='<div class="panel">'+h+'</div>';this.bind(Chat.el,()=>this.render());
+ },
+ detail(a){
+  const r=a[a.length-1],prev=a.length>1?a[a.length-2]:null;
+  let h=`<h3>${esc(r.name)}</h3><div class="small">Resultados del ${esc(new Date(r.exported).toLocaleString())} · ${a.length} entrega(s) guardada(s)</div>`;
+  let ok=0,n=0,m30=0;for(const e of Object.values(r.days)){ok+=e.ok||0;n+=e.n||0;m30+=e.min||0}
+  h+=`<div style="margin-top:6px">Últimos 30 días: <b>${Math.round(m30)}</b> min · acierto <b>${n?Math.round(ok/n*100)+'%':'—'}</b> (${n} respuestas) · racha <b>${r.streak?r.streak.cur:0}</b> (mejor ${r.streak?r.streak.best:0}) · repaso: ${r.srs?r.srs.total+' tarjetas, '+r.srs.due+' pendientes':'—'} · partidas: ${r.games?r.games.w+'G '+r.games.d+'T '+r.games.l+'P':'—'}</div>`;
+  for(const c of r.courses){h+=`<h3>${esc(c.title)}</h3><table>`+c.items.map(i=>{const pct=Math.min(100,Math.round(i.done/Math.max(1,i.target)*100));return `<tr><td style="width:22px">${pct>=100?'✓':'○'}</td><td>${esc(i.title)}${i.due?`<br><span class="small">${this.fmtDue(i.due)}</span>`:''}</td><td style="width:120px"><div class="bar"><i style="width:${pct}%"></i></div></td><td class="small">${i.done}/${i.target}</td></tr>`}).join('')+'</table>'}
+  if(r.weak.length){h+='<h3>Puntos débiles</h3><table>'+r.weak.map(w=>{const pv=prev&&prev.weak.find(x=>x.src===w.src&&x.label===w.label);const d=pv?Math.round((w.acc-pv.acc)*100):null;return `<tr><td class="small">${esc(w.src)}</td><td>${esc(w.label)}</td><td>${Math.round(w.acc*100)}% <span class="small">(${w.n})</span>${d===null?'':` <span class="small" style="color:${d>0?'var(--acc)':d<0?'#d9594c':'var(--mut)'}">${d>0?'▲ +':d<0?'▼ ':'= '}${d||''}${d?' pts':''}</span>`}</td></tr>`}).join('')+'</table>'}
+  h+=`<div class="row" style="margin-top:8px"><button data-co="del" data-s="${esc(r.sid)}">Borrar alumno</button></div>`;
+  return h;
+ }
+};
+
 /* =============== CONTROL DE PESTAÑAS =============== */
-const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,edit:Edit,progress:Prog};
+const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,edit:Edit,coach:Coach,progress:Prog};
 const Mode={
  set(name,after){
   if(A.mode&&A.mode.leave)A.mode.leave();Engine.stop();anToken++;$('#bStopAn').hidden=true;
@@ -2060,8 +2631,8 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>Mode.set(b.da
  document.addEventListener('pointerdown',()=>Snd.init(),{passive:true});document.addEventListener('keydown',()=>Snd.init());
 })();
 Engine.init().catch(()=>{});
-Mode.set('today');
-window.__app={Log,Today,Snd,PZ_MATE,PZ_POS,MateU,STRUCTS,Struct,Rep,Exam,parseStudyPGN,Games,PZ,parsePGN,SRS,Rev,A,Lesson,Tac,Play,Edit,Engine,PUZZLES,LESSONS,Mode,board,whiteEval};
+Coach.syncTab();Backup.init().finally(()=>Mode.set('today'));
+window.__app={Coach,Backup,store,Log,Today,Snd,PZ_MATE,PZ_POS,MateU,STRUCTS,Struct,Rep,Exam,parseStudyPGN,Games,PZ,parsePGN,SRS,Rev,A,Lesson,Tac,Play,Edit,Engine,PUZZLES,LESSONS,Mode,board,whiteEval};
 </script>
 </body>
 </html>
