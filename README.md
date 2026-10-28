@@ -62,3 +62,7 @@ Stockfish.js 19 (WASM, lite, GPLv3) como motor principal, Stockfish.js 10 (asm.j
 - **Lecciones → Importar PGN**: acepta PGN de estudios (Lichess/ChessBase) con comentarios, `[Orientation]`, flechas `[%cal]` y varias partidas. El color (blancas/negras) se detecta solo; también puedes elegirlo, y elegir si cada partida es un capítulo o una partida modelo. Si el PGN trae notación en español (R, D, T, A, C) se convierte automáticamente. Si algo falla, el mensaje indica qué partida y qué jugada.
 - **Crear**: editor de lecciones con varios capítulos (añadir, borrar, ordenar), posición inicial por FEN, comentario por jugada, pegar jugadas/PGN, editar tus lecciones o copiar una incluida, duplicar/borrar, y guardar o guardar y practicar.
 - **Importar/exportar** desde Crear: PGN o JSON (una lección, una lista o `{lessons}`); exportar la lección actual (JSON o PGN) o todas las tuyas.
+
+## Interfaz
+- Botones, campos y paneles con un estilo único; foco visible con teclado; cabecera fija y compacta en pantallas medianas.
+- **Crear** se organiza en pestañas (1·Lección, 2·Capítulo, 3·Jugadas, Archivo) con barra fija de «Guardar lección / Guardar y practicar». Nada se desborda del panel; en móvil el panel fluye bajo el tablero.

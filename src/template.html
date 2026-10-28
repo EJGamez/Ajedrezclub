@@ -100,6 +100,63 @@ aside{background:var(--panel);border:1px solid var(--line);border-radius:12px;di
 .bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;min-width:60px}.bar i{display:block;height:100%;background:var(--acc)}
 footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;color:var(--mut);font-size:12px}
 .small{font-size:12px;color:var(--mut)}
+
+/* ===== Pulido de interfaz ===== */
+:root{--r:10px;--focus:0 0 0 2px rgba(138,179,74,.45)}
+html{color-scheme:dark}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#3a3632;border-radius:8px;border:2px solid transparent;background-clip:content-box}::-webkit-scrollbar-thumb:hover{background:#4a453f;background-clip:content-box;border:2px solid transparent}
+header{position:sticky;top:0;z-index:20;padding:8px 18px}
+nav{gap:2px}nav button{padding:7px 11px;font-weight:500}
+nav button.on{background:var(--acc);color:#102000;border-color:var(--acc);font-weight:600}
+button,select,input,textarea{outline:none}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{box-shadow:var(--focus);border-color:var(--acc)}
+.panel button,.bub button,#chat button{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:5px 11px;font:inherit;font-size:14px;cursor:pointer}
+.panel button:hover:not(:disabled),#chat button:hover:not(:disabled){border-color:var(--acc)}
+.panel button.pri,#chat button.pri,#ctl button.pri,.chip.pri{background:var(--acc);color:#102000;border-color:var(--acc);font-weight:600}
+.panel button.on,#chat button.on{background:var(--acc);color:#102000;border-color:var(--acc)}
+.panel select,.panel input,.panel textarea{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit}
+.panel details{border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;margin:8px 0;background:rgba(255,255,255,.015)}
+.panel summary{cursor:pointer}
+aside{border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.28);overflow:hidden}
+#ctl{overflow:auto;max-height:46%;min-height:0;scrollbar-gutter:stable}
+#ctl select,#ctl input,#ctl textarea{width:100%;transition:border-color .12s}
+#ctl textarea{resize:vertical;min-height:54px;line-height:1.4}
+#ctl label{font-size:12px;font-weight:500;letter-spacing:.01em}
+#ctl button{transition:border-color .12s,background .12s}
+#ctl button.danger{color:#e48a80}#ctl button.danger:hover:not(:disabled){border-color:var(--bad);background:rgba(217,89,76,.1)}
+#chips{align-items:center}#chips:empty{display:none}
+.chip{font-size:14px}
+.bub{line-height:1.5}
+footer{padding:4px 18px 28px;line-height:1.5}
+@media(max-width:1440px){nav button{padding:7px 8px}#sizeBox{font-size:0}#sizeBox input{width:56px}header{gap:8px 8px}#engstat.ok{display:none}}
+/* Crear */
+body[data-m=edit] #ctl{flex:1 1 0;max-height:none;overflow:hidden;padding:0;gap:0;display:flex}
+body[data-m=edit] #ctl.hide{display:flex}
+body[data-m=edit] #ctlToggle{display:none}
+body[data-m=edit] #chat{flex:0 0 clamp(96px,19%,150px);min-height:0;border-top:1px solid var(--line);font-size:14px;padding:10px 12px}
+body[data-m=edit] #chips{display:none}
+.ed{display:flex;flex-direction:column;min-height:0;flex:1}
+.ed .edopen{padding:12px 14px 8px}
+.edtabs{display:flex;gap:2px;padding:0 14px;border-bottom:1px solid var(--line)}
+#ctl .edtabs button{flex:1;background:transparent;border:0;border-bottom:2px solid transparent;border-radius:0;color:var(--mut);padding:8px 4px;font-weight:500;font-size:13px}
+#ctl .edtabs button:hover{color:var(--txt);border-color:transparent;border-bottom-color:var(--line)}
+#ctl .edtabs button.on{color:var(--acc);border-bottom-color:var(--acc)}
+.edbody{flex:1;min-height:0;overflow:auto;padding:12px 14px;scrollbar-gutter:stable}
+.edbody section{display:flex;flex-direction:column;gap:10px}
+.edbody section[hidden]{display:none}
+.edbody .row{display:flex;flex-wrap:wrap;gap:6px}
+.edbody .stack{display:flex;flex-direction:column;gap:8px}
+.edbody .stack button{text-align:left;padding:9px 12px}
+.edbar{flex:none;padding:10px 14px 12px;border-top:1px solid var(--line);background:var(--panel2);display:flex;flex-direction:column;gap:6px}
+.edbar .small{min-height:0}.edbar .small:empty{display:none}
+.edbar .row{display:flex;gap:8px}
+@media(max-width:900px){
+ body[data-m=edit] #ctl{flex:none;overflow:visible}
+ body[data-m=edit] .ed,body[data-m=edit] .edbody{overflow:visible;flex:none}
+ body[data-m=edit] #chat{flex:none;max-height:none}
+ .edbar{position:sticky;bottom:0}
+ header{position:static}
+}.edbar .row button{flex:1;padding:9px 12px}
 </style>
 </head>
 <body>
@@ -355,9 +412,12 @@ class Board{
   el.addEventListener('pointerdown',e=>this.down(e));
   window.addEventListener('pointermove',e=>this.move(e));
   window.addEventListener('pointerup',e=>this.up(e));
+  window.addEventListener('pointercancel',()=>this.cancelDrag());window.addEventListener('blur',()=>this.cancelDrag());
+  el.addEventListener('dragstart',e=>e.preventDefault());
  }
  setFen(fen){this.pos={};fen.split(' ')[0].split('/').forEach((row,i)=>{let f=0;for(const ch of row){if(/\d/.test(ch))f+=+ch;else{this.pos[FILES[f]+(8-i)]=ch;f++}}});this.sel=null;this.targets=[];this.draw()}
  draw(){
+  if(!(this.drag&&this.drag.ghost))this.clearGhosts();
   for(const n in this.sq){
    const d=this.sq[n],f=FILES.indexOf(n[0]),r=+n[1]-1,i=(7-r)*8+f;
    d.style.order=this.flipped?63-i:i;
@@ -391,7 +451,10 @@ class Board{
  }
  sqAt(x,y){const r=this.el.getBoundingClientRect();const fx=(x-r.left)/r.width*8,fy=(y-r.top)/r.height*8;if(fx<0||fy<0||fx>=8||fy>=8)return null;
   const c=Math.floor(fx),rw=Math.floor(fy);const f=this.flipped?7-c:c,rk=this.flipped?rw:7-rw;return FILES[f]+(rk+1)}
+ clearGhosts(){document.querySelectorAll('.ghost').forEach(g=>g.remove())}
+ cancelDrag(){if(!this.drag&&!document.querySelector('.ghost'))return;this.drag=null;this.clearGhosts();this.sel=null;this.targets=[];this.draw()}
  down(e){
+  this.clearGhosts();
   if(!this.promoEl.hidden)return; if(!this.canMove())return;
   const s=this.sqAt(e.clientX,e.clientY);if(!s)return;
   if(this.sel&&this.targets.includes(s)){this.attempt(this.sel,s);return}
@@ -1077,26 +1140,40 @@ const Edit={
  enter(){
   this.loadDraft();
   const cust=store.get('custom',[]),inc=[...LESSONS,...builtinLessons(),...structLessons(),...endLessons()];
-  $('#ctl').innerHTML=`<details open><summary><b>Lección</b></summary>
-  <label>Abrir para editar<select id="edMine"><option value="">— lección nueva —</option>${cust.length?'<optgroup label="Mis lecciones">'+cust.map(l=>`<option value="c:${esc(l.id)}">${esc(l.title)}</option>`).join('')+'</optgroup>':''}<optgroup label="Incluidas (se edita una copia)">${inc.map(l=>`<option value="i:${esc(l.id)}">${esc(l.title)}</option>`).join('')}</optgroup></select></label>
-  <label>Título<input id="edTitle" placeholder="Ej.: Defensa Caro-Kann"></label>
-  <div class="g2"><label>Juegas con<select id="edSide"><option value="w">Blancas</option><option value="b">Negras</option></select></label><label>&nbsp;<button id="edDelL">Borrar esta lección</button></label></div>
-  <label>Descripción<textarea id="edIntro" rows="2" placeholder="De qué trata la lección…"></textarea></label></details>
-  <details open><summary><b>Capítulo</b></summary>
-  <div class="g2"><label>Capítulo<select id="edCh"></select></label><label>Título del capítulo<input id="edChTitle"></label></div>
-  <div class="row"><button id="edAddCh">+ Capítulo</button><button id="edDelCh">Borrar capítulo</button><button id="edUp" title="Subir">↑</button><button id="edDn" title="Bajar">↓</button></div>
-  <label>Introducción del capítulo<textarea id="edChIntro" rows="2"></textarea></label>
-  <label>Ideas clave (al terminar)<textarea id="edChOutro" rows="2"></textarea></label>
-  <label>Posición inicial (FEN, opcional)<input id="edFen" placeholder="vacío = posición inicial"></label></details>
-  <details open><summary><b>Jugadas</b></summary>
-  <div id="edSelLbl" class="small">Juega las jugadas en el tablero (blancas y negras). Pulsa una jugada de la lista para comentarla.</div>
-  <label>Comentario de la jugada seleccionada <span class="small">(admite &lt;b&gt;negrita&lt;/b&gt;)</span><textarea id="edNote" rows="3" placeholder="Explica la idea de esta jugada…"></textarea></label>
-  <div class="row"><button id="edUndo">Deshacer</button><button id="edTrunc">Cortar aquí</button><button id="edClear">Limpiar capítulo</button></div>
-  <label>Pegar jugadas o PGN<textarea id="edPaste" rows="3" placeholder="1. d4 Nf6 {Desarrolla} 2. c4 e6 …  (también PGN con varias partidas o capítulos)"></textarea></label>
-  <div class="row"><button id="edLoad">Cargar texto</button></div></details>
-  <div class="row"><button id="edSave" class="pri">Guardar lección</button><button id="edTry">Guardar y practicar</button></div>
-  <details><summary><b>Importar y exportar</b></summary><div class="row"><button id="edImpFile">Importar PGN o JSON…</button><button id="edExpL">Exportar esta (JSON)</button><button id="edExpPgn">Exportar esta (PGN)</button><button id="edExpAll">Exportar todas mis lecciones</button></div></details>
-  <div id="edMsg" class="small"></div>`;
+  $('#ctl').innerHTML=`<div class="ed">
+  <label class="edopen">Lección abierta<select id="edMine"><option value="">— lección nueva —</option>${cust.length?'<optgroup label="Mis lecciones">'+cust.map(l=>`<option value="c:${esc(l.id)}">${esc(l.title)}</option>`).join('')+'</optgroup>':''}<optgroup label="Incluidas (se edita una copia)">${inc.map(l=>`<option value="i:${esc(l.id)}">${esc(l.title)}</option>`).join('')}</optgroup></select></label>
+  <div class="edtabs" role="tablist"><button data-t="lec">1 · Lección</button><button data-t="cap">2 · Capítulo</button><button data-t="jug">3 · Jugadas</button><button data-t="arc">Archivo</button></div>
+  <div class="edbody">
+   <section data-sec="lec">
+    <label>Título<input id="edTitle" placeholder="Ej.: Defensa Caro-Kann"></label>
+    <label>Juegas con<select id="edSide"><option value="w">Blancas</option><option value="b">Negras</option></select></label>
+    <label>Descripción<textarea id="edIntro" rows="3" placeholder="De qué trata la lección…"></textarea></label>
+    <div class="row"><button id="edDelL" class="danger">Borrar esta lección</button></div>
+   </section>
+   <section data-sec="cap">
+    <label>Capítulo<select id="edCh"></select></label>
+    <div class="row"><button id="edAddCh">+ Capítulo</button><button id="edUp" title="Subir">↑</button><button id="edDn" title="Bajar">↓</button><button id="edDelCh" class="danger">Borrar capítulo</button></div>
+    <label>Título del capítulo<input id="edChTitle"></label>
+    <label>Introducción<textarea id="edChIntro" rows="3" placeholder="Qué se aprende en este capítulo…"></textarea></label>
+    <label>Ideas clave (al terminar)<textarea id="edChOutro" rows="3"></textarea></label>
+    <label>Posición inicial (FEN, opcional)<input id="edFen" placeholder="vacío = posición inicial"></label>
+   </section>
+   <section data-sec="jug">
+    <div id="edSelLbl" class="small">Juega las jugadas en el tablero (blancas y negras). Pulsa una jugada de la lista para comentarla.</div>
+    <label>Comentario de la jugada seleccionada <span class="small">(admite &lt;b&gt;negrita&lt;/b&gt;)</span><textarea id="edNote" rows="3" placeholder="Explica la idea de esta jugada…"></textarea></label>
+    <div class="row"><button id="edUndo">Deshacer</button><button id="edTrunc">Cortar aquí</button><button id="edClear" class="danger">Limpiar capítulo</button></div>
+    <label>Pegar jugadas o PGN<textarea id="edPaste" rows="2" placeholder="1. d4 Nf6 {Desarrolla} 2. c4 e6 …  (también PGN con varias partidas o capítulos)"></textarea></label>
+    <div class="row"><button id="edLoad">Cargar texto</button></div>
+   </section>
+   <section data-sec="arc">
+    <div class="small">Importa un PGN (de Lichess, ChessBase…) o un JSON, o guarda una copia de tus lecciones.</div>
+    <div class="stack"><button id="edImpFile">Importar PGN o JSON…</button><button id="edExpL">Exportar esta lección (JSON)</button><button id="edExpPgn">Exportar esta lección (PGN)</button><button id="edExpAll">Exportar todas mis lecciones</button></div>
+   </section>
+  </div>
+  <div class="edbar"><div id="edMsg" class="small"></div><div class="row"><button id="edSave" class="pri">Guardar lección</button><button id="edTry">Guardar y practicar</button></div></div>
+  </div>`;
+  this.setTab(this.tab||'lec');
+  $('#ctl').querySelectorAll('.edtabs button').forEach(b=>b.onclick=()=>this.setTab(b.dataset.t));
   const on=(id,ev,fn)=>{const e=$('#'+id);if(e)e['on'+ev]=fn};
   ['edTitle','edSide','edIntro','edChTitle','edChIntro','edChOutro'].forEach(id=>on(id,'change',()=>{this.commit();if(id==='edSide'){board.flipped=this.d.side==='b';board.draw()}if(id==='edChTitle')this.fillChapters()}));
   on('edFen','change',()=>this.setFen($('#edFen').value.trim()));
@@ -1115,6 +1192,7 @@ const Edit={
   on('edImpFile','click',()=>this.impFile());on('edExpL','click',()=>this.exportOne('json'));on('edExpPgn','click',()=>this.exportOne('pgn'));on('edExpAll','click',()=>this.exportAll());
   this.openChapter(this.ci);
  },
+ setTab(t){this.tab=t;const c=$('#ctl');c.querySelectorAll('.edtabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));c.querySelectorAll('.edbody section').forEach(x=>x.hidden=x.dataset.sec!==t)},
  leave(){if(this.d)this.commit()},
  fillForm(){
   const d=this.d,ch=d.chapters[this.ci];
@@ -2589,7 +2667,7 @@ const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:S
 const Mode={
  set(name,after){
   if(A.mode&&A.mode.leave)A.mode.leave();Engine.stop();anToken++;$('#bStopAn').hidden=true;
-  A.mode=MODES[name];A.epoch++;A.marks={};
+  A.mode=MODES[name];A.epoch++;A.marks={};document.body.dataset.m=name;
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.m===name));
   board.arrows=[];board.marks=[];$('#engineLines').innerHTML='';
   A.mode.enter();if(after)after();
@@ -2597,6 +2675,7 @@ const Mode={
  }
 };
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>Mode.set(b.dataset.m));
+(function(){const e=$('#engstat'),f=()=>e.classList.toggle('ok',/listo/.test(e.textContent));new MutationObserver(f).observe(e,{childList:true,characterData:true,subtree:true});f()})();
 
 /* Validación de contenido */
 (function validate(){
