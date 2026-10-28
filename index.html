@@ -128,7 +128,7 @@ aside{border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.28);overflow:hidden}
 .chip{font-size:14px}
 .bub{line-height:1.5}
 footer{padding:4px 18px 28px;line-height:1.5}
-@media(max-width:1440px){nav button{padding:7px 8px}#sizeBox{font-size:0}#sizeBox input{width:56px}header{gap:8px 8px}#engstat.ok{display:none}}
+@media(max-width:1440px){.hx{display:none}nav button{padding:7px 8px}#sizeBox{font-size:0}#sizeBox input{width:56px}header{gap:8px 8px}#engstat.ok{display:none}}
 /* Crear */
 body[data-m=edit] #ctl{flex:1 1 0;max-height:none;overflow:hidden;padding:0;gap:0;display:flex}
 body[data-m=edit] #ctl.hide{display:flex}
@@ -157,12 +157,23 @@ body[data-m=edit] #chips{display:none}
  .edbar{position:sticky;bottom:0}
  header{position:static}
 }.edbar .row button{flex:1;padding:9px 12px}
+
+/* checkbox en paneles de opciones (no deben ocupar todo el ancho) */
+#ctl input[type=checkbox],#ctl input[type=radio]{width:auto;flex:none}
+#ctl .row select,#ctl .row input:not([type=checkbox]){width:auto}
+#ctl label.chk{flex-direction:row;align-items:center;gap:8px;font-size:13px;color:var(--txt);font-weight:400}
+/* A ciegas */
+body[data-m=blind] #evalbar{visibility:hidden}
+body.blindNoList #movelist{display:none}
+.blmove{display:flex;gap:6px;position:sticky;top:-10px;z-index:2;background:var(--panel);padding:10px 0 8px;margin:-10px 0 0}
+#ctl .blmove input{flex:1;width:auto;font-size:16px;padding:9px 10px}
+#ctl .blmove button{padding:9px 16px}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="s_p"><circle cx="22.5" cy="12.6" r="6.3"/><path d="M15.6 34.5C15.6 27.5 18.8 23.5 22.5 18 26.2 23.5 29.4 27.5 29.4 34.5Z"/><rect x="12.5" y="33" width="20" height="6" rx="2.4"/></g><g id="d_p"></g><g id="s_r"><path d="M13.5 35 15 19.5H30L31.5 35Z"/><path d="M12 20V8.5h4.6V12h3.4V8.5h5V12h3.4V8.5H33V20Z"/><rect x="10" y="34.5" width="25" height="4.8" rx="2.2"/></g><g id="d_r"><path d="M14.6 20H30.4"/></g><g id="s_n"><path d="M13.5 34C13 27.5 15 22.8 19.6 19.8L13.4 21.4C11 22 9.6 19.4 11.2 17.4L18 9.8 19.8 5.8 23.2 8.8C30.2 9.2 34.6 15 34.2 24 34 28 33.2 31 32.6 34Z"/><rect x="10" y="34.5" width="25" height="4.8" rx="2.2"/></g><g id="d_n"><path d="M21 14.6h.1"/></g><g id="s_b"><path d="M22.5 7.4C28 11.6 31.4 16.4 31.4 21 31.4 24.4 28.6 26.4 27.8 28.4L27.8 31.5H17.2V28.4C16.4 26.4 13.6 24.4 13.6 21 13.6 16.4 17 11.6 22.5 7.4Z"/><circle cx="22.5" cy="6.4" r="2.6"/><rect x="13" y="30.5" width="19" height="4" rx="1.8"/><rect x="10" y="34.5" width="25" height="4.8" rx="2.2"/></g><g id="d_b"><path d="M21.6 13.6 26.4 20"/></g><g id="s_q"><path d="M11 33.5 8.8 14 14 23 15.6 10 19.6 22 22.5 8 25.4 22 29.4 10 31 23 36.2 14 34 33.5Z"/><circle cx="8.8" cy="12.6" r="2.4"/><circle cx="15.6" cy="8.8" r="2.4"/><circle cx="22.5" cy="6.6" r="2.6"/><circle cx="29.4" cy="8.8" r="2.4"/><circle cx="36.2" cy="12.6" r="2.4"/><rect x="11" y="31.8" width="23" height="4" rx="1.8"/><rect x="10" y="34.5" width="25" height="4.8" rx="2.2"/></g><g id="d_q"><path d="M13 28.6H32"/></g><g id="s_k"><path d="M12.6 34C10.6 27 11.6 21.5 15.2 18.4 17 16.8 19.4 15.8 22.5 15.8 25.6 15.8 28 16.8 29.8 18.4 33.4 21.5 34.4 27 32.4 34Z"/><rect x="20.7" y="2.6" width="3.6" height="14" rx="1.2"/><rect x="16.4" y="6.6" width="12.2" height="3.6" rx="1.2"/><rect x="10" y="34.5" width="25" height="4.8" rx="2.2"/></g><g id="d_k"><path d="M14 28H31"/></g></defs></svg>
 <header>
-  <h1>&#9822; Entrenador de Ajedrez</h1>
+  <h1>&#9822; Entrenador<span class="hx"> de Ajedrez</span></h1>
   <nav id="tabs">
     <button data-m="today">Hoy</button>
     <button data-m="lesson">Lecciones</button>
@@ -172,6 +183,7 @@ body[data-m=edit] #chips{display:none}
     <button data-m="struct" title="Estructuras de peones">Peones</button>
     <button data-m="games">Partidas</button>
     <button data-m="play">Jugar</button>
+    <button data-m="blind" title="Partida sin ver las piezas">A ciegas</button>
     <button data-m="edit">Crear</button>
     <button data-m="coach" id="tabCoach" hidden>Entrenador</button>
     <button data-m="progress">Progreso</button>
@@ -2336,7 +2348,7 @@ const PZ_MATE=[{"fen":"8/5Q2/7k/R5p1/4P3/2P1K2P/6P1/5R2 w - - 0 39","n":1,"pat":
 const PZ_POS=[{"fen":"r4rk1/5p1p/1pn2Qp1/2pqp3/P7/1P2PP2/6RP/R1B1K3 w Q - 0 20","best":"Rd2","ev":-28,"sec":[["e4",-170],["Ra3",-203]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"1rq2k1r/3nbppp/4p3/1QpnP3/8/P3BNP1/1P1N1P1P/R3KR2 w Q - 1 18","best":"Qd3","ev":3,"sec":[["Qa5",-65],["Qc4",-91]],"cat":"Actividad de la dama","idea":"La dama pasa a d3, donde ejerce más presión sin exponerse a ataques."},{"fen":"r2qk2r/1b2npp1/p3p2p/1pb5/P7/2PB1N1P/2P1QPP1/R1B2RK1 b kq a3 0 14","best":"O-O","ev":-4,"sec":[["Bxf3",-52],["Qa5",-71]],"cat":"Seguridad del rey","idea":"Enrocar (O-O) pone al rey a salvo y conecta las torres: es la prioridad antes de iniciar cualquier plan."},{"fen":"r1b1k2r/pp1nppbp/2n3p1/2P5/2N5/3BP3/PP1B1PPP/2RK2NR w kq - 3 11","best":"b4","ev":99,"sec":[["Ke2",-19],["Bb1",-24]],"cat":"Ruptura de peones","idea":"El avance b4 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1r2bk1/1b3pp1/1p1qpn1p/1N1pn3/1pP5/PQ2P2P/1B1NBPP1/2RR2K1 b - - 1 20","best":"Qb8","ev":24,"sec":[["Qc6",-121],["Qd8",-196]],"cat":"Actividad de la dama","idea":"La dama pasa a b8, donde ejerce más presión sin exponerse a ataques."},{"fen":"2r2k2/5pp1/1ppqp3/3r1nBQ/P2P4/7P/1P3PP1/R2R2K1 b - - 2 25","best":"Kg8","ev":10,"sec":[["Ke8",-63],["Ne7",-65]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g8): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2qk2r/pp1n2pp/2pp1p2/b3p1Bb/3PP3/1BP2N1P/PP3PP1/R2QK2R w KQkq - 0 12","best":"Be3","ev":35,"sec":[["Bh4",-14],["Bc1",-23]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e3, una diagonal más activa."},{"fen":"3r1rk1/1bp2pb1/pq2p2p/3n2p1/2NP4/3B2PP/PB2QP2/2R2RK1 b - - 8 24","best":"Qa7","ev":19,"sec":[["Qb5",-105],["Qc6",-108]],"cat":"Actividad de la dama","idea":"La dama pasa a a7, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b1k2r/1ppqnp2/p3p2p/4b1p1/3PB3/N1P5/P3QPPP/R1B2RK1 b kq - 0 15","best":"Bg7","ev":-32,"sec":[["Bf6",-106],["Bd6",-129]],"cat":"Alfil a la gran diagonal","idea":"El alfil en g7 domina la gran diagonal y presiona el flanco rival."},{"fen":"2q2k1r/3nbppp/4p3/2pnP3/8/P2QBNP1/1r1N1P1P/R3KR2 w Q - 0 19","best":"Nc4","ev":0,"sec":[["Rc1",-52],["Rh1",-64]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia c4, una casilla más útil para tu plan."},{"fen":"rn1qk2r/pbpp1pbp/1p2p1p1/4P3/3Pn3/3B1N2/PPP1QPP1/RNB1K2R b KQkq - 4 10","best":"f5","ev":-5,"sec":[["d5",-52],["Nc5",-338]],"cat":"Ruptura de peones","idea":"El avance f5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn1qkbnr/pp1bpppp/8/1Bp1P3/P2p4/8/1PPP1PPP/RNBQK1NR w KQkq - 2 6","best":"e6","ev":65,"sec":[["d3",20],["Nf3",20]],"cat":"Ruptura de peones","idea":"El avance e6 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/1B3PPP/R2QK2R b KQ - 2 15","best":"e5","ev":40,"sec":[["Nd7",-18],["Rab8",-38]],"cat":"Ruptura de peones","idea":"El avance e5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1b1kb1r/1p3ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3QK2R b Kkq - 2 16","best":"Bd7","ev":39,"sec":[["Qg5",-30],["Qd8",-56]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bd7) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r3kb1r/1pq1ppp1/p1n2n2/3P3p/B3p2N/1Q2P3/PP3PPP/R1B1K2R b KQkq - 1 12","best":"b5","ev":-7,"sec":[["Rc8",-54],["Rd8",-60]],"cat":"Ruptura de peones","idea":"El avance b5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn3rk1/p3pp1p/2p3p1/q2Pb3/NpP1P1b1/5NP1/P3QPBP/2RR2K1 w - - 2 18","best":"Qc2","ev":14,"sec":[["Nb2",-88],["d6",-249]],"cat":"Actividad de la dama","idea":"La dama pasa a c2, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b2rk1/1p2qpbp/n2p2p1/p3p3/3Pn3/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 12","best":"Nd5","ev":77,"sec":[["Nxe4",28],["Na4",-66]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d5, una casilla más útil para tu plan."},{"fen":"rnbq1rk1/pp3p2/2p2npb/3P3p/3Pp3/PQN1P3/1P1B1PPP/2R1KBNR w K - 1 10","best":"Bc4","ev":71,"sec":[["dxc6",17],["Na4",-43]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bc4) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r1bqkb1r/5ppp/p1p2n2/2Pp4/1P2p3/3BP3/P1P2PPP/RNBQK2R w KQkq - 0 9","best":"Be2","ev":0,"sec":[["Bf1",-45],["Bb2",-285]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e2, una diagonal más activa."},{"fen":"rn2kb1r/p2p1pp1/b1p1p2p/q3P3/2pP4/2P4N/P1Q1BPPP/R1B1K2R b KQkq - 1 11","best":"d5","ev":58,"sec":[["d6",-8],["Bc8",-19]],"cat":"Ruptura de peones","idea":"El avance d5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r2qkb1r/1pp1pp1p/p4n2/3pPbB1/2P5/4P3/PP3PPP/RN1QKB1R b KQkq - 0 8","best":"Ne4","ev":-37,"sec":[["Ng4",-178],["Rg8",-178]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp1b1p2/2n2Pp1/2p1p2p/3pP2q/N1PP2R1/PP2N1Bn/R1BQ2K1 b kq - 6 19","best":"Ng4","ev":56,"sec":[["Bg4",-108],["Qxf6",-344]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a g4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r2k3r/p1p1n3/1p3p2/4n2p/2PpPR2/P6P/P3B1PB/R5K1 b - - 0 19","best":"Nd7","ev":-29,"sec":[["Rf8",-114],["d3",-121]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d7, una casilla más útil para tu plan."},{"fen":"6kr/ppq2p2/6p1/3Q1p1p/3Pr3/P1P2NbP/1P3P2/4RRK1 b - - 0 24","best":"Kg7","ev":-6,"sec":[["Rxe1",-113],["Bd6",-143]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"rnb1k2r/ppqn1ppp/4p3/1NbpP1B1/8/5N2/PPP1BPPP/R2QK2R b KQkq - 3 9","best":"Qb6","ev":-40,"sec":[["Qc6",-101],["Qa5+",-129]],"cat":"Actividad de la dama","idea":"La dama pasa a b6, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1r3k1/1R3pb1/pN2p1pp/2n5/2Pp2P1/4P2P/5P1B/5R1K w - - 2 27","best":"Re7","ev":0,"sec":[["Nxc8",-121],["Rc7",-135]],"cat":"Torre a la séptima","idea":"La torre en la séptima fila (e7) ataca los peones rivales y limita al rey."},{"fen":"rnbqk1nr/1pp1b1pp/p3p3/3p4/3P1Bp1/2N2N2/PPP1PP1P/R2QKB1R w KQkq - 0 7","best":"Ne5","ev":29,"sec":[["Nd2",-67],["Ng1",-97]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e5: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp3ppp/2nb1q2/1Bpp3b/8/1P2PN1P/P2P1PP1/RN1Q1RK1 w kq - 0 11","best":"Nc3","ev":14,"sec":[["Bxc6+",-61],["Na3",-78]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nc3) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r1b1k1nr/pp2ppbp/2n3p1/2P5/2N5/4P3/PP1B1PPP/2RK1BNR b kq - 0 9","best":"Nf6","ev":-21,"sec":[["Be6",-77],["Bf5",-85]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nf6) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r2k3r/p2nq1pp/2pp1p2/4p3/4P3/1BP1QP1P/PP3P2/2KR3R b - - 2 18","best":"Kc7","ev":12,"sec":[["Kc8",-59],["h5",-86]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (c7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2q1rk1/5ppp/1pn1p3/2pp4/P2PN3/1P2PN2/5PbP/R1BQK2R w KQ - 0 14","best":"Rg1","ev":-38,"sec":[["Ng3",-159],["Nxc5",-342]],"cat":"Torre a columna semiabierta","idea":"La torre ocupa la columna g, semiabierta para ti: no tienes peones que la bloqueen y presionas el peón rival."},{"fen":"r3kb1r/1p1b1ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3Q1RK1 b kq - 4 17","best":"Rd8","ev":44,"sec":[["Ba4",-5],["Be7",-5]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/5PPP/R1BQK2R w KQ - 1 15","best":"Bb2","ev":17,"sec":[["Bd2",-34],["Rb1",-39]],"cat":"Alfil a la gran diagonal","idea":"El alfil se desarrolla a b2 y domina la gran diagonal, presionando el flanco rival."}];
 PZ_MATE.forEach(p=>{p.theme=p.pat});PZ_POS.forEach(p=>{p.theme='Posicional: '+p.cat});
 const ALLPZ=()=>PZ().concat(PZ_MATE,PZ_POS);
-const COLS={basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},pos:{n:'Mejorar la posición',get:()=>PZ_POS},theme:{n:'Tema',get:()=>ALLPZ().filter(p=>p.theme===Tac.theme)}};
+const COLS={basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},err:{n:'Mis errores (repaso)',get:()=>ErrSRS.session()},pos:{n:'Mejorar la posición',get:()=>PZ_POS},theme:{n:'Tema',get:()=>ALLPZ().filter(p=>p.theme===Tac.theme)}};
 const MateU={
  canMate(c){for(const m of c.moves()){c.move(m);const ok=c.in_checkmate();c.undo();if(ok)return true}return false},
  forced(c,k){ // c: mueve el rival; ¿lo mato en k jugadas mías?
@@ -2432,7 +2444,7 @@ function uciToSan(fen,u){const c=new Chess(fen);const m=c.move({from:u.slice(0,2
 class Board{
  constructor(el){
   this.el=el;this.flipped=false;this.pos={};this.last=null;this.checkSq=null;this.marks=[];this.arrows=[];
-  this.sel=null;this.targets=[];this.legal=()=>[];this.canMove=()=>false;this.onMove=()=>{};this.drag=null;
+  this.vis=null;this.hideHl=false;this.sel=null;this.targets=[];this.legal=()=>[];this.canMove=()=>false;this.onMove=()=>{};this.drag=null;
   el.innerHTML='<div class="grid"></div><svg class="arrows" viewBox="0 0 8 8"></svg><div class="promo" hidden></div>';
   this.grid=el.querySelector('.grid');this.svg=el.querySelector('svg');this.promoEl=el.querySelector('.promo');this.sq={};
   for(let i=0;i<64;i++){const f=i%8,r=7-Math.floor(i/8);const n=FILES[f]+(r+1);const d=document.createElement('div');
@@ -2450,16 +2462,16 @@ class Board{
    const d=this.sq[n],f=FILES.indexOf(n[0]),r=+n[1]-1,i=(7-r)*8+f;
    d.style.order=this.flipped?63-i:i;
    let cls='sq '+((f+r)%2===0?'dark':'light');
-   if(this.last&&(this.last[0]===n||this.last[1]===n))cls+=' last';
+   if(!this.hideHl&&this.last&&(this.last[0]===n||this.last[1]===n))cls+=' last';
    if(this.marks.includes(n))cls+=' mark';
    if(this.sel===n)cls+=' sel';
-   if(this.checkSq===n)cls+=' check';
+   if(!this.hideHl&&this.checkSq===n)cls+=' check';
    d.className=cls;
    const bottom=this.flipped?8:1,left=this.flipped?'h':'a';
    if(r+1===bottom)d.dataset.f=n[0];else delete d.dataset.f;
    if(n[0]===left)d.dataset.r=n[1];else delete d.dataset.r;
    const p=this.pos[n];let h='';
-   if(p)h+=`<div class="pc ${p===p.toUpperCase()?'w':'b'}${this.drag&&this.drag.moved&&this.drag.from===n?' ghosted':''}">${pieceSvg(p)}</div>`;
+   if(p&&(!this.vis||this.vis(p,n)))h+=`<div class="pc ${p===p.toUpperCase()?'w':'b'}${this.drag&&this.drag.moved&&this.drag.from===n?' ghosted':''}">${pieceSvg(p)}</div>`;
    if(this.targets.includes(n))h+=p?'<i class="cap"></i>':'<i class="dot"></i>';
    d.innerHTML=h;
   }
@@ -2492,9 +2504,10 @@ class Board{
  }
  move(e){
   const d=this.drag;if(!d)return;
+  if(e.pointerType==='mouse'&&e.buttons===0){this.cancelDrag();return} /* se perdió el «soltar»: no seguir arrastrando */
   if(!d.moved&&Math.hypot(e.clientX-d.x,e.clientY-d.y)>6){
    d.moved=true;const p=this.pos[d.from];const g=document.createElement('div');g.className='ghost '+(p===p.toUpperCase()?'w':'b');
-   g.style.width=g.style.height=(this.el.getBoundingClientRect().width/8*.95)+'px';g.innerHTML=pieceSvg(p);document.body.appendChild(g);d.ghost=g;this.draw();
+   g.style.width=g.style.height=(this.el.getBoundingClientRect().width/8*.95)+'px';g.innerHTML=pieceSvg(p);document.body.appendChild(g);d.ghost=g;try{this.el.setPointerCapture(d.id)}catch(_){}this.draw();
   }
   if(d.ghost){d.ghost.style.left=e.clientX+'px';d.ghost.style.top=e.clientY+'px'}
  }
@@ -2846,10 +2859,10 @@ const Tac={
  free:false,i:0,s:0,tries:0,failed:false,done:false,col:'basic',mq:0,calc:false,
  canMove(){return !this.calc&&!this.done&&!this.lock},
  list(){return (COLS[this.col]||COLS.basic).get()},
- label(p,i){return p.n?`${i+1}. Mate en ${p.n}`:p.best?`${i+1}. Mejorar la posición`:`${i+1}. ${p.theme}`},
+ label(p,i){return p.n?`${i+1}. Mate en ${p.n}`:p.best?`${i+1}. Mejorar la posición`:p.theme==='Mis errores'?`${i+1}. Mi error (${ErrSRS.tag(p)})`:`${i+1}. ${p.theme}`},
  fill(){const L=this.list();$('#tpSel').innerHTML=L.map((p,i)=>`<option value="${i}">${esc(this.label(p,i))}</option>`).join('');if(this.i>=L.length)this.i=0;$('#tpSel').value=this.i},
  enter(){
-  this.col=store.get('tcol','basic');if(!COLS[this.col]||(this.col==='theme'&&!this.theme))this.col='basic';
+  ErrSRS.reset();this.col=store.get('tcol','basic');if(!COLS[this.col]||(this.col==='theme'&&!this.theme))this.col='basic';
   $('#ctl').innerHTML=`<div class="g2"><label>Colección<select id="tpCol">${Object.entries(COLS).filter(([k])=>k!=='theme'||Tac.theme).map(([k,c])=>`<option value="${k}">${esc(k==='theme'?'Tema: '+Tac.theme:c.n)} (${c.get().length})</option>`).join('')}</select></label>
   <label>Problema<select id="tpSel"></select></label></div>
   <div class="row"><label style="flex-direction:row;gap:6px;align-items:center"><input type="checkbox" id="tpCalc"> Calcular sin mover piezas</label><select id="tpNot" title="Notación al escribir las jugadas"><option value="es">R D T A C (español)</option><option value="en">K Q R B N (inglés)</option></select></div>
@@ -2857,7 +2870,7 @@ const Tac={
   this.calc=!!store.get('tcalc',false);$('#tpCalc').checked=this.calc;$('#tpNot').value=store.get('tnot','es');
   $('#tpCalc').onchange=e=>{this.calc=e.target.checked;store.set('tcalc',this.calc);this.load()};$('#tpNot').onchange=e=>{store.set('tnot',e.target.value);this.load()};
   $('#tpCol').value=this.col;this.i=0;this.fill();
-  $('#tpCol').onchange=e=>{this.col=e.target.value;store.set('tcol',this.col);this.i=0;this.fill();this.load()};
+  $('#tpCol').onchange=e=>{this.col=e.target.value;store.set('tcol',this.col);if(this.col==='err')ErrSRS.reset();this.i=0;this.fill();this.load()};
   $('#tpSel').onchange=e=>{this.i=+e.target.value;this.load()};
   $('#tpHint').onclick=()=>this.hint();$('#tpRestart').onclick=()=>this.load();
   $('#tpRand').onclick=()=>{const L=this.list();this.i=Math.floor(Math.random()*L.length);$('#tpSel').value=this.i;this.load()};
@@ -2867,9 +2880,11 @@ const Tac={
  leave(){},
  focusTheme(t){this.theme=t;store.set('tcol','theme');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()})},
  load(){
-  const p=this.list()[this.i];if(!p)return;A.epoch++;Engine.stop();A.game=new Chess(p.fen);A.startFen=A.game.fen();A.viewIdx=null;
+  const p=this.list()[this.i];
+  if(!p){A.epoch++;Chat.clear();Chat.chips([]);A.status('');Chat.say(this.col==='err'?'<b>No tienes errores pendientes de repaso.</b><br>Cuando analices tus partidas y pulses «Guardar mis errores como problemas», aparecerán aquí; cada uno vuelve a salir con intervalos crecientes (1, 3, 7, 14, 30 días) hasta que lo domines.':'No hay problemas en esta colección.');return}
+  A.epoch++;Engine.stop();A.game=new Chess(p.fen);A.startFen=A.game.fen();A.viewIdx=null;
   A.userColor=A.game.turn();board.flipped=A.userColor==='b';board.arrows=[];board.marks=[];
-  this.s=0;this.tries=0;this.failed=false;this.done=false;this.lock=false;this.mq=p.n||0;
+  this.s=0;this.tries=0;this.failed=false;this.done=false;this.lock=false;this.errInfo=null;this.mq=p.n||0;
   setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();
   const who=A.userColor==='w'?'blancas':'negras';
   if(p.n)Chat.say(`<b>Problema ${this.i+1} · Mate en ${p.n}</b><br>Juegan ${who}. Da mate en ${p.n} jugada${p.n>1?'s':''}, pase lo que pase el rival.`);
@@ -2954,8 +2969,9 @@ const Tac={
   let k=0;const step=()=>{const m=A.game.move(L[k]);if(!m)return;k++;A.sync();A.updateControls();board.arrows=[[m.from,m.to]];board.draw();Chat.chips(k<L.length?[{label:'Siguiente jugada ▶',pri:true,fn:step},{label:'Reiniciar',fn:()=>this.load()}]:[{label:'Siguiente problema ▶',pri:true,fn:()=>$('#tpNext').click()},{label:'Repetir este',fn:()=>this.load()}])};
   Chat.chips([{label:'Ver la línea en el tablero ▶',pri:true,fn:step},{label:'Siguiente problema ▶',fn:()=>$('#tpNext').click()}]);
  },
- stat(ok){if(this.calc){const q=store.get('cstats',{n:0,ok:0});q.n++;if(ok)q.ok++;store.set('cstats',q);Log.add('cal',1,ok)}Log.add('tac',1,ok);const s=store.get('tstats',{});const t=this.list()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
- wrong(msg){this.tries++;this.lock=true;if(!this.failed){this.failed=true;this.stat(false)}Chat.say(msg,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
+ stat(ok){{const q=this.list()[this.i];if(q&&q.theme==='Mis errores')this.errInfo=ErrSRS.grade(q.fen,ok);
+  try{if(q){const w=Log.key(Evo.monday()),th=store.get('thist',{}),t=q.theme||(q.n?'Mate en '+q.n:'Otros'),o=th[w]||(th[w]={}),c=o[t]||(o[t]=[0,0]);if(ok)c[0]++;c[1]++;const ks=Object.keys(th).sort();if(ks.length>80)ks.slice(0,ks.length-80).forEach(k=>delete th[k]);store.set('thist',th)}}catch(e){}}if(this.calc){const q=store.get('cstats',{n:0,ok:0});q.n++;if(ok)q.ok++;store.set('cstats',q);Log.add('cal',1,ok)}Log.add('tac',1,ok);const s=store.get('tstats',{});const t=this.list()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
+ wrong(msg){this.tries++;this.lock=true;let note='';if(!this.failed){this.failed=true;this.errInfo=null;this.stat(false);const q=this.list()[this.i];if(q&&q.theme==='Mis errores')note=ErrSRS.note(q,this.errInfo)}Chat.say(msg+note,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
  onMove(m){
   const p=this.list()[this.i];
   if(p.n)return this.onMate(m,p);
@@ -3005,12 +3021,12 @@ const Tac={
   if(next>=3)setTimeout(()=>{const c=new Chess(A.game.fen());const x=c.move(p.best);if(x){board.arrows=[[x.from,x.to]];board.draw()}},900);
  },
  solved(){
-  const p=this.list()[this.i];this.done=true;if(!this.failed)this.stat(true);
+  const p=this.list()[this.i];this.done=true;this.errInfo=null;if(!this.failed)this.stat(true);
   A.status('¡Resuelto!');Snd.play('ok',.12);let h;
   if(p.n)h=`<b>¡Mate!</b> ${esc(p.pat)}.<br>${p.expl}<br><span class="small">Línea: ${esc(p.line)}</span>`;
   else if(p.best){const alt=p.sec&&p.sec[0];h=`<b>¡Correcto: ${esc(p.best)}!</b> ${p.idea}<br><span class="small">Stockfish: con ${esc(p.best)} tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(alt[0])}) deja ≈${fmtEv(alt[1])}`:''}.</span>`}
   else h=`<b>¡Correcto!</b> ${p.expl}`;
-  Chat.say(h+(this.failed?'':'<br>Resuelto al primer intento.'),'ok');
+  Chat.say(h+(this.failed?'':'<br>Resuelto al primer intento.')+(p.theme==='Mis errores'&&!this.failed?ErrSRS.note(p,this.errInfo):''),'ok');
   Chat.chips([{label:'Siguiente problema ▶',pri:true,fn:()=>$('#tpNext').click()},{label:'Analizar con Stockfish',fn:analyze}]);
  },
  hint(){
@@ -3153,6 +3169,173 @@ const Play={
   Chat.say(`Pista de Stockfish: <b>${esc(uciToSan(A.game.fen(),r.best))}</b>.`,'warn');
  },
  resign(){if(A.game.game_over()||this.counted)return;this.counted=true;Engine.stop();A.epoch++;this.thinking=false;A.status('Te rendiste');this.finishGame('Te rendiste.','l')}
+};
+
+/* =============== MODO A CIEGAS =============== */
+const Blind={
+ free:false,level:2,color:'w',vis:'none',list:true,voice:false,
+ started:false,g:null,startFen:null,userColor:'w',thinking:false,over:false,ill:0,pk:0,mv:0,peek:false,quiz:null,drill:null,
+ canMove(){return false},
+ st(){return Object.assign({g:0,w:0,l:0,d:0,ill:0,pk:0,mv:0,qn:0,qok:0,cn:0,cok:0},store.get('blind',{}))},
+ upd(f){const s=this.st();f(s);store.set('blind',s)},
+ VIS:[['none','Ninguna (a ciegas total)'],['pawns','Solo los peones'],['mine','Solo mis piezas'],['all','Todas (practicar la notación)']],
+ visFn(){
+  if(this.over||this.peek)return null;
+  const v=this.vis;if(v==='all')return null;
+  if(v==='pawns')return p=>p.toLowerCase()==='p';
+  if(v==='mine')return p=>(p===p.toUpperCase())===(this.userColor==='w');
+  return ()=>false;
+ },
+ apply(){
+  board.vis=this.visFn();board.hideHl=this.vis!=='all'&&!this.over&&!this.peek;
+  document.body.classList.toggle('blindNoList',!this.list&&!this.over);board.draw();
+ },
+ enter(){
+  $('#ctl').innerHTML=`<div class="blmove"><input id="blIn" type="text" placeholder="Tu jugada (ej.: Cf3, e4, O-O)" autocomplete="off" autocapitalize="off" spellcheck="false"><button id="blGo" class="pri">Jugar</button></div>
+  <div class="g2"><label>Nivel de Stockfish<select id="blLv">${LEVELS.map((l,i)=>`<option value="${i}">${l.n}</option>`).join('')}</select></label>
+  <label>Tu color<select id="blCol"><option value="w">Blancas</option><option value="b">Negras</option><option value="r">Aleatorio</option></select></label></div>
+  <div class="g2"><label>Piezas visibles<select id="blVis">${this.VIS.map(v=>`<option value="${v[0]}">${v[1]}</option>`).join('')}</select></label>
+  <label>Notación al escribir<select id="blNot"><option value="es">R D T A C (español)</option><option value="en">K Q R B N (inglés)</option></select></label></div>
+  <label class="chk"><input type="checkbox" id="blList"> Mostrar la lista de jugadas bajo el tablero</label>
+  <label class="chk"><input type="checkbox" id="blVoice"> Leer en voz alta las jugadas del rival</label>
+  <div class="row"><button id="blNew" class="pri">Nueva partida</button><button id="blPeek">Ver tablero (3 s)</button><button id="blPl">Lista de piezas</button><button id="blQ">Preguntarme</button><button id="blCd">Entrenar casillas</button><button id="blSt">Estadísticas</button><button id="blRes" class="danger">Rendirse</button></div>`;
+  $('#blLv').value=this.level;$('#blCol').value=this.color;$('#blVis').value=this.vis;$('#blNot').value=store.get('tnot','es');$('#blList').checked=this.list;$('#blVoice').checked=this.voice;
+  $('#blLv').onchange=e=>{this.level=+e.target.value};$('#blCol').onchange=e=>{this.color=e.target.value};
+  $('#blVis').onchange=e=>{this.vis=e.target.value;this.apply()};
+  $('#blNot').onchange=e=>store.set('tnot',e.target.value);
+  $('#blList').onchange=e=>{this.list=e.target.checked;this.apply()};$('#blVoice').onchange=e=>{this.voice=e.target.checked};
+  $('#blNew').onclick=()=>this.newGame();$('#blPeek').onclick=()=>this.peekBoard();$('#blPl').onclick=()=>this.listPieces();
+  $('#blQ').onclick=()=>this.ask();$('#blCd').onclick=()=>this.drillStart();$('#blSt').onclick=()=>this.stats();$('#blRes').onclick=()=>this.resign();
+  $('#blGo').onclick=()=>this.submit();$('#blIn').onkeydown=e=>{if(e.key==='Enter')this.submit()};
+  if(this.started&&this.g){
+   A.game=this.g;A.startFen=this.startFen;A.userColor=this.userColor;board.flipped=this.userColor==='b';A.viewIdx=null;this.thinking=false;
+   setEval(null);$('#engineLines').innerHTML='';this.apply();A.sync();A.updateControls();Chat.clear();
+   Chat.say(this.over?'La partida a ciegas terminó. Pulsa «Nueva partida» para otra.':'Partida a ciegas en curso. Escribe tu jugada abajo.'+(this.list?' Llevas '+A.hist.length+' jugadas.':''));
+   if(!this.over&&A.game.turn()!==A.userColor)this.engineMove();else this.ready();
+  }else this.newGame();
+ },
+ leave(){Engine.stop();this.thinking=false;this.peek=false;board.vis=null;board.hideHl=false;board.marks=[];document.body.classList.remove('blindNoList')},
+ ready(){A.status(this.over?'':'Tu turno: escribe tu jugada');const i=$('#blIn');if(i&&!this.over){i.value='';i.focus()}},
+ newGame(){
+  Engine.stop();A.epoch++;this.started=true;this.over=false;this.thinking=false;this.peek=false;this.ill=0;this.pk=0;this.mv=0;this.quiz=null;this.drill=null;
+  let col=this.color;if(col==='r')col=Math.random()<.5?'w':'b';
+  this.g=new Chess();A.game=this.g;A.startFen=this.g.fen();this.startFen=A.startFen;A.viewIdx=null;A.userColor=col;this.userColor=col;
+  board.flipped=col==='b';board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';
+  this.apply();A.sync();A.updateControls();Chat.clear();Chat.chips([]);Snd.play('start');
+  const lv=LEVELS[this.level].n,es=store.get('tnot','es')==='es';
+  Chat.say(`<b>Partida a ciegas</b> contra Stockfish — ${esc(lv)}. Tú llevas las <b>${col==='w'?'blancas':'negras'}</b>.<br>Las piezas no se ven${this.vis==='all'?' (hoy las dejaste todas visibles)':this.vis==='none'?'':' del todo'}. Escribe tus jugadas abajo en notación ${es?'española (R, D, T, A, C)':'inglesa (K, Q, R, B, N)'}; el rival se anuncia en texto${this.voice?' y en voz alta':''}.<br><span class="small">Si pierdes el hilo: «Lista de piezas» o «Ver tablero», pero cuentan como vistazos.</span>`);
+  if(col==='b')this.engineMove();else this.ready();
+ },
+ submit(){
+  const inp=$('#blIn');if(!inp)return;const tok=(inp.value||'').trim();if(!tok)return;
+  if(this.over||this.thinking||A.game.turn()!==A.userColor)return;
+  if(this.quiz||this.drill){Chat.say('Termina primero la pregunta o pulsa «Seguir jugando».','warn');return}
+  if(!A.live()){A.viewIdx=null;A.sync()}
+  const r=Tac.parseTok(A.game,tok);
+  if(r.err){this.ill++;this.upd(s=>{s.ill++});Chat.say(r.err,'bad');inp.select();return}
+  const m=r.m;A.game.move({from:m.from,to:m.to,promotion:m.promotion});
+  this.mv++;A.epoch++;A.viewIdx=null;A.sync();A.updateControls();inp.value='';
+  Chat.me(esc(Tac.fmt(m.san)));
+  if(this.checkEnd())return;this.engineMove();
+ },
+ async engineMove(){
+  const ep=A.epoch,L=LEVELS[this.level];this.thinking=true;A.status('Stockfish piensa…');
+  try{
+   const r=await Engine.search({fen:A.game.fen(),depth:L.depth,movetime:L.ms,skill:L.skill,elo:L.elo});
+   if(ep!==A.epoch)return;
+   if(r.best){const m=A.game.move({from:r.best.slice(0,2),to:r.best.slice(2,4),promotion:r.best[4]});A.epoch++;A.viewIdx=null;A.sync();A.updateControls();if(m)this.announce(m)}
+  }catch(e){Chat.say('El motor no responde. Prueba recargar la página.','bad');this.thinking=false;return}
+  this.thinking=false;if(this.checkEnd())return;this.ready();
+ },
+ announce(m){
+  const n=A.hist.length,num=Math.ceil(n/2)+(n%2?'.':'...'),txt=Snd.sanEs(m);
+  if(!this.list)Chat.clear();
+  Chat.say(`<b>Stockfish juega:</b> ${num} <b>${esc(Tac.fmt(m.san))}</b> <span class="small">(${esc(txt)})</span>`);
+  if(this.voice)Snd.speak(txt);
+ },
+ checkEnd(){
+  const g=A.game;if(!g.game_over())return false;
+  let t='Tablas.',res='d';
+  if(g.in_checkmate()){if(g.turn()===A.userColor){t='Jaque mate. Ganó Stockfish.';res='l'}else{t='¡Jaque mate! Ganaste a ciegas.';res='w'}}
+  else if(g.in_stalemate())t='Tablas por ahogado.';else if(g.insufficient_material())t='Tablas por material insuficiente.';else if(g.in_threefold_repetition())t='Tablas por repetición.';
+  this.finish(t,res);return true;
+ },
+ resign(){if(this.over||!this.started)return;Engine.stop();A.epoch++;this.thinking=false;this.finish('Te rendiste.','l')},
+ finish(t,res){
+  if(this.over)return;this.over=true;this.thinking=false;this.quiz=null;this.drill=null;
+  this.upd(s=>{s.g++;s[res]++;s.mv+=this.mv;s.pk+=this.pk});
+  Snd.play(res==='w'?'win':res==='l'?'lose':'draw',.6);Log.add('play',1);
+  this.apply();A.sync();A.updateControls();A.status(t);
+  let h=`<b>${t}</b> Ya puedes ver el tablero.<br>Jugadas tuyas: <b>${this.mv}</b> · intentos no válidos: <b>${this.ill}</b> · vistazos: <b>${this.pk}</b>.`;
+  h+=this.ill+this.pk===0?'<br>Partida limpia: seguiste todo el tablero de memoria.':this.ill+this.pk<=3?'<br>Muy bien: perdiste el hilo pocas veces.':'<br>Perdiste el hilo varias veces. Prueba con «Solo los peones» visibles y baja el nivel, o entrena casillas.';
+  Chat.say(h,res==='w'?'ok':'');
+  Chat.chips([{label:'Nueva partida',pri:true,fn:()=>this.newGame()},{label:'Revisar con análisis',fn:()=>{Games.pending=this.pgn();Mode.set('games')}},{label:'Estadísticas',fn:()=>this.stats()}]);
+ },
+ pgn(){
+  const g=A.game,me=store.get('myname','Yo').split(',')[0].trim()||'Yo';const sf='Stockfish nivel '+(this.level+1);
+  const r=g.in_checkmate()?(g.turn()==='w'?'0-1':'1-0'):g.game_over()?'1/2-1/2':(A.userColor==='w'?'0-1':'1-0');
+  g.header('Event','A ciegas','Date',new Date().toISOString().slice(0,10).replace(/-/g,'.'),'White',A.userColor==='w'?me:sf,'Black',A.userColor==='b'?me:sf,'Result',r);
+  return g.pgn();
+ },
+ peekBoard(){
+  if(this.over||this.peek)return;this.peek=true;this.pk++;this.apply();
+  Chat.say('Tablero visible 3 segundos…','warn');
+  setTimeout(()=>{this.peek=false;if(A.mode===this)this.apply()},3000);
+ },
+ listPieces(){
+  if(this.over)return;this.pk++;
+  const M=store.get('tnot','es')==='es'?{K:'R',Q:'D',R:'T',B:'A',N:'C'}:{K:'K',Q:'Q',R:'R',B:'B',N:'N'};
+  const ord={k:0,q:1,r:2,b:3,n:4,p:5};
+  const side=w=>Object.entries(board.pos).filter(([s,p])=>(p===p.toUpperCase())===w).sort((a,b)=>ord[a[1].toLowerCase()]-ord[b[1].toLowerCase()]||a[0].localeCompare(b[0])).map(([s,p])=>(p.toLowerCase()==='p'?'':M[p.toUpperCase()])+s).join(' ');
+  Chat.say(`<b>Piezas en el tablero</b> (cuenta como vistazo)<br>Blancas: ${side(true)}<br>Negras: ${side(false)}`,'warn');
+ },
+ /* preguntas de visualización */
+ ask(){
+  if(this.drill)return;
+  const pos=board.pos,occ=Object.keys(pos),all=[];for(const f of FILES)for(let r=1;r<=8;r++)all.push(f+r);
+  const sq=occ.length&&Math.random()<.65?occ[Math.floor(Math.random()*occ.length)]:all[Math.floor(Math.random()*64)];
+  this.quiz={sq,step:0,t:null};
+  Chat.say(`<b>Visualización:</b> ¿qué hay ahora en <b>${sq}</b>?`);
+  Chat.chips(['Vacía','Peón','Caballo','Alfil','Torre','Dama','Rey'].map((l,i)=>({label:l,fn:()=>this.qAns(i)})));
+ },
+ qAns(i){
+  const q=this.quiz;if(!q)return;const p=board.pos[q.sq],keys=[null,'p','n','b','r','q','k'];
+  if(q.step===0){
+   q.t=keys[i];if(!q.t)return this.qEnd(!p);
+   q.step=1;Chat.chips([{label:'Blanca',fn:()=>this.qAns(0)},{label:'Negra',fn:()=>this.qAns(1)}]);return;
+  }
+  this.qEnd(!!p&&p.toLowerCase()===q.t&&((p===p.toUpperCase())===(i===0)));
+ },
+ qEnd(ok){
+  const q=this.quiz;this.quiz=null;const p=board.pos[q.sq];
+  const N={p:'peón',n:'caballo',b:'alfil',r:'torre',q:'dama',k:'rey'};
+  const name=p?N[p.toLowerCase()]+' '+(p===p.toUpperCase()?'blanco':'negro'):'la casilla está vacía';
+  this.upd(s=>{s.qn++;if(ok)s.qok++});
+  Chat.say(ok?`✓ Correcto: en ${q.sq}: ${name}.`:`✗ En <b>${q.sq}</b>: ${name}.`,ok?'ok':'bad');
+  Chat.chips([{label:'Otra pregunta',pri:true,fn:()=>this.ask()},{label:'Seguir jugando',fn:()=>{Chat.chips([]);this.ready()}}]);
+ },
+ /* entrenar el color de las casillas */
+ drillStart(){this.quiz=null;this.drill={n:0,ok:0,t0:Date.now()};this.drillNext()},
+ drillNext(){
+  const d=this.drill;if(d.n>=10)return this.drillEnd();
+  const f=Math.floor(Math.random()*8),r=1+Math.floor(Math.random()*8);d.sq=FILES[f]+r;d.dark=(f+r-1)%2===0;
+  Chat.clear();Chat.say(`<b>Casillas</b> ${d.n+1}/10 — ¿de qué color es <b>${d.sq}</b>?`);
+  Chat.chips([{label:'Clara',fn:()=>this.drillAns(false)},{label:'Oscura',fn:()=>this.drillAns(true)},{label:'Salir',fn:()=>{this.drill=null;Chat.chips([]);this.ready()}}]);
+ },
+ drillAns(dark){
+  const d=this.drill;if(!d)return;d.n++;if(dark===d.dark)d.ok++;
+  if(dark!==d.dark){Chat.say(`✗ ${d.sq} es una casilla ${d.dark?'oscura':'clara'}.`,'bad');setTimeout(()=>this.drill&&this.drillNext(),900)}else this.drillNext();
+ },
+ drillEnd(){
+  const d=this.drill;this.drill=null;const s=Math.round((Date.now()-d.t0)/1000);
+  this.upd(x=>{x.cn+=10;x.cok+=d.ok});
+  Chat.clear();Chat.say(`<b>${d.ok}/10</b> en ${s} s. ${d.ok===10?'¡Perfecto! Intenta ir más rápido.':'Truco: a1, c1, e1… son oscuras; en la misma columna alternan; la diagonal a1–h8 es toda oscura.'}`,d.ok>=9?'ok':'');
+  Chat.chips([{label:'Otra ronda',pri:true,fn:()=>this.drillStart()},{label:'Seguir jugando',fn:()=>{Chat.chips([]);this.ready()}}]);
+ },
+ stats(){
+  const s=this.st(),pc=(a,b)=>b?Math.round(a/b*100)+'%':'—';
+  Chat.say(`<b>Tus estadísticas a ciegas</b><br>Partidas: ${s.g} (${s.w} ganadas, ${s.d} tablas, ${s.l} perdidas)<br>Jugadas escritas: ${s.mv} · intentos no válidos: ${s.ill} · vistazos: ${s.pk}<br>Preguntas de visualización: ${s.qok}/${s.qn} (${pc(s.qok,s.qn)})<br>Color de casillas: ${s.cok}/${s.cn} (${pc(s.cok,s.cn)})`);
+ }
 };
 
 /* =============== MODO CREAR LECCIÓN =============== */
@@ -3396,6 +3579,44 @@ function findCard(key){
  const g=new Chess(ch.fen||undefined);for(let k=0;k<+i;k++){if(!g.move(ch.moves[k].san))return null}
  return {L,ch,i:+i,step,game:g};
 }
+/* =============== MIS ERRORES: REPASO ESPACIADO =============== */
+const ErrSRS={
+ STEPS:[1,3,7,14,30,60],snap:null,
+ all(){return store.get('errsrs',{})},
+ puzzles(){return store.get('mypuz',[]).filter(p=>p&&p.fen&&p.theme==='Mis errores')},
+ rec(p){return this.all()[p.fen]||null},
+ isDue(p){const r=this.rec(p);return !r||r.due<=Date.now()},
+ dueList(){return this.puzzles().filter(p=>this.isDue(p)).sort((a,b)=>((this.rec(a)||{due:0}).due)-((this.rec(b)||{due:0}).due))},
+ dueCount(){return this.dueList().length},
+ session(){if(!this.snap)this.snap=this.dueList();return this.snap},
+ reset(){this.snap=null},
+ mastered(p){const r=this.rec(p);return !!r&&(r.streak||0)>=4},
+ stats(){
+  const ps=this.puzzles();let nuevos=0,rep=0,dom=0,due=0;
+  for(const p of ps){const r=this.rec(p);if(!r)nuevos++;else if((r.streak||0)>=4)dom++;else rep++;if(this.isDue(p))due++}
+  return {total:ps.length,nuevos,rep,dom,due};
+ },
+ tag(p){const r=this.rec(p);return !r?'nuevo':(r.streak||0)>=4?'dominado':'repaso '+(r.streak||0)},
+ /* ok: ¿acertó a la primera? Devuelve info para mostrar al usuario */
+ grade(fen,ok){
+  const a=this.all(),had=!!a[fen],r=a[fen]||{step:0,streak:0,ok:0,fail:0,due:0},now=Date.now();
+  const dueNow=!had||r.due<=now;
+  if(ok){
+   r.ok++;r.last=now;
+   if(dueNow){r.streak=(r.streak||0)+1;const days=this.STEPS[Math.min(r.step,this.STEPS.length-1)];r.due=now+days*DAY;r.step=Math.min(r.step+1,this.STEPS.length-1);a[fen]=r;store.set('errsrs',a);Log.add('err',1);return {days,streak:r.streak,mastered:r.streak>=4,early:false}}
+   a[fen]=r;store.set('errsrs',a);return {days:Math.max(1,Math.ceil((r.due-now)/DAY)),streak:r.streak||0,mastered:(r.streak||0)>=4,early:true};
+  }
+  r.fail++;r.last=now;r.streak=0;r.step=0;r.due=now+this.STEPS[0]*DAY;a[fen]=r;store.set('errsrs',a);Log.add('err',1);
+  return {days:1,streak:0,mastered:false,early:false,failed:true};
+ },
+ note(p,info){
+  if(!info)return '';
+  if(info.failed)return `<br><span class="small">📅 Lo volverás a ver mañana hasta que lo domines.</span>`;
+  if(info.early)return `<br><span class="small">📅 Aún no tocaba repasarlo: no cambia el calendario (próximo repaso en ${info.days} día${info.days===1?'':'s'}).</span>`;
+  return info.mastered?`<br><span class="small">🏆 ¡Dominado! Lo repasarás de vez en cuando (próximo en ${info.days} días).</span>`:`<br><span class="small">📅 Acierto ${info.streak} de 4 seguidos. Volverá a aparecer en ${info.days} día${info.days===1?'':'s'}.</span>`;
+ }
+};
+
 const Rev={
  free:false,queue:[],cur:null,lock:false,fails:0,hinted:false,hint:0,graded:false,done:0,total:0,
  canMove(){return !!this.cur&&!this.lock},
@@ -4056,12 +4277,15 @@ const Today={
  plan(){
   const S=+store.get('todayMin',30),T={15:{srs:8,exam:3,tac:3,str:1,les:0,gam:0,play:0,cal:0},30:{srs:15,exam:5,tac:6,str:2,les:1,gam:1,play:0,cal:2},45:{srs:25,exam:8,tac:10,str:3,les:1,gam:1,play:1,cal:4}}[S]||{};
   const td=Log.today(),tasks=[];
+  let boost='';{const gg=Evo.goal();if(gg&&gg.errTarget){const ee=Evo.errNow();if(ee!=null&&ee>gg.errTarget){T.tac=(T.tac||0)+2;boost='Más práctica para bajar tus errores serios por partida (tu meta).'}}}
   const due=SRS.dueList().length,srsTarget=Math.min(T.srs,due+td.srs);
   if(srsTarget>0)tasks.push({id:'srs',title:'Repaso espaciado',desc:`${due} jugada${due===1?'':'s'} pendiente${due===1?'':'s'} de tu repertorio.`,target:srsTarget,done:td.srs,min:Math.ceil(srsTarget*.4),go:()=>Mode.set('review')});
   Exam.scope='all';
   if(Exam.pool().length&&T.exam)tasks.push({id:'exam',title:'Examen de repertorio',desc:'Líneas al azar jugadas de memoria; salen más las que más fallas.',target:T.exam,done:td.exam,min:Math.ceil(T.exam*1),go:()=>{Exam.n=Math.max(5,T.exam);Mode.set('exam',()=>Exam.start(false))}});
   const themes=[...new Set(ALLPZ().map(p=>p.theme))];const wt=this.pick(this.themeStats(),themes);
   tasks.push({id:'tac',title:'Táctica: '+wt.label,desc:wt.acc==null?'Tema nuevo para ti hoy.':`Tu tema más débil: acierto ${Math.round(wt.acc*100)}% en ${wt.n} intentos.`,target:T.tac,done:td.tac,min:Math.ceil(T.tac*1),go:()=>Tac.focusTheme(wt.label)});
+  if(boost){const t=tasks.find(x=>x.id==='tac');if(t)t.desc+=' '+boost}
+  {const ed=ErrSRS.dueCount();if(ed>0&&T.tac){const tg=Math.min(ed,Math.max(3,Math.round(T.tac*.8)));tasks.push({id:'err',title:'Repasa tus errores de partidas',desc:`${ed} problema${ed===1?'':'s'} de tus partidas toca${ed===1?'':'n'} repasar hoy.`,target:tg,done:td.err||0,min:tg*2,go:()=>{store.set('tcol','err');Mode.set('tactics')}})}}
   if(T.cal)tasks.push({id:'cal',title:'Cálculo sin mover piezas',desc:'Mate en 2: escribe la línea completa (con las respuestas del rival) antes de comprobar.',target:T.cal,done:td.cal||0,min:T.cal*3,go:()=>{store.set('tcalc',true);store.set('tcol','m2');Mode.set('tactics')}});
   const ws=this.pick(this.structStats(),STRUCTS.map(x=>x.name));
   if(T.str)tasks.push({id:'str',title:'Estructura de peones: '+ws.label,desc:ws.acc==null?'Una estructura nueva para entrenar el plan.':`Tu acierto aquí es ${Math.round(ws.acc*100)}%: adivina el plan.`,target:T.str,done:td.str,min:T.str*2,go:()=>Mode.set('struct',()=>{Struct.rand=false;Struct.si=ws.i;Struct.pi=0;const sel=$('#stSel');if(sel)sel.value=Struct.si;Struct.ask()})});
@@ -4075,7 +4299,7 @@ const Today={
  render(){
   const {S,tasks}=this.plan();this.tasks=tasks;const st=Log.streak(),td=Log.today();
   const tot=tasks.reduce((a,t)=>a+t.target,0),got=tasks.reduce((a,t)=>a+Math.min(t.done,t.target),0),pct=tot?Math.round(got/tot*100):0,doneN=tasks.filter(t=>t.done>=t.target).length;
-  let h=Backup.banner()+Coach.todayCard()+`<h3>Plan de hoy</h3><div class="row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="small">Sesión:</span>${[15,30,45].map(m=>`<button data-sess="${m}" class="${m===S?'pri':''}">${m} min</button>`).join('')}</div>`;
+  let h=Backup.banner()+Coach.todayCard()+Evo.todayCard()+`<h3>Plan de hoy</h3><div class="row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="small">Sesión:</span>${[15,30,45].map(m=>`<button data-sess="${m}" class="${m===S?'pri':''}">${m} min</button>`).join('')}</div>`;
   h+=`<div style="margin:10px 0 4px"><b>${pct}%</b> completado · ${doneN} de ${tasks.length} tareas · ${Math.round(td.min)} min hoy · racha <b>${st.cur}</b> día${st.cur===1?'':'s'} (mejor: ${st.best})</div><div class="bar"><i style="width:${pct}%"></i></div>`;
   h+='<table style="margin-top:8px">'+tasks.map((t,i)=>{const ok=t.done>=t.target;return `<tr><td style="width:22px">${ok?'✓':'○'}</td><td><b>${esc(t.title)}</b><br><span class="small">${esc(t.desc)}</span></td><td style="white-space:nowrap">${Math.min(t.done,t.target)}/${t.target}<br><span class="small">~${t.min} min</span></td><td><button data-task="${i}" class="${ok?'':'pri'}">${ok?'Repetir':'Ir'}</button></td></tr>`}).join('')+'</table>';
   const nxt=tasks.findIndex(t=>t.done<t.target);
@@ -4085,8 +4309,9 @@ const Today={
   for(let k=6;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);const e=L[Log.key(d)];const m=e?Math.round(e.min):0;wk+=m;days.push({n:names[d.getDay()],m,t:k===0})}
   const mx=Math.max(10,...days.map(x=>x.m));
   h+='<h3>Esta semana</h3><div style="display:flex;gap:8px;align-items:flex-end;height:70px">'+days.map(x=>`<div style="flex:1;text-align:center;font-size:11px;color:var(--mut)"><div style="height:${Math.max(3,x.m/mx*52)}px;background:${x.m?'var(--acc)':'var(--line)'};border-radius:3px;opacity:${x.t?1:.7}"></div>${x.n}<br>${x.m}</div>`).join('')+`</div><div class="small">Total: ${wk} min. Meta sugerida: 30 min al día, 5 días a la semana.</div>`;
+  h+=Evo.weekDetails();
   h+=this.profile();
-  Chat.el.innerHTML='<div class="panel">'+h+'</div>';
+  Chat.el.innerHTML='<div class="panel">'+h+'</div>';Evo.bindToday(Chat.el,()=>this.render());
   Chat.el.querySelectorAll('[data-sess]').forEach(b=>b.onclick=()=>{store.set('todayMin',+b.dataset.sess);this.render()});
   Backup.bind(Chat.el,()=>this.render());Coach.bind(Chat.el,()=>this.render());
   Chat.el.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{const t=this.tasks[+b.dataset.task];if(t)t.go()});
@@ -4107,6 +4332,7 @@ const Today={
   if(this.weak.length&&this.weak[0].acc<.7)dg.push(`Tu punto más débil ahora: <b>${esc(this.weak[0].label)}</b> (${esc(this.weak[0].area)}), acierto ${Math.round(this.weak[0].acc*100)}% en ${this.weak[0].n} intentos.`);
   const worst=gp.ph.filter(p=>p.acc!=null&&p.n>=8).sort((a,b)=>a.acc-b.acc)[0];
   if(worst)dg.push(`En tus partidas analizadas (${gp.games}) pierdes más precisión en el <b>${worst.l.toLowerCase()}</b> (${Math.round(worst.acc)}%, ${worst.e} errores).`);
+  for(const t of Games.todayLines())dg.push(t);
   if(dev)dg.push(`Te sales de tu repertorio con más frecuencia en: <b>${esc(Rep.lineText(new Chess().fen(),dev.line.concat([dev.played]),200).slice(-60))}</b> (${dev.n}×); esperabas ${esc(dev.expected.join(' / '))}.`);
   if(!dg.length)dg.push('Aún hay pocos datos. Haz la sesión de hoy y, en unos días, aquí verás tus puntos débiles y qué practicar.');
   h+='<ul>'+dg.map(x=>`<li>${x}</li>`).join('')+'</ul>';
@@ -4212,7 +4438,8 @@ const Games={
   <div class="row"><button id="gmImp">Importar archivo PGN</button><button id="gmPaste">Pegar PGN</button></div>
   <textarea id="gmTxt" rows="4" placeholder="Pega aquí una o varias partidas en PGN…" hidden></textarea>
   <div class="row"><button id="gmLoad" class="pri" hidden>Cargar PGN pegado</button></div>
-  <div class="row"><button id="gmAn" class="pri">Analizar partida</button><button id="gmPuz">Guardar mis errores</button><button id="gmExp">Exportar</button><button id="gmDel">Eliminar</button></div>`;
+  <div class="row"><button id="gmAn" class="pri">Analizar partida</button><button id="gmAll">Analizar todas</button><button id="gmDiag">Mi diagnóstico</button></div>
+  <div class="row"><button id="gmPuz">Guardar mis errores</button><button id="gmExp">Exportar</button><button id="gmDel" class="danger">Eliminar</button></div>`;
   $('#gmName').value=store.get('myname','');
   $('#gmName').onchange=e=>{store.set('myname',e.target.value);this.open(this.idx)};
   $('#gmSide').onchange=()=>this.open(this.idx);
@@ -4221,7 +4448,7 @@ const Games={
    inp.onchange=async()=>{let t='';for(const f of inp.files)t+='\n\n'+await f.text();this.addText(t)};inp.click()};
   $('#gmPaste').onclick=()=>{const h=$('#gmTxt').hidden;$('#gmTxt').hidden=!h;$('#gmLoad').hidden=!h};
   $('#gmLoad').onclick=()=>{this.addText($('#gmTxt').value);$('#gmTxt').value='';$('#gmTxt').hidden=true;$('#gmLoad').hidden=true};
-  $('#gmAn').onclick=()=>this.analyze();$('#gmPuz').onclick=()=>this.savePuzzles();
+  $('#gmAn').onclick=()=>this.analyze();$('#gmAll').onclick=()=>this.askBatch();$('#gmDiag').onclick=()=>this.diagnose();$('#gmPuz').onclick=()=>this.savePuzzles();
   $('#gmExp').onclick=()=>{const g=this.list[this.idx];if(g)downloadText(`${g.white}-vs-${g.black}.pgn`.replace(/[^\w.\-]+/g,'_'),g.pgn)};
   $('#gmDel').onclick=()=>this.del();
   Chat.clear();
@@ -4233,7 +4460,7 @@ const Games={
  fillSel(){$('#gmSel').innerHTML=this.list.map((g,i)=>`<option value="${i}">${esc(g.white)} – ${esc(g.black)} · ${esc(g.result)}${g.date&&g.date!=='????.??.??'?' · '+esc(g.date):''} (${g.n} j.)</option>`).join('');$('#gmSel').value=this.idx},
  empty(){
   A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];setEval(null);A.sync();A.updateControls();A.status('');
-  Chat.say('<b>Revisión de partidas.</b><br>Importa un archivo <b>.pgn</b> (por ejemplo, tus partidas de Lichess o Chess.com) o pega el texto del PGN. Luego pulsa «Analizar partida» y el motor revisará cada jugada: precisión, errores, gráfica de ventaja y los momentos críticos. Tus errores se pueden convertir en problemas para entrenar.');
+  Chat.say('<b>Revisión de partidas.</b><br>Importa un archivo <b>.pgn</b> (por ejemplo, tus partidas de Lichess o Chess.com) o pega el texto del PGN. Luego pulsa «Analizar partida» y el motor revisará cada jugada: precisión, errores, gráfica de ventaja y los momentos críticos. Tus errores se pueden convertir en problemas para entrenar. Si importas varias, «Analizar todas» las revisa en lote y «Mi diagnóstico» te dice qué estudiar primero.');
   Chat.chips([{label:'Importar archivo PGN',pri:true,fn:()=>$('#gmImp').click()},{label:'Pegar PGN',fn:()=>$('#gmPaste').click()}]);
  },
  addText(t,openLast){
@@ -4244,6 +4471,7 @@ const Games={
   if(this.list.length>400){this.list=this.list.slice(-400)}
   this.save();this.idx=openLast?this.list.length-1:Math.max(0,first);this.fillSel();this.open(this.idx);
   Chat.say(`Importé <b>${added}</b> partida${added===1?'':'s'}${games.length-added?` (${games.length-added} ya estaban)`:''}${bad?` y omití ${bad} con errores`:''}.`,'ok');
+  if(added>1)Chat.chips([{label:'Analizar todas',pri:true,fn:()=>this.askBatch()},{label:'Analizar solo esta',fn:()=>this.analyze()}]);
  },
  side(g){
   const v=$('#gmSide').value;if(v!=='auto')return v;
@@ -4269,21 +4497,241 @@ const Games={
   const g=this.list[this.idx];if(!g)return;const fens=A.fens.slice(),n=fens.length;const ep=++this.run;Engine.stop();A.marks={};
   Chat.clear();Chat.say(`<b>Analizando la partida…</b> <span class="small" id="gmPct">0 / ${n}</span><div class="bar" style="margin-top:6px"><i id="gmBar" style="width:0%"></i></div>`);
   Chat.chips([{label:'Cancelar',fn:()=>{this.run++;Engine.stop();this.open(this.idx)}}]);
-  const prof=Engine.kind==='wasm'?{depth:14,movetime:600}:{depth:10,movetime:800};
-  const ev=[],best=[],pv=[];
-  try{
+  let r;
+  try{r=await this.runEngine(fens,this.profQ('n'),ep,(k)=>{const bar=$('#gmBar');if(bar){bar.style.width=(k/n*100)+'%';$('#gmPct').textContent=k+' / '+n}})}
+  catch(e){Chat.say('El motor no responde. Prueba recargar la página.','bad');return}
+  if(!r)return;
+  const an=this.anAll();an[g.id]={ev:r.ev,best:r.best,pv:r.pv,q:'n'};store.set('games_an',an);Log.add('gam',1);this.report();
+ },
+ /* ---------- análisis por lotes y diagnóstico ---------- */
+ perGame(){
+  if(!this.list.length)this.list=store.get('games_pgn',[]);
+  const an=this.anAll(),out=[];
+  this.list.forEach((g,gi)=>{
+   const m=this.meta(g),a=an[g.id];if(!a||!a.ev||a.ev.length!==m.fens.length)return;
+   const side=this.mySide(g);if(!side)return;
+   const sg=side==='w'?1:-1,res=g.result;
+   const sc=res==='1/2-1/2'?.5:res==='1-0'?(side==='w'?1:0):res==='0-1'?(side==='b'?1:0):null;
+   let aS=0,aN=0,err=0,blund=0;
+   m.hist.forEach((mv,i)=>{const k=i+1;if(mv.color!==side)return;const loss=Math.max(0,wp(a.ev[k-1]*sg)-wp(a.ev[k]*sg));aS+=Math.max(0,Math.min(100,103.1668*Math.exp(-0.04354*loss)-3.1669));aN++;if(loss>=20)err++;if(loss>=30)blund++});
+   if(!aN)return;
+   const d=/^(\d{4})\.(\d\d)\.(\d\d)/.exec(g.date||'');const t=d?new Date(+d[1],+d[2]-1,+d[3]).getTime():null;
+   out.push({gi,t,acc:aS/aN,err,blund,sc,side,label:g.white+' – '+g.black,date:g.date||''});
+  });
+  out.sort((x,y)=>x.t==null?(y.t==null?x.gi-y.gi:1):(y.t==null?-1:(x.t-y.t||x.gi-y.gi)));
+  return out;
+ },
+ meta(g){
+  this._m=this._m||{};let m=this._m[g.id];if(m)return m;
+  const c=new Chess();c.load_pgn(g.pgn);const hdr=c.header();const start=hdr.FEN||new Chess().fen();
+  const hist=c.history({verbose:true});const t=new Chess(start);const fens=[start];
+  hist.forEach(x=>{t.move({from:x.from,to:x.to,promotion:x.promotion});fens.push(t.fen())});
+  return this._m[g.id]={hist,fens,hdr};
+ },
+ profQ(q){return q==='f'?(Engine.kind==='wasm'?{depth:10,movetime:250}:{depth:8,movetime:400}):(Engine.kind==='wasm'?{depth:14,movetime:600}:{depth:10,movetime:800})},
+ async runEngine(fens,prof,ep,onP,pvN){
+  const n=fens.length,ev=[],best=[],pv=[];
   for(let k=0;k<n;k++){
-   if(ep!==this.run)return;
+   if(ep!==this.run)return null;
    const c=new Chess(fens[k]);
    if(c.in_checkmate()){ev[k]=c.turn()==='w'?-10000:10000;best[k]=null;pv[k]=''}
    else if(c.game_over()){ev[k]=0;best[k]=null;pv[k]=''}
    else{
-    const r=await Engine.search({fen:fens[k],...prof,skill:20});if(ep!==this.run)return;
-    const e=whiteEval(fens[k],r.line);ev[k]=e?e.cp:0;best[k]=r.best;pv[k]=r.line?r.line.pv.slice(0,6).join(' '):'';
+    const r=await Engine.search({fen:fens[k],...prof,skill:20});if(ep!==this.run)return null;
+    const e=whiteEval(fens[k],r.line);ev[k]=e?e.cp:0;best[k]=r.best;pv[k]=r.line?r.line.pv.slice(0,pvN||6).join(' '):'';
    }
-   const bar=$('#gmBar');if(bar){bar.style.width=((k+1)/n*100)+'%';$('#gmPct').textContent=(k+1)+' / '+n}
-  }}catch(e){Chat.say('El motor no responde. Prueba recargar la página.','bad');return}
-  const an=this.anAll();an[g.id]={ev,best,pv};store.set('games_an',an);Log.add('gam',1);this.report();
+   if(onP)onP(k+1,n);
+  }
+  return {ev,best,pv};
+ },
+ pending_(){const an=this.anAll();return this.list.filter(g=>{const a=an[g.id],m=this.meta(g);return !(a&&a.ev&&a.ev.length===m.fens.length)})},
+ askBatch(){
+  if(!this.list.length){Chat.say('Primero importa tus partidas.','warn');return}
+  const todo=this.pending_();
+  if(!todo.length){Chat.say('Todas tus partidas ya están analizadas.','ok');this.diagnose();return}
+  const plies=todo.reduce((s,g)=>s+this.meta(g).fens.length,0);
+  const est=ms=>{const s=plies*ms/1000;return s<90?Math.round(s)+' s':Math.round(s/60)+' min'};
+  Chat.clear();
+  Chat.say(`Hay <b>${todo.length}</b> partida${todo.length===1?'':'s'} sin analizar (${plies} posiciones). Elige la velocidad. Puedes detenerlo cuando quieras: lo ya analizado se conserva.<br><span class="small">Rápido: ≈${est(300)} en total · Normal (más preciso): ≈${est(650)}. Mantén esta pestaña abierta mientras analiza.</span>`);
+  Chat.chips([{label:'Rápido',pri:true,fn:()=>this.batch('f')},{label:'Normal',fn:()=>this.batch('n')},{label:'Cancelar',fn:()=>this.open(this.idx)}]);
+ },
+ async batch(q){
+  const todo=this.pending_();if(!todo.length)return this.diagnose();
+  const ep=++this.run;Engine.stop();const prof=this.profQ(q);
+  const total=todo.reduce((s,g)=>s+this.meta(g).fens.length,0);let done=0;
+  Chat.clear();
+  Chat.say('<b>Analizando tus partidas…</b><div class="small" id="gbLbl"></div><div class="bar" style="margin-top:6px"><i id="gbBar" style="width:0%"></i></div>');
+  Chat.chips([{label:'Detener y ver diagnóstico',fn:()=>{this.run++;Engine.stop();this.diagnose()}}]);
+  let j=0;
+  for(const g of todo){
+   j++;const m=this.meta(g);const lbl=`Partida ${j} de ${todo.length}: ${esc(g.white)} – ${esc(g.black)}`;
+   let r;
+   try{r=await this.runEngine(m.fens,prof,ep,(k,n)=>{const l=$('#gbLbl'),b=$('#gbBar');if(l)l.innerHTML=lbl+' · jugada '+k+'/'+n;if(b)b.style.width=((done+k)/total*100)+'%'},4)}
+   catch(e){Chat.say('El motor no responde. Prueba recargar la página.','bad');return}
+   if(!r)return;
+   const an=this.anAll();an[g.id]={ev:r.ev,best:r.best,pv:r.pv,q};store.set('games_an',an);done+=m.fens.length;Log.add('gam',1);
+  }
+  this.diagnose();
+ },
+ mySide(g){
+  const names=(store.get('myname','')||'').toLowerCase().split(',').map(x=>x.trim()).filter(Boolean);if(!names.length)return null;
+  const w=(g.white||'').toLowerCase(),b=(g.black||'').toLowerCase();
+  const iw=names.some(n=>w.includes(n)),ib=names.some(n=>b.includes(n));
+  return iw&&!ib?'w':ib&&!iw?'b':null;
+ },
+ guessName(){
+  const c={};for(const g of this.list)for(const n of new Set([g.white,g.black])){if(n&&n!=='?')c[n]=(c[n]||0)+1}
+  const top=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];
+  return top&&top[1]>=2&&top[1]>=this.list.length*.6?top[0]:null;
+ },
+ endgame(fen){let s=0;const V={n:3,b:3,r:5,q:9};for(const ch of fen.split(' ')[0]){const v=V[ch.toLowerCase()];if(v)s+=v}return s<=26},
+ MOT:{
+  mate_missed:['Mates que tenías y no viste','Revisa siempre jaques y capturas forzadas. Entrena Mate en 2 y en 3, y «Calcular sin mover piezas».','tac'],
+  mate_against:['Mates o ataques decisivos permitidos','Antes de mover pregunta: ¿qué jaques y amenazas tiene mi rival después de esto? Cuida la seguridad de tu rey.','tac'],
+  hang:['Piezas dejadas en prise','Haz un chequeo antes de cada jugada: ¿queda alguna pieza atacada o sin defender?','tac'],
+  miss_cap:['Ganancias de material que no viste','Antes de elegir un plan busca capturas, horquillas y clavadas disponibles.','tac'],
+  miss_chk:['Jaques fuertes que no viste','Examina todos los jaques, aunque parezcan absurdos: a veces ganan material o dan mate.','tac'],
+  pos:['Errores posicionales o de plan','Estudia estructuras de peones y planes típicos: te ayudan a elegir sin calcular tanto.','str']
+ },
+ motif(m,a,k,side){
+  const sg=side==='w'?1:-1;const b4=a.ev[k-1]*sg,af=a.ev[k]*sg;
+  if(b4>=9000)return 'mate_missed';
+  if(af<=-9000)return 'mate_against';
+  const ob=a.best[k];
+  if(ob){try{const c=new Chess(m.fens[k]);const x=c.move({from:ob.slice(0,2),to:ob.slice(2,4),promotion:ob[4]});if(x&&x.captured&&'nbrq'.includes(x.captured))return 'hang'}catch(e){}}
+  const bu=a.best[k-1];if(bu){try{const s=uciToSan(m.fens[k-1],bu);if(s.includes('x'))return 'miss_cap';if(s.includes('+'))return 'miss_chk'}catch(e){}}
+  return 'pos';
+ },
+ openLabel(m,side){
+  const h=m.hdr||{};let name=h.Opening||'';
+  if(!name&&h.ECOUrl){try{name=decodeURIComponent(h.ECOUrl.split('/').pop()).replace(/-/g,' ').replace(/\s+\d+\..*$/,'')}catch(e){}}
+  name=name.split(/[:,]/)[0].trim().split(/\s+/).slice(0,2).join(' ');
+  if(!name)name=m.hist.slice(0,4).map((x,i)=>(i%2?'':(i/2+1)+'.')+x.san).join(' ');
+  return (side==='w'?'Blancas · ':'Negras · ')+name;
+ },
+ diagData(){
+  const sig=this.list.length+'|'+Object.keys(this.anAll()).length+'|'+store.get('myname','');
+  if(this._dg&&this._dg.sig===sig)return this._dg.D;
+  const an=this.anAll();
+  const mk=l=>({l,n:0,s:0,e:0,i:0});
+  const D={games:0,skipped:0,notAn:0,total:this.list.length,rec:{w:{W:0,D:0,L:0},b:{W:0,D:0,L:0}},accS:{w:0,b:0},accN:{w:0,b:0},ph:{ap:mk('Apertura'),me:mk('Medio juego'),fi:mk('Final')},motifs:{},ops:{},crit:[],adv:0,wasted:[],saved:0,errN:0};
+  this.list.forEach((g,gi)=>{
+   const m=this.meta(g),a=an[g.id];
+   if(!a||!a.ev||a.ev.length!==m.fens.length){D.notAn++;return}
+   const side=this.mySide(g);if(!side){D.skipped++;return}
+   D.games++;const sg=side==='w'?1:-1,res=g.result;
+   const sc=res==='1/2-1/2'?.5:res==='1-0'?(side==='w'?1:0):res==='0-1'?(side==='b'?1:0):null;
+   if(sc!=null)D.rec[side][sc===1?'W':sc===.5?'D':'L']++;
+   const olab=this.openLabel(m,side);const O=D.ops[olab]||(D.ops[olab]={n:0,sc:0,scN:0,aS:0,aN:0,eS:0,eN:0});O.n++;if(sc!=null){O.sc+=sc;O.scN++}
+   const i20=Math.min(20,a.ev.length-1);O.eS+=Math.max(-1000,Math.min(1000,a.ev[i20]*sg));O.eN++;
+   m.hist.forEach((mv,i)=>{
+    const k=i+1;if(mv.color!==side)return;
+    const loss=Math.max(0,wp(a.ev[k-1]*sg)-wp(a.ev[k]*sg));
+    const uci=mv.from+mv.to+(mv.promotion||'');
+    const cls=uci===a.best[k-1]?'best':loss>=30?'blunder':loss>=20?'mistake':loss>=10?'inacc':'good';
+    const acc=Math.max(0,Math.min(100,103.1668*Math.exp(-0.04354*loss)-3.1669));
+    D.accS[side]+=acc;D.accN[side]++;
+    const ph=k<=24?'ap':this.endgame(m.fens[k-1])?'fi':'me';const P=D.ph[ph];P.n++;P.s+=acc;
+    if(cls==='inacc')P.i++;
+    if(k<=24){O.aS+=acc;O.aN++}
+    if(cls==='mistake'||cls==='blunder'){
+     P.e++;D.errN++;const key=this.motif(m,a,k,side);const M=D.motifs[key]||(D.motifs[key]={n:0,loss:0});M.n++;M.loss+=loss;
+     D.crit.push({gi,k,loss,cls,key,label:Math.ceil(k/2)+(k%2?'. ':'... ')+mv.san,game:g.white+' – '+g.black});
+    }
+   });
+   // conversión de ventajas
+   let run=0,found=-1,run2=0,low=false;
+   for(let k=0;k<a.ev.length;k++){const v=a.ev[k]*sg;if(v>=200){run++;if(run===4&&found<0)found=k}else run=0;if(v<=-200){run2++;if(run2===4)low=true}else run2=0}
+   if(found>=0){D.adv++;if(sc!=null&&sc<1){let idx=found;if(m.fens[idx].split(' ')[1]!==side&&idx+1<m.fens.length)idx++;D.wasted.push({gi,fen:m.fens[idx],side,sc,label:g.white+' – '+g.black})}}
+   if(low&&sc!=null&&sc>=.5)D.saved++;
+  });
+  this._dg={sig,D};return D;
+ },
+ bar(p){return `<div class="bar"><i style="width:${Math.max(0,Math.min(100,Math.round(p)))}%"></i></div>`},
+ diagnose(){
+  if(!this.list.length){Chat.clear();Chat.say('Importa tus partidas primero (archivo .pgn de Lichess o Chess.com).','warn');return}
+  this.run++;Engine.stop();const D=this.diagData();Chat.clear();
+  let h='<h3 style="margin-top:0">Diagnóstico de tus partidas</h3>';
+  const nm=this.guessName();
+  if(!store.get('myname','')&&nm)h+=`<div class="panel" style="margin-bottom:8px;border:1px solid var(--acc2)">Para saber qué jugadas son tuyas necesito tu nombre de usuario. ¿Eres <b>${esc(nm)}</b>? <button data-act="name" data-v="${esc(nm)}" class="pri">Sí, usar ese nombre</button></div>`;
+  else if(D.skipped&&!D.games)h+='<div class="small" style="margin-bottom:8px">No pude saber cuáles son tus jugadas: escribe tu nombre exactamente como aparece en el PGN en «Mi nombre en el PGN» (puedes poner varios separados por comas).</div>';
+  else if(D.skipped)h+=`<div class="small" style="margin-bottom:8px">${D.skipped} partida${D.skipped===1?'':'s'} no se contaron porque tu nombre no aparece en ellas.</div>`;
+  if(D.notAn)h+=`<div style="margin-bottom:8px">Hay <b>${D.notAn}</b> partida${D.notAn===1?'':'s'} sin analizar: <button data-act="batch" class="pri">Analizar ${D.notAn===1?'la':'las '+D.notAn}</button></div>`;
+  if(!D.games){Chat.el.innerHTML='<div class="panel">'+h+(D.notAn?'':'<div>Aún no hay partidas analizadas con tu nombre.</div>')+'</div>';this.bindDiag();Chat.chips([{label:'Volver a la partida',fn:()=>this.open(this.idx)}]);return}
+  const pc=s=>D.accN[s]?Math.round(D.accS[s]/D.accN[s]):null;
+  const tot=D.accN.w+D.accN.b,all=tot?Math.round((D.accS.w+D.accS.b)/tot):0;
+  const R=D.rec,wt=R.w.W+R.b.W,dr=R.w.D+R.b.D,ls=R.w.L+R.b.L;
+  h+=`<div><b>${D.games}</b> partida${D.games===1?'':'s'} analizada${D.games===1?'':'s'} · <b>${wt}</b> ganadas, <b>${dr}</b> tablas, <b>${ls}</b> perdidas · precisión media <b>${all}%</b></div>`;
+  // prioridades
+  const tips=[];
+  const phs=Object.entries(D.ph).filter(([k,p])=>p.n>=10).map(([k,p])=>({k,p,acc:p.s/p.n})).sort((a,b)=>a.acc-b.acc);
+  if(phs.length){const w=phs[0];const adv={ap:['Repasa tu repertorio: Examen y Repaso espaciado.','exam','Examen de repertorio'],me:['Entrena táctica y planes: es donde más pierdes.','tac','Entrenar táctica'],fi:['Estudia finales: peones primero, luego torres.','fin','Finales de peones']}[w.k];
+   tips.push(`Tu fase más débil es el <b>${w.p.l.toLowerCase()}</b>: precisión ${Math.round(w.acc)}% y ${w.p.e} error${w.p.e===1?'':'es'} serio${w.p.e===1?'':'s'}. ${adv[0]}`+` <button data-act="${adv[1]}">${adv[2]}</button>`)}
+  const ms=Object.entries(D.motifs).sort((a,b)=>b[1].n-a[1].n);
+  if(ms.length){const [k,v]=ms[0];const M=this.MOT[k];tips.push(`Tu error más repetido: <b>${M[0].toLowerCase()}</b> (${v.n} de ${D.errN}). ${M[1]} <button data-act="${M[2]}">${M[2]==='str'?'Estructuras de peones':'Entrenar táctica'}</button>`)}
+  const ops=Object.entries(D.ops).filter(([k,o])=>o.n>=2).map(([k,o])=>({k,o,e:o.eS/o.eN,a:o.aN?o.aS/o.aN:100})).sort((a,b)=>a.e-b.e);
+  if(ops.length&&ops[0].e<-40)tips.push(`En <b>${esc(ops[0].k)}</b> llegas al movimiento 10 con desventaja media de ${(-ops[0].e/100).toFixed(1)} (${ops[0].o.n} partidas). Revisa esa línea en tu repertorio.`);
+  if(D.wasted.length>=1&&D.adv>=2)tips.push(`Alcanzaste ventaja clara en <b>${D.adv}</b> partidas pero no ganaste <b>${D.wasted.length}</b>. Practica convertir: abajo puedes jugar contra Stockfish desde esas posiciones.`);
+  if(tips.length)h+='<h3>Qué estudiar primero</h3><ol style="padding-left:18px;margin:4px 0">'+tips.map(t=>`<li style="margin-bottom:6px">${t}</li>`).join('')+'</ol>';
+  // color
+  const rc=(s,l)=>{const r=R[s],n=r.W+r.D+r.L;return `<tr><td>${l}</td><td>${n}</td><td>${r.W}-${r.D}-${r.L}</td><td>${pc(s)==null?'—':pc(s)+'%'}</td></tr>`};
+  h+=`<h3>Por color</h3><table><tr><th></th><th>Partidas</th><th>G-T-P</th><th>Precisión</th></tr>${rc('w','Blancas')}${rc('b','Negras')}</table>`;
+  // fases
+  h+='<h3>Por fase</h3><table>'+Object.values(D.ph).map(p=>{const a=p.n?p.s/p.n:null;return `<tr><td>${p.l}</td><td>${a==null?'—':Math.round(a)+'%'}</td><td style="width:38%">${this.bar(a||0)}</td><td class="small">${p.e} err. · ${p.i} imprec.</td></tr>`}).join('')+'</table>';
+  // tipos de error
+  if(ms.length){h+='<h3>Tipos de error</h3><table>'+ms.map(([k,v])=>`<tr><td>${this.MOT[k][0]}</td><td>${v.n}</td><td style="width:30%">${this.bar(v.n/D.errN*100)}</td></tr>`).join('')+'</table><div class="small">Solo cuentan errores y errores graves de tus jugadas.</div>'}
+  // aperturas
+  const ol=Object.entries(D.ops).sort((a,b)=>b[1].n-a[1].n).slice(0,8);
+  if(ol.length){h+='<h3>Tus aperturas</h3><table><tr><th></th><th>Part.</th><th>Puntos</th><th>Precisión 1-12</th><th>Ventaja j.10</th></tr>'+ol.map(([k,o])=>{const e=o.eS/o.eN/100,a=o.aN?o.aS/o.aN:null;const bad=e<-.6||(a!=null&&a<75&&o.n>=2);return `<tr${bad?' style="color:#e48a80"':''}><td>${esc(k)}</td><td>${o.n}</td><td>${o.scN?o.sc+'/'+o.scN:'—'}</td><td>${a==null?'—':Math.round(a)+'%'}</td><td>${(e>=0?'+':'')+e.toFixed(1)}</td></tr>`}).join('')+'</table><div class="small">En rojo: aperturas donde sales peor. La ventaja es la evaluación media (desde tu lado) en la jugada 10.</div>'}
+  // conversión
+  if(D.adv||D.saved){h+=`<h3>Conversión</h3><div>Ventajas claras (≥ +2) alcanzadas: <b>${D.adv}</b> · no convertidas: <b>${D.wasted.length}</b> · partidas salvadas desde posición perdida: <b>${D.saved}</b>.</div>`;
+   if(D.wasted.length)h+='<div class="row" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">'+D.wasted.slice(0,4).map((w,i)=>`<button data-act="conv" data-i="${i}">Convertir: ${esc(w.label.length>26?w.label.slice(0,26)+'…':w.label)}</button>`).join('')+'</div>'}
+  // momentos
+  const top=D.crit.slice().sort((a,b)=>b.loss-a.loss).slice(0,8);
+  if(top.length){h+='<h3>Tus errores más costosos</h3><table>'+top.map((c,i)=>`<tr><td>${esc(c.game)}<br><span class="small">${esc(c.label)} ${CLS_SYM[c.cls]||''} · ${esc(this.MOT[c.key][0].toLowerCase())}</span></td><td>−${Math.round(c.loss)}%</td><td><button data-act="mom" data-i="${i}">Ver</button></td></tr>`).join('')+'</table>'}
+  Chat.el.innerHTML='<div class="panel">'+h+'</div>';
+  this._top=top;this._wasted=D.wasted;
+  this.bindDiag();
+  const chips=[];if(D.errN)chips.push({label:'Guardar todos mis errores como problemas',pri:true,fn:()=>this.savePuzzlesAll()});
+  chips.push({label:'Volver a la partida',fn:()=>this.open(this.idx)});Chat.chips(chips);
+ },
+ bindDiag(){
+  Chat.el.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{
+   const a=b.dataset.act;
+   if(a==='name'){store.set('myname',b.dataset.v);const e=$('#gmName');if(e)e.value=b.dataset.v;this._dg=null;this.diagnose()}
+   else if(a==='batch')this.askBatch();
+   else if(a==='tac')Mode.set('tactics');
+   else if(a==='str')Mode.set('struct');
+   else if(a==='exam')Mode.set('exam');
+   else if(a==='fin'){Lesson.li=Math.max(0,Lesson.all().findIndex(l=>l.id==='fin_basico'));Lesson.ci=0;Mode.set('lesson')}
+   else if(a==='mom'){const c=this._top[+b.dataset.i];if(c){this.open(c.gi);this.moment(c.k)}}
+   else if(a==='conv'){const w=this._wasted[+b.dataset.i];if(w)Play.fromPosition(w.fen,w.side)}
+  });
+ },
+ savePuzzlesAll(){
+  const an=this.anAll(),pz=store.get('mypuz',[]);let n=0;
+  this.list.forEach(g=>{
+   const side=this.mySide(g),a=an[g.id],m=this.meta(g);if(!side||!a||!a.ev||a.ev.length!==m.fens.length)return;
+   const sg=side==='w'?1:-1;
+   m.hist.forEach((mv,i)=>{const k=i+1;if(mv.color!==side)return;
+    const loss=Math.max(0,wp(a.ev[k-1]*sg)-wp(a.ev[k]*sg));if(loss<20)return;
+    const fen=m.fens[k-1],bu=a.best[k-1];if(!bu||pz.some(p=>p.fen===fen))return;
+    const bs=uciToSan(fen,bu);
+    pz.push({fen,theme:'Mis errores',sol:[bs],expl:`En tu partida (${esc(g.white)} vs ${esc(g.black)}) jugaste <b>${esc(mv.san)}</b> y era mejor <b>${esc(bs)}</b>. Pueden existir otras jugadas buenas, pero ésta es la que Stockfish prefiere.`});n++});
+  });
+  store.set('mypuz',pz.slice(-300));
+  Chat.say(n?`Guardé <b>${n}</b> problema${n===1?'':'s'} nuevo${n===1?'':'s'} a partir de tus errores. Los encuentras en <b>Táctica › Mis errores (repaso)</b>: volverán con intervalos crecientes hasta que los domines.`:'No hay errores nuevos para guardar (o ya estaban guardados).',n?'ok':'');
+ },
+ todayLines(){
+  try{
+   if(!this.list.length)this.list=store.get('games_pgn',[]);
+   const D=this.diagData();if(D.games<2)return [];const out=[];
+   const phs=Object.entries(D.ph).filter(([k,p])=>p.n>=10).map(([k,p])=>({p,acc:p.s/p.n})).sort((a,b)=>a.acc-b.acc);
+   const ms=Object.entries(D.motifs).sort((a,b)=>b[1].n-a[1].n);
+   if(ms.length)out.push(`Tu error más repetido en partidas: <b>${this.MOT[ms[0][0]][0].toLowerCase()}</b> (${ms[0][1].n} veces). Mira el diagnóstico en Partidas.`);
+   if(D.wasted.length>=2)out.push(`Dejaste escapar ventajas claras en ${D.wasted.length} de ${D.adv} partidas donde ganabas: practica la conversión.`);
+   return out;
+  }catch(e){return []}
  },
  compute(an){
   const h=A.hist,out=[],acc={w:[],b:[]};
@@ -4357,14 +4805,236 @@ const Games={
    const bs=uciToSan(fen,bu);
    pz.push({fen,theme:'Mis errores',sol:[bs],expl:`En tu partida (${g.white} vs ${g.black}) jugaste <b>${esc(o.san)}</b> y era mejor <b>${esc(bs)}</b>. Pueden existir otras jugadas buenas, pero ésta es la que Stockfish prefiere.`});n++}
   store.set('mypuz',pz);
-  Chat.say(n?`Guardé <b>${n}</b> problema${n===1?'':'s'} a partir de tus errores. Los encuentras en <b>Táctica › Mis errores</b>.`:'No hay errores nuevos para guardar (o ya estaban guardados).',n?'ok':'');
+  Chat.say(n?`Guardé <b>${n}</b> problema${n===1?'':'s'} a partir de tus errores. Los encuentras en <b>Táctica › Mis errores (repaso)</b>: volverán con intervalos crecientes hasta que los domines.`:'No hay errores nuevos para guardar (o ya estaban guardados).',n?'ok':'');
  }
 };
 function hash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return 'g'+(h>>>0).toString(36)+s.length}
 
+/* =============== EVOLUCIÓN Y OBJETIVOS =============== */
+const Evo={
+ pad2:n=>String(n).padStart(2,'0'),
+ fd(t){const d=new Date(t);return this.pad2(d.getDate())+'/'+this.pad2(d.getMonth()+1)},
+ monday(d=new Date()){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x},
+ weeks(n){const m=this.monday(),out=[];for(let i=n-1;i>=0;i--){const d=new Date(m);d.setDate(d.getDate()-7*i);out.push(d)}return out},
+ weekAgg(mon){
+  const L=Log.all(),a={min:0,srs:0,exam:0,tac:0,str:0,play:0,les:0,gam:0,err:0,cal:0,ok:0,n:0,days:0};
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(d.getDate()+i);const e=L[Log.key(d)];if(!e)continue;for(const k of Object.keys(a)){if(k!=='days')a[k]+=+e[k]||0}if(Log.active(e))a.days++}
+  return a;
+ },
+ /* ---- gráficas SVG sencillas ---- */
+ chart(o){
+  const W=320,H=o.h||150,L=34,R=30,T=10,B=22,pts=o.pts;
+  if(!pts.length)return '';
+  const xs=pts.map(p=>p.x);let x0=Math.min(...xs),x1=Math.max(...xs);if(x0===x1){x0-=1;x1+=1}
+  const ys=pts.map(p=>p.y).concat((o.avg||[]).map(p=>p.y),o.ref?[o.ref.y]:[]);
+  let y0=o.ymin!=null?o.ymin:Math.min(...ys),y1=o.ymax!=null?o.ymax:Math.max(...ys);
+  if(o.ymin==null){const pd=(y1-y0||10)*.18;y0-=pd;y1+=pd}
+  const X=x=>L+(x-x0)/(x1-x0)*(W-L-R),Y=y=>T+(1-(y-y0)/((y1-y0)||1))*(H-T-B);
+  const f=o.fmt||(v=>Math.round(v));let g='';
+  for(let i=0;i<3;i++){const v=y0+(y1-y0)*i/2,yy=Y(v);g+=`<line x1="${L}" x2="${W-R}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}" stroke="var(--line)" stroke-width=".7"/><text x="${L-5}" y="${(yy+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--mut)">${esc(String(f(v)))}</text>`}
+  const r=pts.length>40?1.8:pts.length>20?2.4:3.2;
+  const line=a=>a.map(p=>`${X(p.x).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ');
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block" role="img" aria-label="${esc(o.label||'Gráfica')}">${g}`;
+  if(o.ref)s+=`<line x1="${L}" x2="${W-R}" y1="${Y(o.ref.y).toFixed(1)}" y2="${Y(o.ref.y).toFixed(1)}" stroke="var(--acc2)" stroke-width="1.2" stroke-dasharray="4 3"/><text x="${W-R+3}" y="${(Y(o.ref.y)+3).toFixed(1)}" font-size="9" fill="var(--mut)">${esc(o.ref.l)}</text>`;
+  if(o.avg){s+=`<polyline points="${line(o.avg)}" fill="none" stroke="var(--acc)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`}
+  else if(pts.length>1)s+=`<polyline points="${line(pts)}" fill="none" stroke="var(--acc)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  pts.forEach(p=>{s+=`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="${r}" fill="var(--acc)" fill-opacity="${o.avg?.45:1}" stroke="var(--panel)" stroke-width="1"><title>${esc(p.t||String(f(p.y)))}</title></circle>`});
+  const last=(o.avg&&o.avg.length?o.avg:pts)[(o.avg&&o.avg.length?o.avg:pts).length-1];
+  s+=`<text x="${(X(last.x)+5).toFixed(1)}" y="${(Y(last.y)+3).toFixed(1)}" font-size="10" font-weight="600" fill="var(--txt)">${esc(String(f(last.y)))}</text>`;
+  (o.xl||[]).forEach((l,i,a)=>{s+=`<text x="${X(l.x).toFixed(1)}" y="${H-6}" text-anchor="${i===0?'start':i===a.length-1?'end':'middle'}" font-size="9" fill="var(--mut)">${esc(l.l)}</text>`});
+  return s+'</svg>';
+ },
+ bars(o){
+  const W=320,H=o.h||120,L=34,R=8,T=10,B=22,n=o.vals.length,mx=Math.max(o.min||1,...o.vals.map(v=>v.y));
+  const bw=(W-L-R)/n,Y=v=>T+(1-v/mx)*(H-T-B);
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block" role="img" aria-label="${esc(o.label||'Barras')}">`;
+  for(let i=0;i<3;i++){const v=mx*i/2,yy=Y(v);s+=`<line x1="${L}" x2="${W-R}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}" stroke="var(--line)" stroke-width=".7"/><text x="${L-5}" y="${(yy+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--mut)">${Math.round(v)}</text>`}
+  if(o.ref)s+=`<line x1="${L}" x2="${W-R}" y1="${Y(o.ref).toFixed(1)}" y2="${Y(o.ref).toFixed(1)}" stroke="var(--acc2)" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+  o.vals.forEach((v,i)=>{const h=Math.max(v.y>0?2:0,(H-T-B)*v.y/mx),x=L+i*bw+bw*.16;
+   s+=`<rect x="${x.toFixed(1)}" y="${(H-B-h).toFixed(1)}" width="${(bw*.68).toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="var(--acc)"${i===n-1?'':' fill-opacity=".75"'}><title>${esc(v.t)}</title></rect>`;
+   if(i%Math.ceil(n/6)===0||i===n-1)s+=`<text x="${(x+bw*.34).toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="9" fill="var(--mut)">${esc(v.l)}</text>`});
+  return s+'</svg>';
+ },
+ table(head,rows){return `<details style="margin-top:4px"><summary class="small">Ver como tabla</summary><table>${'<tr>'+head.map(h=>`<th>${esc(h)}</th>`).join('')+'</tr>'}${rows.map(r=>'<tr>'+r.map(c=>`<td>${esc(String(c))}</td>`).join('')+'</tr>').join('')}</table></details>`},
+ /* ---- Elo manual ---- */
+ eloAll(){return store.get('elo',[]).slice().sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0)},
+ eloPlat(){
+  const all=this.eloAll();if(!all.length)return null;const c={};all.forEach(e=>c[e.pl]=(c[e.pl]||0)+1);
+  const sel=store.get('eloPl','');if(sel&&c[sel])return sel;return Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];
+ },
+ /* ---- vista Evolución ---- */
+ evolHtml(){
+  let h='';
+  // Elo
+  const pl=this.eloPlat(),all=this.eloAll(),plats=[...new Set(all.map(e=>e.pl))];
+  h+='<h3 style="margin-top:0">Tu Elo</h3>';
+  const g=store.get('goal',null);
+  if(pl){
+   const es=all.filter(e=>e.pl===pl);
+   h+=`<div class="row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${plats.length>1?`<select id="evPl">${plats.map(x=>`<option${x===pl?' selected':''}>${esc(x)}</option>`).join('')}</select>`:`<b>${esc(pl)}</b>`}<span class="small">${es.length} registro${es.length===1?'':'s'}</span></div>`;
+   const pts=es.map(e=>({x:new Date(e.d+'T00:00:00').getTime(),y:e.v,t:`${e.d}: ${e.v}`}));
+   const ref=g&&g.elo&&g.elo.pl===pl?{y:g.elo.target,l:'meta '+g.elo.target}:null;
+   h+=pts.length>1?this.chart({pts,ref,xl:[{x:pts[0].x,l:this.fd(pts[0].x)},{x:pts[pts.length-1].x,l:this.fd(pts[pts.length-1].x)}],label:'Evolución del Elo en '+pl}):`<div style="font-size:26px;font-weight:700">${es[0].v}</div><div class="small">Registra más veces (por ejemplo cada semana) para ver la curva.</div>`;
+   if(pts.length>1){const d=es[es.length-1].v-es[0].v;h+=`<div class="small">Cambio desde el primer registro: <b>${d>=0?'+':''}${d}</b> en ${Math.max(1,Math.round((pts[pts.length-1].x-pts[0].x)/864e5))} días.</div>`}
+   h+=this.table(['Fecha','Elo','Plataforma'],es.map(e=>[e.d,e.v,e.pl]).reverse());
+  }else h+='<div class="small">Anota tu Elo de vez en cuando (Lichess, Chess.com, FIDE…) para ver tu curva y tu ritmo.</div>';
+  h+=`<div class="row" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center"><input type="number" id="evV" placeholder="Elo" style="width:88px" min="100" max="3500"><input type="date" id="evD" value="${Log.key()}"><select id="evP"><option>Lichess</option><option>Chess.com</option><option>FIDE</option><option>Club</option><option>Otro</option></select><button id="evAdd" class="pri">Añadir</button>${all.length?'<button id="evDel" class="danger">Borrar el último</button>':''}</div>`;
+  // Partidas
+  const pg=Games.perGame();
+  h+='<h3>Tus partidas en el tiempo</h3>';
+  if(pg.length<3)h+='<div class="small">Analiza al menos 3 partidas tuyas (Partidas › Analizar todas, con tu nombre escrito) para ver la tendencia.</div>';
+  else{
+   const MA=5,avg=pg.map((p,i)=>{const a=pg.slice(Math.max(0,i-MA+1),i+1);return {x:i,y:a.reduce((s,q)=>s+q.acc,0)/a.length}});
+   const pts=pg.map((p,i)=>({x:i,y:p.acc,t:`${p.label}${p.date&&p.date!=='????.??.??'?' ('+p.date+')':''}: precisión ${Math.round(p.acc)}%, ${p.err} error${p.err===1?'':'es'} serio${p.err===1?'':'s'}`}));
+   h+=`<div class="small">Precisión por partida (puntos) y media de las últimas ${MA} (línea)</div>`+this.chart({pts,avg,ymin:0,ymax:100,fmt:v=>Math.round(v)+'%',xl:[{x:0,l:pg[0].date&&pg[0].date!=='????.??.??'?pg[0].date.replace(/\./g,'/'):'1'},{x:pg.length-1,l:pg[pg.length-1].date&&pg[pg.length-1].date!=='????.??.??'?pg[pg.length-1].date.replace(/\./g,'/'):String(pg.length)}],label:'Precisión por partida'});
+   h+=this.table(['Partida','Fecha','Precisión','Errores serios'],pg.map(p=>[p.label,p.date||'',Math.round(p.acc)+'%',p.err]).reverse());
+   const k=Math.min(10,Math.floor(pg.length/2));
+   if(k>=3){
+    const rec=pg.slice(-k),pre=pg.slice(-2*k,-k),m=(a,f)=>a.reduce((s,p)=>s+f(p),0)/a.length;
+    const row=(l,f,fmt,better)=>{const a=m(rec,f),b=m(pre,f),d=a-b;const arrow=Math.abs(d)<(better==='up'?1:.15)?'＝':((d>0)===(better==='up')?'▲ mejor':'▼ peor');return `<tr><td>${l}</td><td>${fmt(b)}</td><td>${fmt(a)}</td><td>${arrow}</td></tr>`};
+    h+=`<div class="small" style="margin-top:8px">Últimas ${k} partidas frente a las ${k} anteriores</div><table><tr><th></th><th>Antes</th><th>Ahora</th><th></th></tr>`
+     +row('Precisión',p=>p.acc,v=>Math.round(v)+'%','up')
+     +row('Errores serios por partida',p=>p.err,v=>v.toFixed(1),'down')
+     +row('Errores graves por partida',p=>p.blund,v=>v.toFixed(1),'down')
+     +row('Puntos obtenidos',p=>p.sc==null?.5:p.sc,v=>Math.round(v*100)+'%','up')+'</table>';
+   }
+  }
+  // Constancia y acierto semanal
+  const wk=this.weeks(12),ag=wk.map(m=>this.weekAgg(m));
+  const wg=store.get('goal',null),wref=wg&&wg.weekMin?wg.weekMin:null;
+  h+='<h3>Constancia (minutos por semana)</h3>'+this.bars({vals:ag.map((a,i)=>({y:Math.round(a.min),l:this.fd(wk[i]),t:`Semana del ${this.fd(wk[i])}: ${Math.round(a.min)} min, ${a.days} día${a.days===1?'':'s'} activo${a.days===1?'':'s'}`})),ref:wref,min:30,label:'Minutos por semana'});
+  if(wref)h+=`<div class="small">Línea discontinua: tu meta semanal (${wref} min).</div>`;
+  const ap=ag.map((a,i)=>a.n>=5?{x:i,y:a.ok/a.n*100,t:`Semana del ${this.fd(wk[i])}: ${Math.round(a.ok/a.n*100)}% (${a.ok}/${a.n})`}:null).filter(Boolean);
+  h+='<h3>Acierto semanal en ejercicios</h3>';
+  if(ap.length>=2){h+=this.chart({pts:ap,ymin:0,ymax:100,fmt:v=>Math.round(v)+'%',xl:[{x:0,l:this.fd(wk[0])},{x:11,l:this.fd(wk[11])}],label:'Acierto semanal'})+'<div class="small">Incluye táctica, repaso y examen (semanas con al menos 5 respuestas).</div>'}
+  else h+='<div class="small">Necesitas al menos dos semanas con actividad para ver la curva.</div>';
+  // Temas
+  const th=store.get('thist',{}),mons=this.weeks(8).map(d=>Log.key(d));
+  const recent=mons.slice(4),older=mons.slice(0,4),agg=ws=>{const o={};ws.forEach(w=>Object.entries(th[w]||{}).forEach(([t,c])=>{const q=o[t]||(o[t]=[0,0]);q[0]+=c[0];q[1]+=c[1]}));return o};
+  const R=agg(recent),O=agg(older),themes=[...new Set([...Object.keys(R),...Object.keys(O)])].filter(t=>(R[t]||[0,0])[1]+(O[t]||[0,0])[1]>=4);
+  h+='<h3>Táctica por tema (últimas 4 semanas frente a las 4 anteriores)</h3>';
+  if(themes.length){
+   const pc=c=>c&&c[1]>=2?Math.round(c[0]/c[1]*100):null;
+   h+='<table><tr><th>Tema</th><th>Antes</th><th>Ahora</th><th></th></tr>'+themes.map(t=>{const a=pc(O[t]),b=pc(R[t]);const d=a!=null&&b!=null?b-a:null;return {t,a,b,d}}).sort((x,y)=>(x.d==null?0:x.d)-(y.d==null?0:y.d)).map(x=>`<tr><td>${esc(x.t)}</td><td>${x.a==null?'—':x.a+'%'}</td><td>${x.b==null?'—':x.b+'%'}</td><td>${x.d==null?'':Math.abs(x.d)<5?'＝':x.d>0?'▲ mejor':'▼ peor'}</td></tr>`).join('')+'</table>';
+  }else h+='<div class="small">Esta comparación se irá llenando a medida que resuelvas problemas (se empezó a registrar con esta versión).</div>';
+  return h;
+ },
+ bindEvo(root){
+  const $$=s=>root.querySelector(s);
+  const sel=$$('#evPl');if(sel)sel.onchange=()=>{store.set('eloPl',sel.value);Prog.enter()};
+  const add=$$('#evAdd');if(add)add.onclick=()=>{
+   const v=Math.round(+$$('#evV').value),d=$$('#evD').value||Log.key(),pl=$$('#evP').value;
+   if(!(v>=100&&v<=3500)){$$('#evV').focus();return}
+   const e=store.get('elo',[]);e.push({d,v,pl});store.set('elo',e);store.set('eloPl',pl);Prog.enter();
+  };
+  const del=$$('#evDel');if(del)del.onclick=()=>{const e=this.eloAll();if(!e.length)return;const l=e[e.length-1];const a=store.get('elo',[]);const i=a.findIndex(x=>x.d===l.d&&x.v===l.v&&x.pl===l.pl);if(i>=0)a.splice(i,1);store.set('elo',a);Prog.enter()};
+ },
+ /* ---- objetivos ---- */
+ goal(){return store.get('goal',null)},
+ eloNow(pl){const e=this.eloAll().filter(x=>x.pl===pl);return e.length?e[e.length-1]:null},
+ eloPace(pl){
+  const e=this.eloAll().filter(x=>x.pl===pl);if(e.length<2)return null;
+  const last=e[e.length-1],t1=new Date(last.d+'T00:00:00').getTime();
+  let first=e.find(x=>t1-new Date(x.d+'T00:00:00').getTime()<=120*864e5)||e[0];if(first===last)first=e[e.length-2];
+  const dt=(t1-new Date(first.d+'T00:00:00').getTime())/864e5;if(dt<7)return null;
+  return (last.v-first.v)/dt*30;
+ },
+ errNow(){const pg=Games.perGame();const k=Math.min(10,pg.length);if(k<3)return null;return pg.slice(-k).reduce((s,p)=>s+p.err,0)/k},
+ daysLeftWeek(){return 7-((new Date().getDay()+6)%7)},
+ progress(){
+  const g=this.goal();if(!g)return [];const out=[];
+  if(g.elo&&g.elo.target){
+   const pl=g.elo.pl,cur=this.eloNow(pl),T=g.elo.target;
+   if(!cur)out.push({k:'elo',title:'Elo '+esc(pl)+' → '+T,pct:0,text:'Registra tu Elo actual para medir el avance.',status:'Pendiente'});
+   else{
+    const base=g.elo.base!=null?g.elo.base:cur.v,span=Math.max(1,T-base),pct=Math.max(0,Math.min(100,(cur.v-base)/span*100));
+    const days=Math.round((new Date(g.elo.date+'T23:59:59').getTime()-Date.now())/864e5),need=days>0?(T-cur.v)/days*30:null,pace=this.eloPace(pl);
+    let st;
+    if(cur.v>=T)st='🎯 ¡Meta lograda!';
+    else if(days<=0)st='⏰ La fecha ya pasó: ajusta la meta.';
+    else if(pace==null)st='Registra tu Elo más veces para medir tu ritmo.';
+    else st=pace>=need?'✓ Vas a buen ritmo.':'⚠ Vas por debajo del ritmo necesario.';
+    out.push({k:'elo',title:`Elo ${esc(pl)}: ${cur.v} → ${T}`,pct,text:`faltan ${Math.max(0,T-cur.v)}${days>0?` · quedan ${days} días · necesitas +${Math.max(0,Math.round(need))}/mes`:''}${pace!=null?` · tu ritmo: ${pace>=0?'+':''}${Math.round(pace)}/mes`:''}`,status:st});
+   }
+  }
+  if(g.weekMin){
+   const a=this.weekAgg(this.monday()),done=Math.round(a.min),dl=this.daysLeftWeek(),need=Math.max(0,g.weekMin-done)/dl;
+   out.push({k:'min',title:'Estudio semanal',pct:Math.min(100,done/g.weekMin*100),text:`${done} de ${g.weekMin} min esta semana`+(done<g.weekMin?` · ${Math.round(need)} min al día en lo que queda`:''),status:done>=g.weekMin?'✓ Meta de la semana cumplida.':need>50?'⚠ Es difícil llegar: reparte más días o baja la meta.':'En camino.'});
+  }
+  if(g.errTarget){
+   const e=this.errNow();
+   out.push(e==null?{k:'err',title:'Errores serios por partida',pct:0,text:'Analiza al menos 3 de tus partidas para medirlo.',status:'Pendiente'}:{k:'err',title:'Errores serios por partida',pct:Math.max(0,Math.min(100,g.errTarget/Math.max(e,.01)*100)),text:`ahora ${e.toFixed(1)} (últimas partidas) · meta ≤ ${g.errTarget}`,status:e<=g.errTarget?'✓ Meta lograda.':'⚠ Todavía por encima de la meta.'});
+  }
+  return out;
+ },
+ suggest(){
+  const g=this.goal();if(!g||!g.weekMin)return null;
+  const a=this.weekAgg(this.monday()),left=g.weekMin-a.min;if(left<=0)return null;
+  const need=left/this.daysLeftWeek();const m=need<=20?15:need<=37?30:45;
+  return {min:m,text:need>50?`Para tu meta semanal necesitarías ~${Math.round(need)} min al día: sesiones de 45 min y algún día extra.`:`Para tu meta semanal te convienen ~${Math.round(need)} min al día: sesión de ${m} min.`};
+ },
+ weekTable(){
+  const m=this.monday(),prev=new Date(m);prev.setDate(prev.getDate()-7);
+  const A=this.weekAgg(prev),B=this.weekAgg(m);
+  const rows=[['Minutos de estudio',Math.round(A.min),Math.round(B.min)],['Días activos',A.days,B.days],['Repaso espaciado (jugadas)',A.srs,B.srs],['Examen de repertorio',A.exam,B.exam],['Táctica',A.tac,B.tac],['Mis errores repasados',A.err,B.err],['Estructuras de peones',A.str,B.str],['Capítulos de lecciones',A.les,B.les],['Partidas contra Stockfish',A.play,B.play],['Partidas analizadas',A.gam,B.gam],['Acierto en ejercicios',A.n?Math.round(A.ok/A.n*100)+'%':'—',B.n?Math.round(B.ok/B.n*100)+'%':'—']];
+  return `<table><tr><th></th><th>Semana pasada</th><th>Esta semana</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><b>${r[2]}</b></td></tr>`).join('')}</table>`;
+ },
+ weekDetails(){return `<details style="margin-top:10px"><summary><b>Resumen de la semana</b></summary>${this.weekTable()}</details>`},
+ todayCard(){
+  const items=this.progress();
+  let h='<h3>Tu objetivo</h3>';
+  if(!items.length)return h+'<div class="small">Define una meta (Elo con fecha, minutos por semana o errores por partida) y aquí verás tu avance y cuánto toca estudiar. <button data-goal="open">Definir objetivo</button></div>';
+  h+=items.map(i=>`<div style="margin:8px 0"><b>${i.title}</b><br><span class="small">${i.text}</span><div class="bar" style="margin:4px 0"><i style="width:${Math.round(i.pct)}%"></i></div><span class="small">${i.status}</span></div>`).join('');
+  const sg=this.suggest();if(sg)h+=`<div class="small">${sg.text} <button data-sess2="${sg.min}">Usar ${sg.min} min hoy</button></div>`;
+  return h+'<div class="row" style="display:flex;gap:6px;margin-top:6px"><button data-goal="open">Ver objetivos y resumen</button></div>';
+ },
+ bindToday(root,again){
+  root.querySelectorAll('[data-goal]').forEach(b=>b.onclick=()=>{Prog.view='obj';store.set('progView','obj');Mode.set('progress')});
+  root.querySelectorAll('[data-sess2]').forEach(b=>b.onclick=()=>{store.set('todayMin',+b.dataset.sess2);again()});
+ },
+ goalsHtml(){
+  const g=this.goal()||{},pls=['Lichess','Chess.com','FIDE','Club','Otro'];
+  const e=g.elo||{},ds=new Date();ds.setMonth(ds.getMonth()+4);
+  let h='<h3 style="margin-top:0">Tus objetivos</h3>';
+  const items=this.progress();
+  h+=items.length?items.map(i=>`<div style="margin:8px 0"><b>${i.title}</b><br><span class="small">${i.text}</span><div class="bar" style="margin:4px 0"><i style="width:${Math.round(i.pct)}%"></i></div><span class="small">${i.status}</span></div>`).join(''):'<div class="small">Aún no tienes objetivos. Define uno abajo: el plan de «Hoy» y los avisos se ajustan a él.</div>';
+  const sg=this.suggest();if(sg)h+=`<div class="small" style="margin-top:6px">${sg.text} <button data-sess2="${sg.min}">Usar ${sg.min} min hoy</button></div>`;
+  h+=`<h3>Definir o cambiar</h3>
+  <div style="display:grid;gap:8px">
+   <div><b>Elo objetivo</b> <span class="small">(opcional)</span><div class="row" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><input type="number" id="goT" placeholder="Elo meta" value="${e.target||''}" style="width:100px"><input type="date" id="goD" value="${e.date||Log.key(ds)}"><select id="goP">${pls.map(x=>`<option${(e.pl||this.eloPlat()||'Lichess')===x?' selected':''}>${x}</option>`).join('')}</select></div></div>
+   <div><b>Minutos de estudio por semana</b> <span class="small">(opcional)</span><div class="row" style="margin-top:4px"><input type="number" id="goM" placeholder="Ej.: 150" value="${g.weekMin||''}" style="width:100px" min="10" max="2000"></div></div>
+   <div><b>Errores serios por partida</b> <span class="small">(opcional; los mides en Partidas › Mi diagnóstico)</span><div class="row" style="margin-top:4px"><input type="number" id="goE" placeholder="Ej.: 3" value="${g.errTarget||''}" style="width:100px" min="0" step=".5"></div></div>
+   <div class="row" style="display:flex;gap:6px"><button id="goSave" class="pri">Guardar objetivos</button>${items.length?'<button id="goDel" class="danger">Borrar objetivos</button>':''}</div><div id="goMsg" class="small"></div>
+  </div>
+  <h3>Resumen de la semana</h3>${this.weekTable()}`;
+  return h;
+ },
+ bindGoals(root){
+  const $$=s=>root.querySelector(s);this.bindToday(root,()=>Prog.enter());
+  const sv=$$('#goSave');if(sv)sv.onclick=()=>{
+   const T=Math.round(+$$('#goT').value),D=$$('#goD').value,P=$$('#goP').value,M=Math.round(+$$('#goM').value),E=+$$('#goE').value;
+   const msg=t=>{$$('#goMsg').textContent=t};const g={set:Date.now()};
+   if(T){
+    if(!(T>=300&&T<=3500)){msg('El Elo meta debe estar entre 300 y 3500.');return}
+    if(!D||new Date(D+'T23:59:59').getTime()<Date.now()){msg('La fecha de la meta debe ser futura.');return}
+    const cur=this.eloNow(P);g.elo={target:T,date:D,pl:P,base:cur?cur.v:null};
+    if(cur&&cur.v>=T){msg('Tu Elo actual ya supera esa meta: pon una más alta.');return}
+   }
+   if(M){if(!(M>=10&&M<=2000)){msg('Los minutos por semana deben estar entre 10 y 2000.');return}g.weekMin=M}
+   if(E>0)g.errTarget=E;
+   if(!g.elo&&!g.weekMin&&!g.errTarget){msg('Completa al menos un objetivo.');return}
+   store.set('goal',g);Prog.enter();
+  };
+  const dl=$$('#goDel');if(dl)dl.onclick=()=>{if(confirm('¿Borrar tus objetivos?')){try{localStorage.removeItem('goal')}catch(e){}store.set('lastChange',Date.now());Prog.enter()}};
+ },
+ render(view){return view==='obj'?this.goalsHtml():this.evolHtml()},
+ bind(root,view){if(view==='obj')this.bindGoals(root);else this.bindEvo(root)}
+};
+
 /* =============== PROGRESO =============== */
 const Prog={
- free:false,canMove(){return false},
+ free:false,view:store.get('progView','resumen'),canMove(){return false},
+ seg(){return `<div class="seg" style="margin-bottom:10px;flex-wrap:wrap">${[['resumen','Resumen'],['evol','Evolución'],['obj','Objetivos']].map(([k,l])=>`<button data-pv="${k}" class="${this.view===k?'on':''}">${l}</button>`).join('')}</div>`},
  enter(){
   $('#ctl').innerHTML='<div class="small">Tu avance se guarda automáticamente en este navegador. Abajo puedes respaldarlo o sincronizarlo.</div>';Chat.clear();
   A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();A.status('');
@@ -4379,14 +5049,17 @@ const Prog={
    h+=`<tr><td>${esc(t)}</td><td>${n?Math.round(pct*100)+'%':'—'}</td><td><div class="bar"><i style="width:${n?pct*100:0}%"></i></div></td></tr>`;
    if(n&&pct<wv){wv=pct;weak=t}}
   {const cs=store.get('cstats',{n:0,ok:0});if(cs.n)h+=`</table><div style="margin-top:6px">Cálculo sin mover piezas: <b>${Math.round(cs.ok/cs.n*100)}%</b> (${cs.ok}/${cs.n})</div><table>`}
-  h+='</table><h3>Partidas contra Stockfish</h3>'+`<div>Ganadas ${gs.w} · Tablas ${gs.d} · Perdidas ${gs.l}</div>`;
+  {const es=ErrSRS.stats();h+='</table><h3>Mis errores (repaso espaciado)</h3>'+(es.total?`<div>Problemas: <b>${es.total}</b> · Pendientes hoy: <b>${es.due}</b> · Nuevos: ${es.nuevos} · En repaso: ${es.rep} · Dominados: <b>${es.dom}</b></div>`:'<div class="small">Aún no guardaste errores de tus partidas (Partidas › Mi diagnóstico).</div>')}
+  h+='<h3>Partidas contra Stockfish</h3>'+`<div>Ganadas ${gs.w} · Tablas ${gs.d} · Perdidas ${gs.l}</div>`;
   h+=Rep.panel();h+=Struct.panel();h+=Backup.panel();h+=Coach.panel();h+='<h3>Qué practicar ahora</h3><ul>';
   const pending=[];for(const l of Lesson.all())l.chapters.forEach(c=>{if(!(ps[l.id]||[]).includes(c.id))pending.push(`${l.title}: ${c.title}`)});
   if(pending.length)h+=`<li>Completa el capítulo «${esc(pending[0])}».</li>`;
   if(weak)h+=`<li>Refuerza el tema táctico «${esc(weak)}» (tu acierto es el más bajo).</li>`;
   else h+='<li>Resuelve los problemas de la pestaña Táctica para detectar tus temas débiles.</li>';
   h+='<li>Juega una partida contra Stockfish desde el final de cada capítulo para fijar los planes.</li><li>Crea tus propias lecciones con lo que estés estudiando (estructuras de peones, cálculo, finales) en «Crear lección».</li></ul>';
-  Chat.el.innerHTML='<div class="panel">'+h+'</div>';Rep.bind(Chat.el);Backup.bind(Chat.el,()=>this.enter());Coach.bind(Chat.el,()=>this.enter());
+  Chat.el.innerHTML='<div class="panel">'+this.seg()+(this.view==='resumen'?h:Evo.render(this.view))+'</div>';
+  Chat.el.querySelectorAll('[data-pv]').forEach(b=>b.onclick=()=>{this.view=b.dataset.pv;store.set('progView',this.view);this.enter()});
+  if(this.view==='resumen'){Rep.bind(Chat.el);Backup.bind(Chat.el,()=>this.enter());Coach.bind(Chat.el,()=>this.enter())}else Evo.bind(Chat.el,this.view);
  },
  leave(){}
 };
@@ -4416,6 +5089,10 @@ const Backup={
    case 'srs':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [c,d] of Object.entries(v))o[c]=o[c]?this.best(o[c],d,q=>+q.last||0):d;return o}
    case 'tstats':case 'struct':case 'exam':{if(!isO(x)||!isO(v))return x;const f=q=>(+q.n||0)+(+q.ok||0)+(+q.fail||0)+(+q.f||0);const o={...x};for(const [c,d] of Object.entries(v))o[c]=o[c]?this.best(o[c],d,f):d;return o}
    case 'games':return isO(x)&&isO(v)?this.best(x,v,q=>(+q.w||0)+(+q.l||0)+(+q.d||0)):x;
+   case 'elo':{if(!Array.isArray(x)||!Array.isArray(v))return x;return this.uni(x,v,e=>(e&&e.d)+'|'+(e&&e.pl)+'|'+(e&&e.v))}
+   case 'thist':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [w,ts] of Object.entries(v)){const a=o[w]?{...o[w]}:{};for(const [t,c] of Object.entries(ts)){const q=a[t];a[t]=q?(q[1]>=c[1]?q:c):c}o[w]=a}return o}
+   case 'errsrs':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [c,d] of Object.entries(v))o[c]=o[c]?this.best(o[c],d,q=>+q.last||0):d;return o}
+   case 'blind':return isO(x)&&isO(v)?this.best(x,v,q=>(+q.g||0)+(+q.qn||0)+(+q.cn||0)+(+q.ill||0)):x;
    case 'games_an':return isO(x)&&isO(v)?{...v,...x}:x;
    default:return x;
   }
@@ -4691,7 +5368,7 @@ const Coach={
 };
 
 /* =============== CONTROL DE PESTAÑAS =============== */
-const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,edit:Edit,coach:Coach,progress:Prog};
+const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,blind:Blind,edit:Edit,coach:Coach,progress:Prog};
 const Mode={
  set(name,after){
   if(A.mode&&A.mode.leave)A.mode.leave();Engine.stop();anToken++;$('#bStopAn').hidden=true;

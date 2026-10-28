@@ -66,3 +66,11 @@ Stockfish.js 19 (WASM, lite, GPLv3) como motor principal, Stockfish.js 10 (asm.j
 ## Interfaz
 - Botones, campos y paneles con un estilo único; foco visible con teclado; cabecera fija y compacta en pantallas medianas.
 - **Crear** se organiza en pestañas (1·Lección, 2·Capítulo, 3·Jugadas, Archivo) con barra fija de «Guardar lección / Guardar y practicar». Nada se desborda del panel; en móvil el panel fluye bajo el tablero.
+
+## Análisis por lotes y diagnóstico (Partidas)
+- **Analizar todas**: revisa con Stockfish todas las partidas importadas que aún no lo estén (velocidad Rápida o Normal; se puede detener y se conserva lo ya analizado).
+- **Mi diagnóstico**: usa tu nombre de usuario (la app sugiere el más frecuente en tus PGN) para separar tus jugadas y muestra: «qué estudiar primero», rendimiento por color y por fase (apertura/medio juego/final), tipos de error (mates, piezas en prise, capturas o jaques no vistos, posicionales), tus aperturas con precisión y ventaja a la jugada 10, conversión de ventajas (con botón «Convertir» para jugar desde esa posición contra Stockfish) y tus errores más costosos.
+- **Guardar todos mis errores como problemas** los añade a Táctica › Básicos y mis errores. El plan de «Hoy» también muestra líneas del diagnóstico.
+
+## A ciegas
+Pestaña «A ciegas»: partida contra Stockfish sin ver las piezas. Escribes cada jugada (notación española o inglesa; también e2e4) y el rival se anuncia en texto y, opcionalmente, en voz alta. Opciones: piezas visibles (ninguna / solo peones / solo las mías / todas), ocultar la lista de jugadas, «Ver tablero (3 s)» y «Lista de piezas» (cuentan como vistazos), preguntas «¿qué hay en e5?», entrenamiento del color de las casillas y estadísticas (intentos no válidos, vistazos, aciertos).
