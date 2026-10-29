@@ -74,3 +74,31 @@ Stockfish.js 19 (WASM, lite, GPLv3) como motor principal, Stockfish.js 10 (asm.j
 
 ## A ciegas
 Pestaña «A ciegas»: partida contra Stockfish sin ver las piezas. Escribes cada jugada (notación española o inglesa; también e2e4) y el rival se anuncia en texto y, opcionalmente, en voz alta. Opciones: piezas visibles (ninguna / solo peones / solo las mías / todas), ocultar la lista de jugadas, «Ver tablero (3 s)» y «Lista de piezas» (cuentan como vistazos), preguntas «¿qué hay en e5?», entrenamiento del color de las casillas y estadísticas (intentos no válidos, vistazos, aciertos).
+
+## Evolución (Progreso › Evolución)
+Gráficas de tu Elo (lo anotas tú, por plataforma), precisión por partida analizada con media móvil, comparación de tus últimas 10 partidas contra las 10 anteriores, minutos de estudio por semana, acierto semanal y acierto por tema de táctica (este último se va llenando con el uso). Cada gráfica tiene «Ver como tabla».
+
+## Objetivos y plan personal (Progreso › Objetivos)
+Define una meta de Elo con fecha, minutos de estudio por semana y errores serios por partida. La app calcula el ritmo necesario frente a tu ritmo real, sugiere una sesión diaria y muestra un resumen semanal (semana pasada vs esta). «Hoy» muestra la tarjeta «Tu objetivo» y ajusta el plan (más táctica si tus errores superan la meta).
+
+## Mis errores con repaso espaciado
+Los errores de tus partidas analizadas se convierten en ejercicios (Táctica › Mis errores (repaso)) con intervalos de 1, 3, 7, 14, 30 y 60 días. Fallar reinicia la racha; con 4 aciertos seguidos el error se da por dominado. «Hoy» incluye la tarea de repasarlos.
+
+## Cuaderno de partidas (Partidas)
+Cada partida tiene su bloque «Notas y etiquetas»: marca **⚑ Para revisar** o **★ Favorita**, tus propias etiquetas, una nota general y **notas por jugada** (avanza a la jugada y guarda el comentario; luego vuelves a ella desde la lista). El botón «Cuaderno» abre la lista con búsqueda de texto (jugadores, apertura, notas, etiquetas) y filtros por marca, resultado, color, etiqueta y «con errores serios». Se añaden etiquetas automáticas (color, resultado, apertura). «Hoy» avisa cuántas partidas tienes marcadas para revisar. Las notas entran en el respaldo y la sincronización.
+
+## Prueba de nivel (Progreso › Nivel)
+14 ejercicios (mates en 1, 2 y 3 y posiciones de plan) con una sola oportunidad cada uno, sin pistas ni solución. Da el resultado por área, el tiempo medio y un nivel **orientativo** (no sustituye tu Elo real). Señala tu área más débil con un botón para entrenarla. Se puede repetir (cada mes se sugiere en «Hoy»), prefiriendo ejercicios que no hayas visto. Si sales de Táctica a mitad de la prueba, no se guarda. También se corrigió que los mates se contaran bajo un tema sin nombre en las estadísticas de táctica.
+
+## Retos (pestaña «Retos»)
+Tres modos de práctica:
+
+- **Contrarreloj.** Resuelve el máximo de mates y tácticas en 1, 3 o 5 minutos. Empiezan fáciles y se endurecen; tienes 3 vidas, y cada 5 aciertos seguidos suman un punto extra. Guarda tu récord por configuración y cada ejercicio cuenta en tus estadísticas de táctica.
+- **Finales teóricos.** 18 posiciones clásicas (peones: rey en sexta, oposición, peón de torre, regla del cuadrado; alfil: alfil equivocado y correcto; torre: Lucena y Philidor; dama: contra peón en séptima, ganadora y de tablas; mates básicos: torre, dama, dos alfiles, alfil y caballo) que juegas contra Stockfish al máximo. Si el objetivo es ganar, hay que coronar o dar mate; si es empatar, hay que resistir, lograr ahogado o que Stockfish acepte tablas. Stockfish evalúa cada jugada: te avisa de imprecisiones y termina el intento si dejas escapar la victoria o las tablas. Hay pista, «Ver la idea», deshacer y reiniciar; solo se considera «dominado» si lo logras sin ayudas. «Hoy» sugiere un final en sesiones de 30 y 45 minutos.
+- **Partida con reloj.** Ritmos de 1+0 a 30+0 con incremento, contra Stockfish con el nivel que elijas. Si se acaba tu tiempo, pierdes (o tablas si el rival no puede dar mate). Al terminar, informe de gestión del tiempo: tiempo por fase, jugadas más lentas, errores con poco tiempo o con prisa y consejos. Las partidas cuentan en tus estadísticas.
+
+## Explorador de aperturas (pestaña «Aperturas»)
+Construido con tus partidas importadas (necesita tu nombre de usuario tal como aparece en el PGN). Elige si juegas con blancas o negras y mueve las piezas del tablero o pulsa una jugada de la tabla: para cada posición ves qué jugaste tú y qué jugaron tus rivales, cuántas veces, el resultado (barra de ganadas/tablas/perdidas), los puntos y la precisión media (si analizaste las partidas). Se cruza con tu repertorio: 📖 marca lo que está en el libro, ⚠ lo que juegas fuera de él, «hueco» las respuestas del rival que no cubres (con botón «+ Hueco» para guardarlas), y avisa cuando sueles jugar algo distinto de lo que dice tu repertorio. En el inicio aparecen «Donde más puntos pierdes» y «Tus mejores líneas» (líneas con al menos 3 partidas), y cada posición lista las partidas que pasaron por ella, que se abren en Partidas en esa jugada.
+
+## Ajustes (botón ⚙ o tecla «?»)
+Tema oscuro, claro o automático; colores del tablero (madera, verde, azul, gris, coral); tamaño del texto; mostrar u ocultar coordenadas, puntos de jugadas legales, resaltado de la última jugada y barra de evaluación; empezar en «Hoy» o donde lo dejaste; pantalla completa; descarga de respaldo, restablecer ajustes y borrar todos los datos (con doble confirmación). Atajos: ← → (jugadas), Inicio/Fin, F (girar), M (sonido), ? (ajustes), Esc (cerrar). La aplicación funciona sin conexión porque es un único archivo; los ajustes son de cada navegador y no se sincronizan entre equipos.

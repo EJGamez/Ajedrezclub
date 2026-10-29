@@ -168,6 +168,35 @@ body.blindNoList #movelist{display:none}
 .blmove{display:flex;gap:6px;position:sticky;top:-10px;z-index:2;background:var(--panel);padding:10px 0 8px;margin:-10px 0 0}
 #ctl .blmove input{flex:1;width:auto;font-size:16px;padding:9px 10px}
 #ctl .blmove button{padding:9px 16px}
+.nb{display:flex;flex-direction:column;gap:6px;margin:6px 0}.nb textarea,.nb input{width:100%;box-sizing:border-box}#nbMvList a{color:var(--acc)}
+.nbf{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-bottom:8px}.nbf input{grid-column:1/-1}
+.nbrow{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;cursor:pointer;display:flex;flex-direction:column;gap:4px}.nbrow:hover,.nbrow:focus{border-color:var(--acc);outline:none}
+.chip2{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:10px;padding:1px 7px;margin:0 4px 2px 0;color:var(--mut,inherit)}.nbn{opacity:.85}
+.nbd>summary{cursor:pointer;font-size:13px;color:var(--mut);padding:4px 0}
+body[data-m=reto] #evalbar{visibility:hidden}
+#rtBox{display:flex;flex-direction:column;gap:8px}#rtBox .row{display:flex;gap:6px;flex-wrap:wrap}#rtBox select{width:100%}
+.stbox{display:flex;gap:14px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;padding:8px 12px}.stt{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--acc)}.stt.low{color:var(--bad)}.dim{opacity:.25}
+#ckClocks{display:flex;gap:8px}.ck{flex:1;border:1px solid var(--line);border-radius:8px;padding:6px 10px;display:flex;flex-direction:column}.ck span{font-size:12px;color:var(--mut)}.ck b{font-size:26px;font-variant-numeric:tabular-nums}.ck.act{border-color:var(--acc);background:var(--panel2)}.ck.low b{color:var(--bad)}
+.wdl{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--line)}.wdl i{display:block;height:100%}
+.extbl td,.extbl th{padding:4px 6px;vertical-align:middle}.exmv{font-weight:600;padding:2px 8px}.exline{margin:6px 0;font-size:13px;line-height:1.6}.exline a,#chat .small a{color:var(--acc);text-decoration:none}
+.xg{color:var(--acc);font-weight:600}.xb{color:var(--bad);font-weight:600}.warnT{color:var(--acc2);font-size:12px}.callout{margin:8px 0;padding:8px 10px;border-left:3px solid var(--acc2);background:var(--panel2);border-radius:4px}
+button.sm{padding:1px 6px;font-size:12px}body[data-m=expl] #evalbar{visibility:hidden}
+html[data-theme=light]{--bg:#f2efe8;--panel:#ffffff;--panel2:#ece8df;--line:#d6d0c2;--txt:#2a2724;--mut:#6b665c;--acc:#5c8c24;--acc2:#a96a0a;--bad:#c0392b;color-scheme:light}
+html[data-theme=light] .bub b{color:var(--txt)}html[data-theme=light] .msg.me .bub{background:#dfe9cf}html[data-theme=light] .sq[data-f]::after,html[data-theme=light] .sq[data-r]::before{color:#333}
+html[data-theme=light] #evalbar{background:#3a3a3a}
+body{font-size:calc(15px*var(--fs,1))}#chat{font-size:calc(15px*var(--fs,1))}
+body.nocoords .sq[data-f]::after,body.nocoords .sq[data-r]::before{display:none}
+body.nodots .dot,body.nodots .cap{display:none}
+body.nohl .sq.last,body.nohl .sq.check{box-shadow:none}
+body.noeval #evalbar{display:none}
+#cfgBtn{padding:5px 8px;font-size:16px;line-height:1}
+#cfgPop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.55);display:flex;align-items:flex-start;justify-content:center;padding:40px 12px;overflow:auto}#cfgPop[hidden]{display:none}
+.cfgbox{background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:14px 18px 18px;width:min(520px,100%);box-shadow:0 12px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:8px}
+.cfgbox h4{margin:10px 0 0;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.cfghead{display:flex;justify-content:space-between;align-items:center;font-size:17px}
+.cfgrow{display:flex;align-items:center;justify-content:space-between;gap:10px}.cfgrow select{width:auto;min-width:170px}.cfgrow input[type=checkbox]{width:auto;flex:none;order:-1;margin-right:4px}
+label.cfgrow:has(input[type=checkbox]){justify-content:flex-start}
+.cfgkeys{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;font:12px/1.5 system-ui;background:var(--panel2)}
 </style>
 </head>
 <body>
@@ -184,16 +213,20 @@ body.blindNoList #movelist{display:none}
     <button data-m="games">Partidas</button>
     <button data-m="play">Jugar</button>
     <button data-m="blind" title="Partida sin ver las piezas">A ciegas</button>
+    <button data-m="expl" title="Explorador de aperturas con tus partidas">Aperturas</button>
+    <button data-m="reto" title="Contrarreloj, finales teóricos y partidas con reloj">Retos</button>
     <button data-m="edit">Crear</button>
     <button data-m="coach" id="tabCoach" hidden>Entrenador</button>
     <button data-m="progress">Progreso</button>
   </nav>
   <label id="sizeBox" title="Tamaño del tablero (doble clic para restablecer)">Tablero <input type="range" id="sizeK" min="60" max="140" step="5" value="100"></label>
   <button id="sndBtn" class="b" title="Sonido" aria-label="Sonido"></button>
+  <button id="cfgBtn" class="b" title="Ajustes (?)" aria-label="Ajustes">&#9881;</button>
   <button id="wideBtn" class="b" title="Hace el chat más ancho y el tablero más pequeño">Chat amplio</button>
   <span id="engstat">Cargando motor…</span>
 </header>
 
+<div id="cfgPop" hidden></div>
 <div id="sndPop" role="dialog" aria-label="Sonido">
  <label><input type="checkbox" id="sndOn"> Sonidos de jugadas y avisos</label>
  <label>Volumen <input type="range" id="sndVol" min="0" max="100" step="5"></label>
@@ -2348,7 +2381,7 @@ const PZ_MATE=[{"fen":"8/5Q2/7k/R5p1/4P3/2P1K2P/6P1/5R2 w - - 0 39","n":1,"pat":
 const PZ_POS=[{"fen":"r4rk1/5p1p/1pn2Qp1/2pqp3/P7/1P2PP2/6RP/R1B1K3 w Q - 0 20","best":"Rd2","ev":-28,"sec":[["e4",-170],["Ra3",-203]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"1rq2k1r/3nbppp/4p3/1QpnP3/8/P3BNP1/1P1N1P1P/R3KR2 w Q - 1 18","best":"Qd3","ev":3,"sec":[["Qa5",-65],["Qc4",-91]],"cat":"Actividad de la dama","idea":"La dama pasa a d3, donde ejerce más presión sin exponerse a ataques."},{"fen":"r2qk2r/1b2npp1/p3p2p/1pb5/P7/2PB1N1P/2P1QPP1/R1B2RK1 b kq a3 0 14","best":"O-O","ev":-4,"sec":[["Bxf3",-52],["Qa5",-71]],"cat":"Seguridad del rey","idea":"Enrocar (O-O) pone al rey a salvo y conecta las torres: es la prioridad antes de iniciar cualquier plan."},{"fen":"r1b1k2r/pp1nppbp/2n3p1/2P5/2N5/3BP3/PP1B1PPP/2RK2NR w kq - 3 11","best":"b4","ev":99,"sec":[["Ke2",-19],["Bb1",-24]],"cat":"Ruptura de peones","idea":"El avance b4 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1r2bk1/1b3pp1/1p1qpn1p/1N1pn3/1pP5/PQ2P2P/1B1NBPP1/2RR2K1 b - - 1 20","best":"Qb8","ev":24,"sec":[["Qc6",-121],["Qd8",-196]],"cat":"Actividad de la dama","idea":"La dama pasa a b8, donde ejerce más presión sin exponerse a ataques."},{"fen":"2r2k2/5pp1/1ppqp3/3r1nBQ/P2P4/7P/1P3PP1/R2R2K1 b - - 2 25","best":"Kg8","ev":10,"sec":[["Ke8",-63],["Ne7",-65]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g8): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2qk2r/pp1n2pp/2pp1p2/b3p1Bb/3PP3/1BP2N1P/PP3PP1/R2QK2R w KQkq - 0 12","best":"Be3","ev":35,"sec":[["Bh4",-14],["Bc1",-23]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e3, una diagonal más activa."},{"fen":"3r1rk1/1bp2pb1/pq2p2p/3n2p1/2NP4/3B2PP/PB2QP2/2R2RK1 b - - 8 24","best":"Qa7","ev":19,"sec":[["Qb5",-105],["Qc6",-108]],"cat":"Actividad de la dama","idea":"La dama pasa a a7, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b1k2r/1ppqnp2/p3p2p/4b1p1/3PB3/N1P5/P3QPPP/R1B2RK1 b kq - 0 15","best":"Bg7","ev":-32,"sec":[["Bf6",-106],["Bd6",-129]],"cat":"Alfil a la gran diagonal","idea":"El alfil en g7 domina la gran diagonal y presiona el flanco rival."},{"fen":"2q2k1r/3nbppp/4p3/2pnP3/8/P2QBNP1/1r1N1P1P/R3KR2 w Q - 0 19","best":"Nc4","ev":0,"sec":[["Rc1",-52],["Rh1",-64]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia c4, una casilla más útil para tu plan."},{"fen":"rn1qk2r/pbpp1pbp/1p2p1p1/4P3/3Pn3/3B1N2/PPP1QPP1/RNB1K2R b KQkq - 4 10","best":"f5","ev":-5,"sec":[["d5",-52],["Nc5",-338]],"cat":"Ruptura de peones","idea":"El avance f5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn1qkbnr/pp1bpppp/8/1Bp1P3/P2p4/8/1PPP1PPP/RNBQK1NR w KQkq - 2 6","best":"e6","ev":65,"sec":[["d3",20],["Nf3",20]],"cat":"Ruptura de peones","idea":"El avance e6 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/1B3PPP/R2QK2R b KQ - 2 15","best":"e5","ev":40,"sec":[["Nd7",-18],["Rab8",-38]],"cat":"Ruptura de peones","idea":"El avance e5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1b1kb1r/1p3ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3QK2R b Kkq - 2 16","best":"Bd7","ev":39,"sec":[["Qg5",-30],["Qd8",-56]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bd7) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r3kb1r/1pq1ppp1/p1n2n2/3P3p/B3p2N/1Q2P3/PP3PPP/R1B1K2R b KQkq - 1 12","best":"b5","ev":-7,"sec":[["Rc8",-54],["Rd8",-60]],"cat":"Ruptura de peones","idea":"El avance b5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn3rk1/p3pp1p/2p3p1/q2Pb3/NpP1P1b1/5NP1/P3QPBP/2RR2K1 w - - 2 18","best":"Qc2","ev":14,"sec":[["Nb2",-88],["d6",-249]],"cat":"Actividad de la dama","idea":"La dama pasa a c2, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b2rk1/1p2qpbp/n2p2p1/p3p3/3Pn3/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 12","best":"Nd5","ev":77,"sec":[["Nxe4",28],["Na4",-66]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d5, una casilla más útil para tu plan."},{"fen":"rnbq1rk1/pp3p2/2p2npb/3P3p/3Pp3/PQN1P3/1P1B1PPP/2R1KBNR w K - 1 10","best":"Bc4","ev":71,"sec":[["dxc6",17],["Na4",-43]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bc4) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r1bqkb1r/5ppp/p1p2n2/2Pp4/1P2p3/3BP3/P1P2PPP/RNBQK2R w KQkq - 0 9","best":"Be2","ev":0,"sec":[["Bf1",-45],["Bb2",-285]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e2, una diagonal más activa."},{"fen":"rn2kb1r/p2p1pp1/b1p1p2p/q3P3/2pP4/2P4N/P1Q1BPPP/R1B1K2R b KQkq - 1 11","best":"d5","ev":58,"sec":[["d6",-8],["Bc8",-19]],"cat":"Ruptura de peones","idea":"El avance d5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r2qkb1r/1pp1pp1p/p4n2/3pPbB1/2P5/4P3/PP3PPP/RN1QKB1R b KQkq - 0 8","best":"Ne4","ev":-37,"sec":[["Ng4",-178],["Rg8",-178]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp1b1p2/2n2Pp1/2p1p2p/3pP2q/N1PP2R1/PP2N1Bn/R1BQ2K1 b kq - 6 19","best":"Ng4","ev":56,"sec":[["Bg4",-108],["Qxf6",-344]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a g4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r2k3r/p1p1n3/1p3p2/4n2p/2PpPR2/P6P/P3B1PB/R5K1 b - - 0 19","best":"Nd7","ev":-29,"sec":[["Rf8",-114],["d3",-121]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d7, una casilla más útil para tu plan."},{"fen":"6kr/ppq2p2/6p1/3Q1p1p/3Pr3/P1P2NbP/1P3P2/4RRK1 b - - 0 24","best":"Kg7","ev":-6,"sec":[["Rxe1",-113],["Bd6",-143]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"rnb1k2r/ppqn1ppp/4p3/1NbpP1B1/8/5N2/PPP1BPPP/R2QK2R b KQkq - 3 9","best":"Qb6","ev":-40,"sec":[["Qc6",-101],["Qa5+",-129]],"cat":"Actividad de la dama","idea":"La dama pasa a b6, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1r3k1/1R3pb1/pN2p1pp/2n5/2Pp2P1/4P2P/5P1B/5R1K w - - 2 27","best":"Re7","ev":0,"sec":[["Nxc8",-121],["Rc7",-135]],"cat":"Torre a la séptima","idea":"La torre en la séptima fila (e7) ataca los peones rivales y limita al rey."},{"fen":"rnbqk1nr/1pp1b1pp/p3p3/3p4/3P1Bp1/2N2N2/PPP1PP1P/R2QKB1R w KQkq - 0 7","best":"Ne5","ev":29,"sec":[["Nd2",-67],["Ng1",-97]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e5: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp3ppp/2nb1q2/1Bpp3b/8/1P2PN1P/P2P1PP1/RN1Q1RK1 w kq - 0 11","best":"Nc3","ev":14,"sec":[["Bxc6+",-61],["Na3",-78]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nc3) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r1b1k1nr/pp2ppbp/2n3p1/2P5/2N5/4P3/PP1B1PPP/2RK1BNR b kq - 0 9","best":"Nf6","ev":-21,"sec":[["Be6",-77],["Bf5",-85]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nf6) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r2k3r/p2nq1pp/2pp1p2/4p3/4P3/1BP1QP1P/PP3P2/2KR3R b - - 2 18","best":"Kc7","ev":12,"sec":[["Kc8",-59],["h5",-86]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (c7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2q1rk1/5ppp/1pn1p3/2pp4/P2PN3/1P2PN2/5PbP/R1BQK2R w KQ - 0 14","best":"Rg1","ev":-38,"sec":[["Ng3",-159],["Nxc5",-342]],"cat":"Torre a columna semiabierta","idea":"La torre ocupa la columna g, semiabierta para ti: no tienes peones que la bloqueen y presionas el peón rival."},{"fen":"r3kb1r/1p1b1ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3Q1RK1 b kq - 4 17","best":"Rd8","ev":44,"sec":[["Ba4",-5],["Be7",-5]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/5PPP/R1BQK2R w KQ - 1 15","best":"Bb2","ev":17,"sec":[["Bd2",-34],["Rb1",-39]],"cat":"Alfil a la gran diagonal","idea":"El alfil se desarrolla a b2 y domina la gran diagonal, presionando el flanco rival."}];
 PZ_MATE.forEach(p=>{p.theme=p.pat});PZ_POS.forEach(p=>{p.theme='Posicional: '+p.cat});
 const ALLPZ=()=>PZ().concat(PZ_MATE,PZ_POS);
-const COLS={basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},err:{n:'Mis errores (repaso)',get:()=>ErrSRS.session()},pos:{n:'Mejorar la posición',get:()=>PZ_POS},theme:{n:'Tema',get:()=>ALLPZ().filter(p=>p.theme===Tac.theme)}};
+const COLS={basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},err:{n:'Mis errores (repaso)',get:()=>ErrSRS.session()},test:{n:'Prueba de nivel',get:()=>Lvl.list()},storm:{n:'Contrarreloj',get:()=>Storm.cur?[Storm.cur]:[]},pos:{n:'Mejorar la posición',get:()=>PZ_POS},theme:{n:'Tema',get:()=>ALLPZ().filter(p=>p.theme===Tac.theme)}};
 const MateU={
  canMate(c){for(const m of c.moves()){c.move(m);const ok=c.in_checkmate();c.undo();if(ok)return true}return false},
  forced(c,k){ // c: mueve el rival; ¿lo mato en k jugadas mías?
@@ -2655,7 +2688,7 @@ $('#bPrev').onclick=()=>A.goto((A.viewIdx==null?A.hist.length:A.viewIdx)-1);
 $('#bNext').onclick=()=>A.goto((A.viewIdx==null?A.hist.length:A.viewIdx)+1);
 $('#bEnd').onclick=()=>A.goto(A.hist.length);
 $('#bFlip').onclick=()=>{board.flipped=!board.flipped;board.draw()};
-document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.key==='ArrowLeft')$('#bPrev').click();if(e.key==='ArrowRight')$('#bNext').click()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&typeof Cfg!=='undefined'&&Cfg.isOpen()){Cfg.close();return}if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='ArrowLeft')$('#bPrev').click();if(e.key==='ArrowRight')$('#bNext').click();if(e.key==='Home'){e.preventDefault();$('#bStart').click()}if(e.key==='End'){e.preventDefault();$('#bEnd').click()}if(e.key==='f'||e.key==='F')$('#bFlip').click();if(e.key==='m'||e.key==='M'){Snd.on=!Snd.on;Snd.save();$('#sndOn').checked=Snd.on}if(e.key==='?'){Cfg.isOpen()?Cfg.close():Cfg.open()}});
 
 /* Eval bar + análisis */
 function setEval(ev){
@@ -2855,6 +2888,106 @@ const Lesson={
 };
 
 /* =============== MODO TÁCTICA =============== */
+/* === PRUEBA DE NIVEL === */
+const Lvl={
+ on:false,L:[],i:0,res:[],t0:0,
+ SPEC:[['m1',3,1],['m2',4,2],['m3',3,3],['pos',4,2]],
+ NAME:{m1:'Mate en 1',m2:'Mate en 2',m3:'Mate en 3',pos:'Plan y posición'},
+ hist(){return store.get('lvl',[])},
+ last(){const h=this.hist();return h[h.length-1]||null},
+ daysSince(){const l=this.last();return l?Math.floor((Date.now()-l.t)/864e5):null},
+ pool(k){return k==='pos'?PZ_POS:PZ_MATE.filter(p=>p.n===+k[1])},
+ build(){
+  const seen=new Set(store.get('lvlSeen',[]));const out=[];
+  for(const [k,n] of this.SPEC){
+   let P=this.pool(k).slice();
+   P.sort(()=>Math.random()-.5);
+   P.sort((a,b)=>(seen.has(a.fen)?1:0)-(seen.has(b.fen)?1:0));
+   const used=new Set(),pick=[];
+   for(const p of P){const tag=p.pat||p.cat;if(used.has(tag))continue;used.add(tag);pick.push(p);if(pick.length>=n)break}
+   for(const p of P){if(pick.length>=n)break;if(!pick.includes(p))pick.push(p)}
+   pick.forEach(p=>out.push({k,p}));
+  }
+  return out;
+ },
+ weight(k){return (this.SPEC.find(s=>s[0]===k)||[0,0,1])[2]},
+ start(){
+  this.L=this.build();this.i=0;this.res=[];this.on=true;
+  store.set('tcol','test');Mode.set('tactics');
+ },
+ list(){return this.on?this.L.map(x=>x.p):[]},
+ intro(){
+  Chat.say(`<b>Prueba de nivel</b><br>${this.L.length} ejercicios: mates en 1, 2 y 3 y posiciones de plan. Una sola oportunidad por ejercicio, sin pistas ni ver la solución, igual que en una partida. No hay límite de tiempo, pero se mide cuánto tardas. Puedes salir cuando quieras (no se guardará).`);
+  Chat.chips([{label:'Empezar',pri:true,fn:()=>this.show()}]);
+  A.status('Prueba de nivel');
+ },
+ show(){
+  const x=this.L[this.i];Tac.i=this.i;Tac.load();Chat.clear();
+  const who=A.userColor==='w'?'blancas':'negras';
+  const hint=x.k==='pos'?'Encuentra la <b>mejor jugada de plan</b>.':x.k==='m1'?'Da <b>mate en 1</b>.':`Da <b>mate en ${x.p.n}</b>, pase lo que pase el rival.`;
+  Chat.say(`<b>Prueba de nivel · ${this.i+1} / ${this.L.length}</b><br>Juegan ${who}. ${hint}`);
+  Chat.chips([{label:'No lo sé (saltar)',fn:()=>this.answer(0)}]);
+  this.t0=Date.now();A.status(`Prueba ${this.i+1}/${this.L.length}`);
+ },
+ answer(score){
+  if(!this.on||Tac.lock2)return;const x=this.L[this.i];if(this.res[this.i])return;
+  const sec=Math.round((Date.now()-this.t0)/1000);
+  this.res[this.i]={k:x.k,s:score,sec,fen:x.p.fen};
+  Tac.i=this.i;Tac.failed=score<1;try{Tac.stat(score>=1)}catch(e){}
+  Tac.done=true;Tac.lock=true;
+  Chat.say(score>=1?'✓ Correcto.':score>0?'Jugada razonable, aunque no la mejor (cuenta la mitad).':'✗ No era esa.',score>=1?'ok':score>0?'':'bad');
+  Chat.chips([]);
+  setTimeout(()=>{if(!this.on)return;this.i++;if(this.i>=this.L.length)this.finish();else this.show()},950);
+ },
+ abort(){this.on=false;this.L=[];this.res=[];if(store.get('tcol','basic')==='test')store.set('tcol','basic')},
+ band(f){
+  const B=[[.25,[700,1000]],[.45,[1000,1300]],[.65,[1300,1600]],[.8,[1600,1800]],[.92,[1800,2000]],[2,[2000,2400]]];
+  return B.find(b=>f<b[0])[1];
+ },
+ score(res){
+  const a={};let pts=0,max=0;
+  for(const [k,n] of this.SPEC)a[k]={ok:0,n:0,pts:0,max:0,sec:0};
+  res.forEach(r=>{const w=this.weight(r.k),q=a[r.k];q.n++;q.max+=w;q.pts+=w*r.s;if(r.s>=1)q.ok++;q.sec+=r.sec;pts+=w*r.s;max+=w});
+  return {a,pts,max,f:max?pts/max:0};
+ },
+ finish(){
+  const sc=this.score(this.res);const band=this.band(sc.f);const secAvg=Math.round(this.res.reduce((s,r)=>s+r.sec,0)/this.res.length);
+  const d=new Date();const rec={t:Date.now(),d:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`,pts:sc.pts,max:sc.max,f:sc.f,band,sec:secAvg,a:Object.fromEntries(Object.entries(sc.a).map(([k,v])=>[k,[v.pts,v.max,v.ok,v.n]]))};
+  const h=this.hist();h.push(rec);store.set('lvl',h.slice(-20));
+  const seen=new Set(store.get('lvlSeen',[]));this.res.forEach(r=>seen.add(r.fen));store.set('lvlSeen',[...seen].slice(-300));
+  Log.add('lvl',this.res.length,true);store.set('lastChange',Date.now());
+  this.on=false;this.L=[];this.res=[];store.set('tcol','basic');
+  this.done=rec;Mode.set('progress');Prog.view='nivel';store.set('progView','nivel');Prog.enter();
+ },
+ weakest(rec){
+  const e=Object.entries(rec.a).filter(([k,v])=>v[1]>0).map(([k,v])=>[k,v[0]/v[1]]).sort((x,y)=>x[1]-y[1]);return e[0]&&e[0][1]<.8?e[0][0]:null;
+ },
+ bar(p){return `<div class="bar" style="height:8px"><i style="width:${Math.round(p*100)}%"></i></div>`},
+ html(){
+  const h=this.hist(),l=this.last();let o='<h3 style="margin-top:0">Prueba de nivel</h3>';
+  o+='<div class="small" style="margin-bottom:8px">14 ejercicios (10–15 min): mates en 1, 2 y 3 y posiciones de plan. Una oportunidad por ejercicio. Sirve para ver tus puntos fuertes y débiles y fijar el punto de partida; la estimación de Elo es <b>orientativa</b> (no sustituye tu Elo real).</div>';
+  if(!l)o+='<div class="panel" style="margin-bottom:10px">Todavía no has hecho la prueba.</div>';
+  else{
+   const w=this.weakest(l);
+   o+=`<div class="panel" style="margin-bottom:10px"><b>Último resultado (${esc(l.d)})</b>: ${Math.round(l.f*100)}% de los puntos · nivel orientativo <b>${l.band[0]}–${l.band[1]}</b>${l.band[0]>=2000?'<br><span class="small">Alcanzaste el techo de la prueba: es posible que sea fácil para tu nivel.</span>':''}<table style="margin-top:8px">${Object.entries(l.a).filter(([k,v])=>v[1]>0).map(([k,v])=>`<tr><td>${this.NAME[k]}</td><td>${v[2]} / ${v[3]}</td><td style="width:40%">${this.bar(v[0]/v[1])}</td></tr>`).join('')}</table><div class="small" style="margin-top:6px">Tiempo medio por ejercicio: ${l.sec} s.</div>${w?`<div style="margin-top:8px">Tu área más débil: <b>${this.NAME[w]}</b>. <button data-lvlgo="${w}" class="pri">Entrenar esta área</button></div>`:'<div style="margin-top:8px">Buen resultado en todas las áreas.</div>'}</div>`;
+  }
+  const d=this.daysSince();
+  o+=`<div class="row" style="display:flex;gap:6px;flex-wrap:wrap"><button id="lvlStart" class="pri">${l?(d>=30?'Repetir la prueba (ya toca)':'Repetir la prueba'):'Empezar la prueba'}</button></div>`;
+  if(h.length>1)o+='<h3>Historial</h3><table><tr><th>Fecha</th><th>Puntos</th><th>Nivel orientativo</th><th>Tiempo medio</th></tr>'+h.slice().reverse().map(r=>`<tr><td>${esc(r.d)}</td><td>${Math.round(r.f*100)}%</td><td>${r.band[0]}–${r.band[1]}</td><td>${r.sec} s</td></tr>`).join('')+'</table><div class="small">Repite la prueba cada mes; usa ejercicios que no viste antes cuando es posible.</div>';
+  return o;
+ },
+ bind(root){
+  const s=root.querySelector('#lvlStart');if(s)s.onclick=()=>this.start();
+  const g=root.querySelector('[data-lvlgo]');if(g)g.onclick=()=>{const k=g.dataset.lvlgo;store.set('tcol',k==='pos'?'pos':k);Mode.set('tactics')};
+ },
+ todayCard(){
+  const l=this.last(),d=this.daysSince();
+  if(l&&d<30)return '';
+  return `<div class="panel" style="margin-bottom:10px"><b>Prueba de nivel</b>: ${l?`hace ${d} días de tu última prueba; repítela para ver cuánto has avanzado.`:'mide tu punto de partida en 10–15 minutos (mates y posiciones de plan).'} <button data-lvlgo2 class="pri" style="margin-left:6px">${l?'Repetir':'Empezar'}</button></div>`;
+ },
+ bindToday(root){const b=root.querySelector('[data-lvlgo2]');if(b)b.onclick=()=>{Prog.view='nivel';store.set('progView','nivel');Mode.set('progress')}}
+};
+
 const Tac={
  free:false,i:0,s:0,tries:0,failed:false,done:false,col:'basic',mq:0,calc:false,
  canMove(){return !this.calc&&!this.done&&!this.lock},
@@ -2862,8 +2995,8 @@ const Tac={
  label(p,i){return p.n?`${i+1}. Mate en ${p.n}`:p.best?`${i+1}. Mejorar la posición`:p.theme==='Mis errores'?`${i+1}. Mi error (${ErrSRS.tag(p)})`:`${i+1}. ${p.theme}`},
  fill(){const L=this.list();$('#tpSel').innerHTML=L.map((p,i)=>`<option value="${i}">${esc(this.label(p,i))}</option>`).join('');if(this.i>=L.length)this.i=0;$('#tpSel').value=this.i},
  enter(){
-  ErrSRS.reset();this.col=store.get('tcol','basic');if(!COLS[this.col]||(this.col==='theme'&&!this.theme))this.col='basic';
-  $('#ctl').innerHTML=`<div class="g2"><label>Colección<select id="tpCol">${Object.entries(COLS).filter(([k])=>k!=='theme'||Tac.theme).map(([k,c])=>`<option value="${k}">${esc(k==='theme'?'Tema: '+Tac.theme:c.n)} (${c.get().length})</option>`).join('')}</select></label>
+  ErrSRS.reset();this.col=store.get('tcol','basic');if(this.col==='test'&&!Lvl.on)this.col='basic';if(!COLS[this.col]||(this.col==='theme'&&!this.theme))this.col='basic';
+  $('#ctl').innerHTML=`<div class="g2"><label>Colección<select id="tpCol">${Object.entries(COLS).filter(([k])=>k==='storm'?false:k==='test'?Lvl.on:(k!=='theme'||Tac.theme)).map(([k,c])=>`<option value="${k}">${esc(k==='theme'?'Tema: '+Tac.theme:c.n)} (${c.get().length})</option>`).join('')}</select></label>
   <label>Problema<select id="tpSel"></select></label></div>
   <div class="row"><label style="flex-direction:row;gap:6px;align-items:center"><input type="checkbox" id="tpCalc"> Calcular sin mover piezas</label><select id="tpNot" title="Notación al escribir las jugadas"><option value="es">R D T A C (español)</option><option value="en">K Q R B N (inglés)</option></select></div>
   <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpRand">Al azar</button><button id="tpNext" class="pri">Siguiente problema ▶</button></div>`;
@@ -2874,11 +3007,12 @@ const Tac={
   $('#tpSel').onchange=e=>{this.i=+e.target.value;this.load()};
   $('#tpHint').onclick=()=>this.hint();$('#tpRestart').onclick=()=>this.load();
   $('#tpRand').onclick=()=>{const L=this.list();this.i=Math.floor(Math.random()*L.length);$('#tpSel').value=this.i;this.load()};
-  $('#tpNext').onclick=()=>{this.i=(this.i+1)%this.list().length;$('#tpSel').value=this.i;this.load()};
+   $('#tpNext').onclick=()=>{this.i=(this.i+1)%this.list().length;$('#tpSel').value=this.i;this.load()};
+  if(Lvl.on){this.calc=false;$('#tpCalc').checked=false;['tpCalc','tpSel','tpCol','tpHint','tpRestart','tpRand','tpNext','tpNot'].forEach(i=>{const e=$('#'+i);if(e)e.disabled=true});Lvl.i=0;Lvl.res=[];A.epoch++;A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;A.sync();Chat.clear();Lvl.intro();return}
   this.load();
  },
- leave(){},
- focusTheme(t){this.theme=t;store.set('tcol','theme');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()})},
+ leave(){if(Lvl.on)Lvl.abort()},
+ focusTheme(t){const mm=/^Mate en (\d)$/.exec(t);if(mm||t==='Mejorar la posición'){store.set('tcol',mm?'m'+mm[1]:'pos');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()});return}this.theme=t;store.set('tcol','theme');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()})},
  load(){
   const p=this.list()[this.i];
   if(!p){A.epoch++;Chat.clear();Chat.chips([]);A.status('');Chat.say(this.col==='err'?'<b>No tienes errores pendientes de repaso.</b><br>Cuando analices tus partidas y pulses «Guardar mis errores como problemas», aparecerán aquí; cada uno vuelve a salir con intervalos crecientes (1, 3, 7, 14, 30 días) hasta que lo domines.':'No hay problemas en esta colección.');return}
@@ -2970,8 +3104,8 @@ const Tac={
   Chat.chips([{label:'Ver la línea en el tablero ▶',pri:true,fn:step},{label:'Siguiente problema ▶',fn:()=>$('#tpNext').click()}]);
  },
  stat(ok){{const q=this.list()[this.i];if(q&&q.theme==='Mis errores')this.errInfo=ErrSRS.grade(q.fen,ok);
-  try{if(q){const w=Log.key(Evo.monday()),th=store.get('thist',{}),t=q.theme||(q.n?'Mate en '+q.n:'Otros'),o=th[w]||(th[w]={}),c=o[t]||(o[t]=[0,0]);if(ok)c[0]++;c[1]++;const ks=Object.keys(th).sort();if(ks.length>80)ks.slice(0,ks.length-80).forEach(k=>delete th[k]);store.set('thist',th)}}catch(e){}}if(this.calc){const q=store.get('cstats',{n:0,ok:0});q.n++;if(ok)q.ok++;store.set('cstats',q);Log.add('cal',1,ok)}Log.add('tac',1,ok);const s=store.get('tstats',{});const t=this.list()[this.i].theme;s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
- wrong(msg){this.tries++;this.lock=true;let note='';if(!this.failed){this.failed=true;this.errInfo=null;this.stat(false);const q=this.list()[this.i];if(q&&q.theme==='Mis errores')note=ErrSRS.note(q,this.errInfo)}Chat.say(msg+note,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
+  try{if(q){const w=Log.key(Evo.monday()),th=store.get('thist',{}),t=q.theme||(q.n?'Mate en '+q.n:'Otros'),o=th[w]||(th[w]={}),c=o[t]||(o[t]=[0,0]);if(ok)c[0]++;c[1]++;const ks=Object.keys(th).sort();if(ks.length>80)ks.slice(0,ks.length-80).forEach(k=>delete th[k]);store.set('thist',th)}}catch(e){}}if(this.calc){const q=store.get('cstats',{n:0,ok:0});q.n++;if(ok)q.ok++;store.set('cstats',q);Log.add('cal',1,ok)}Log.add('tac',1,ok);const s=store.get('tstats',{});const q2=this.list()[this.i],t=q2.theme||(q2.n?'Mate en '+q2.n:q2.best?'Mejorar la posición':'Otros');s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
+ wrong(msg){if(Lvl.on){Lvl.answer(0);return}if(Storm.on){Storm.fail();return}this.tries++;this.lock=true;let note='';if(!this.failed){this.failed=true;this.errInfo=null;this.stat(false);const q=this.list()[this.i];if(q&&q.theme==='Mis errores')note=ErrSRS.note(q,this.errInfo)}Chat.say(msg+note,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
  onMove(m){
   const p=this.list()[this.i];
   if(p.n)return this.onMate(m,p);
@@ -3014,6 +3148,7 @@ const Tac={
  onPos(m,p){
   if(clean(m.san)===clean(p.best))return this.solved();
   const s=(p.sec||[]).find(x=>clean(x[0])===clean(m.san));
+  if(Lvl.on)return Lvl.answer(s&&s[1]>=-60?.5:0);
   let msg=`<b>${esc(m.san)}</b> ${s?`es una jugada razonable (≈${fmtEv(s[1])} para ti), pero no es la mejor.`:'no es la mejor jugada.'}`;
   const next=this.tries+1;
   msg+=next>=3?` La mejor era <b>${esc(p.best)}</b> (≈${fmtEv(p.ev)}). Juégala para continuar.`:' Piensa en el plan: ¿qué pieza está peor situada, qué casilla débil o ruptura puedes aprovechar?';
@@ -3021,6 +3156,8 @@ const Tac={
   if(next>=3)setTimeout(()=>{const c=new Chess(A.game.fen());const x=c.move(p.best);if(x){board.arrows=[[x.from,x.to]];board.draw()}},900);
  },
  solved(){
+  if(Lvl.on){Lvl.answer(1);return}
+  if(Storm.on){Storm.ok();return}
   const p=this.list()[this.i];this.done=true;this.errInfo=null;if(!this.failed)this.stat(true);
   A.status('¡Resuelto!');Snd.play('ok',.12);let h;
   if(p.n)h=`<b>¡Mate!</b> ${esc(p.pat)}.<br>${p.expl}<br><span class="small">Línea: ${esc(p.line)}</span>`;
@@ -3030,7 +3167,7 @@ const Tac={
   Chat.chips([{label:'Siguiente problema ▶',pri:true,fn:()=>$('#tpNext').click()},{label:'Analizar con Stockfish',fn:analyze}]);
  },
  hint(){
-  if(this.done)return;const p=this.list()[this.i];let exp;
+  if(this.done||Lvl.on||Storm.on)return;const p=this.list()[this.i];let exp;
   if(p.n){
    const c=new Chess(A.game.fen());
    if(this.mq===1){exp=c.moves().find(x=>{c.move(x);const k=c.in_checkmate();c.undo();return k})}
@@ -3107,7 +3244,7 @@ const Play={
     if(ep!==A.epoch)return;
     const ev=whiteEval(A.game.fen(),r.line);setEval(ev);
     if(ev&&this.pre.ev){
-     const sg=A.userColor==='w'?1:-1;const loss=(this.pre.ev.cp-ev.cp)*sg;
+     const sg=A.userColor==='w'?1:-1;const loss=(this.pre.ev.cp-ev.cp)*sg;if(this.lossLog)this.lossLog.push({ply:A.hist.length,loss});
      const uci=m.from+m.to+(m.promotion||'');const bestSan=this.pre.best?uciToSan(fenBefore,this.pre.best):'';
      const num=fenBefore.split(' ');const lab=(num[1]==='w'?num[5]+'. ':num[5]+'... ')+m.san;
      if(uci===this.pre.best||loss<=15)Chat.say(`<b>${esc(lab)}</b>: ${uci===this.pre.best?'¡la mejor jugada!':'muy buena jugada.'} Evaluación ${ev.text}.`,'ok');
@@ -3169,6 +3306,590 @@ const Play={
   Chat.say(`Pista de Stockfish: <b>${esc(uciToSan(A.game.fen(),r.best))}</b>.`,'warn');
  },
  resign(){if(A.game.game_over()||this.counted)return;this.counted=true;Engine.stop();A.epoch++;this.thinking=false;A.status('Te rendiste');this.finishGame('Te rendiste.','l')}
+};
+
+/* === RETOS: finales teóricos === */
+const FIN=[
+ {id:'kpk6',cat:'Finales de peones',name:'Rey en sexta casilla',fen:'4k3/8/4K3/4P3/8/8/8/8 w - - 0 1',user:'w',goal:'win',end:'conv',diff:1,
+  intro:'Corona el peón. Con tu rey delante del peón y en la sexta fila, ganas con cualquier turno.',
+  idea:'Con el rey delante del peón y en la <b>sexta fila</b> (aquí Re6 con peón en e5), ganas siempre. Plan típico: Rd6, y el peón avanza protegido por el rey: Rd6 Rd8 e6 Re8 e7 Rf7 Rd7 y corona. Mantén el rey por delante del peón; no lo adelantes sin él.'},
+ {id:'kpkopp',cat:'Finales de peones',name:'La oposición: mueven las negras',fen:'8/3k4/8/3K4/3P4/8/8/8 b - - 0 1',user:'w',goal:'win',end:'conv',diff:2,
+  intro:'Las negras mueven primero y están en zugzwang: tienes que aprovecharlo y coronar.',
+  idea:'Con la <b>oposición</b> a tu favor, el rey rival tiene que ceder. Si el rey negro se aparta, tu rey avanza a la sexta fila delante del peón (Rc6 o Re6) y el peón corona con ayuda del rey. Con las blancas a mover esta misma posición es tablas: quien tiene la oposición, gana o empata.'},
+ {id:'kpkdraw',cat:'Finales de peones',name:'La oposición: mueven las blancas',fen:'8/3k4/8/3K4/3P4/8/8/8 w - - 0 1',user:'b',goal:'draw',max:18,diff:2,
+  intro:'Eres las negras. Las blancas mueven primero: aguanta y empata.',
+  idea:'Si el rey defensor se queda <b>delante del peón</b> y toma la oposición cada vez que puede (Re7 frente a Re5, Rd7 frente a Rd5…), el rey blanco no pasa. Cuando el peón avance, retrocede a la fila de coronación. Si el rey blanco llegara a la sexta fila delante del peón, estarías perdido: no se lo permitas.'},
+ {id:'rpwin',cat:'Finales de peones',name:'Peón de torre con el rey rival lejos',fen:'8/8/8/8/8/k7/7P/7K w - - 0 1',user:'w',goal:'win',end:'conv',diff:1,
+  intro:'Corona el peón de torre antes de que el rey rival llegue.',
+  idea:'Si el rey rival está <b>fuera del cuadrado</b> del peón no hace falta ni mover tu rey: h4, h5, h6, h7, h8. Antes de empezar cuenta las casillas que le faltan al rey rival; cada jugada que pierdes se las regala.'},
+ {id:'rpdraw',cat:'Finales de peones',name:'Peón de torre: el rey llega a la esquina',fen:'7k/8/5K2/7P/8/8/8/8 w - - 0 1',user:'b',goal:'draw',max:15,diff:1,
+  intro:'Eres las negras con el rey en la esquina. Las blancas mueven primero: empata.',
+  idea:'Un peón de torre solo <b>no gana</b> si el rey defensor llega a la esquina de coronación: el rey blanco no puede expulsarlo sin dejarlo ahogado. Quédate en h8/g8 (según convenga) y busca siempre el ahogado.'},
+ {id:'square',cat:'Finales de peones',name:'La regla del cuadrado',fen:'8/8/8/8/k7/8/6P1/7K w - - 0 1',user:'w',goal:'win',end:'conv',diff:1,
+  intro:'Corona el peón sin esperar: el rey rival está fuera del cuadrado.',
+  idea:'<b>Regla del cuadrado</b>: imagina el cuadrado con lado desde el peón hasta la fila de coronación. Si el rey rival no puede entrar en él, el peón corona solo. Empújalo sin perder tiempo (con la doble salida de la segunda fila ganas una jugada).'},
+ {id:'wbdraw1',cat:'Finales de alfil',name:'Alfil equivocado (columna h)',fen:'7k/8/6K1/7P/8/8/8/5B2 w - - 0 1',user:'b',goal:'draw',max:18,diff:2,
+  intro:'Eres las negras. Las blancas tienen alfil y peón de torre: defiende y empata.',
+  idea:'Peón de torre + alfil que <b>no controla la casilla de coronación</b> (alfil de casillas claras con coronación en h8, que es oscura): las negras empatan llevando el rey a la esquina. El rey blanco no puede expulsarlo sin dar ahogado.'},
+ {id:'wbdraw2',cat:'Finales de alfil',name:'Alfil equivocado (columna a)',fen:'k7/8/K7/P7/8/8/8/2B5 w - - 0 1',user:'b',goal:'draw',max:18,diff:2,
+  intro:'Eres las negras en la esquina a8. Defiende y empata.',
+  idea:'Misma idea por el otro flanco: el alfil blanco (casillas oscuras) no controla a8 (casilla clara). El rey defensor se queda en la esquina; cualquier intento de expulsarlo acaba en ahogado.'},
+ {id:'wbwin',cat:'Finales de alfil',name:'Alfil del color correcto',fen:'7k/8/6K1/7P/8/8/8/6B1 w - - 0 1',user:'w',goal:'win',end:'mate',diff:2,
+  intro:'Da mate. Aquí el alfil sí controla la casilla de coronación.',
+  idea:'Con el alfil que <b>controla la casilla de coronación</b> (g1 oscuro, h8 oscura) el rey rival no puede refugiarse en la esquina: el peón corona o das mate. Comparación útil: en el ejercicio anterior (alfil de casillas claras) el resultado era tablas.'},
+ {id:'lucena',cat:'Finales de torre',name:'Posición de Lucena',fen:'1K1k4/1P6/8/8/8/8/r7/2R5 w - - 0 1',user:'w',goal:'win',end:'conv',diff:3,
+  intro:'Corona el peón: tienes que construir el puente.',
+  idea:'<b>Lucena</b>: peón en la séptima, tu rey delante del peón pero cortado por la torre rival. Solución: 1.Td1+ Re7 2.Td4! (la torre a la cuarta fila) y el rey sale de su rincón; cuando llegue el jaque lateral lo tapas con la torre (Tb4). Idea: <b>puente</b> en la cuarta fila.'},
+ {id:'philidor1',cat:'Finales de torre',name:'Defensa de Philidor',fen:'3k4/8/r7/3PK3/8/8/8/7R b - - 0 1',user:'b',goal:'draw',max:25,diff:3,
+  intro:'Eres las negras con la torre en la sexta fila. Mueves primero: empata.',
+  idea:'<b>Philidor</b>: mantén la torre en la <b>sexta fila</b> para que el rey blanco no avance; con el rey delante del peón. Cuando el peón llegue a la sexta fila, pasa la torre a la primera y da jaques desde atrás: no hay mate ni progreso.'},
+ {id:'philidor2',cat:'Finales de torre',name:'Philidor con el rey rival adelantado',fen:'4k3/8/r7/4PK2/8/8/8/7R b - - 0 1',user:'b',goal:'draw',max:25,diff:3,
+  intro:'Misma defensa con el rey blanco más activo. Empata.',
+  idea:'Igual que antes: torre en la sexta, rey delante del peón (e8/f7…). Cuando el peón pise la sexta fila, la torre va a la primera y jaques por detrás. No cambies la torre de fila antes de tiempo.'},
+ {id:'krk',cat:'Mates básicos',name:'Rey y torre contra rey',fen:'8/8/8/3k4/8/8/8/KR6 w - - 0 1',user:'w',goal:'win',end:'mate',diff:1,
+  intro:'Da mate en menos de 50 jugadas.',
+  idea:'Recorta el espacio del rey con la <b>torre a distancia</b> (cortes de fila o columna), acerca tu rey y, cuando tengas la oposición en el borde, da el jaque. Cuida que la torre nunca quede a tiro del rey rival.'},
+ {id:'kqk',cat:'Mates básicos',name:'Rey y dama contra rey',fen:'8/8/8/3k4/8/8/8/KQ6 w - - 0 1',user:'w',goal:'win',end:'mate',diff:1,
+  intro:'Da mate sin ahogar.',
+  idea:'Encierra al rey con la dama a <b>salto de caballo</b>, trae tu rey y remata en el borde. El error típico es el ahogado: antes de cada jugada comprueba que el rey rival conserva una casilla.'},
+ {id:'qpwin',cat:'Finales de dama',name:'Dama contra peón en séptima (peón central)',fen:'8/8/5K2/8/8/8/1Q1p4/4k3 w - - 0 1',user:'w',goal:'win',end:'conv',diff:3,
+  intro:'Captura el peón de forma que ganes la partida.',
+  idea:'Contra un peón central en séptima la dama gana: con jaques <b>obligas al rey rival a ponerse delante del peón</b>, ganas un tiempo y acercas tu rey; el rey rival acaba bloqueando su propio peón y lo capturas.'},
+ {id:'qpdraw',cat:'Finales de dama',name:'Dama contra peón de alfil en séptima (tablas)',fen:'8/8/5K2/8/7Q/8/2p5/k7 w - - 0 1',user:'b',goal:'draw',max:15,diff:3,
+  intro:'Eres las negras con peón de alfil en séptima. Defiende y empata.',
+  idea:'Con peón de <b>alfil o de torre</b> en séptima y el rey en la esquina, el defensor empata: cada vez que el rey blanco se acerca aparece el <b>ahogado</b>. Con un peón central, en cambio, la dama gana.'},
+ {id:'kbbk',cat:'Mates básicos',name:'Rey y dos alfiles contra rey',fen:'8/8/8/3k4/8/8/8/KBB5 w - - 0 1',user:'w',goal:'win',end:'mate',diff:2,
+  intro:'Da mate en menos de 50 jugadas.',
+  idea:'Coloca los alfiles en <b>diagonales adyacentes</b> para formar una barrera, empuja al rey al borde, luego a la esquina con ayuda de tu rey. Cuida el ahogado en la esquina.'},
+ {id:'kbnk',cat:'Mates básicos',name:'Rey, alfil y caballo contra rey',fen:'8/8/8/3k4/8/8/8/KBN5 w - - 0 1',user:'w',goal:'win',end:'mate',diff:3,
+  intro:'El mate más difícil: llévalo a la esquina del color de tu alfil.',
+  idea:'El mate solo se da en una <b>esquina del color de tu alfil</b>. Si el rey rival está en la equivocada, hay que llevarlo a la otra con un camino en «W» (alfil + caballo + rey formando barrera). Cuenta las jugadas: tienes 50 sin captura ni peón.'}
+];
+const Fin={
+ P:null,over:false,failed:false,slips:0,hints:0,undos:0,idea:false,moves:0,base:null,busy:false,pending:null,
+ st(){return store.get('fin',{})},
+ mark(id){const s=this.st()[id];return !s?'':s.last==='clean'?'✓ ':s.last==='ok'?'½ ':'✗ '},
+ mastered(){const s=this.st();return FIN.filter(p=>s[p.id]&&s[p.id].clean>=1).length},
+ suggest(){
+  const s=this.st();const rank=p=>{const x=s[p.id];if(!x)return 0;return x.last==='fail'?1:x.last==='ok'?2:3};
+  return FIN.slice().sort((a,b)=>rank(a)-rank(b)||(s[a.id]?s[a.id].t:0)-(s[b.id]?s[b.id].t:0)||FIN.indexOf(a)-FIN.indexOf(b))[0];
+ },
+ canMove(){return !this.over&&!this.busy&&A.game.turn()===A.userColor&&!A.game.game_over()},
+ enter(box){
+  const cats=[...new Set(FIN.map(p=>p.cat))];
+  box.innerHTML=`<label>Posición<select id="fnSel">${cats.map(c=>`<optgroup label="${esc(c)}">${FIN.filter(p=>p.cat===c).map(p=>`<option value="${p.id}">${this.mark(p.id)}${esc(p.name)} (${p.goal==='win'?'ganas':'tablas'})</option>`).join('')}</optgroup>`).join('')}</select></label>
+  <div class="small" id="fnInfo"></div>
+  <div class="row"><button id="fnNext" class="pri">Siguiente sugerido</button><button id="fnHint">Pista</button><button id="fnIdea">Ver la idea</button><button id="fnUndo">Deshacer</button><button id="fnReset">Reiniciar</button><button id="fnDraw">Ofrecer tablas</button></div>`;
+  $('#fnSel').onchange=e=>this.load(e.target.value);
+  $('#fnNext').onclick=()=>this.load(this.suggest().id);
+  $('#fnHint').onclick=()=>this.hint();$('#fnIdea').onclick=()=>this.showIdea();$('#fnUndo').onclick=()=>this.undo();$('#fnReset').onclick=()=>this.load(this.P.id);$('#fnDraw').onclick=()=>this.offerDraw();
+  const id=this.pending||(this.P&&this.P.id)||this.suggest().id;this.pending=null;this.load(id);
+ },
+ leave(){this.over=true;Engine.stop()},
+ info(){const el=$('#fnInfo');if(el)el.textContent=`Dominados (sin ayuda): ${this.mastered()} de ${FIN.length}. ✓ sin ayuda · ½ con ayuda · ✗ fallado.`;const sel=$('#fnSel');if(sel){[...sel.options].forEach(o=>{const p=FIN.find(x=>x.id===o.value);o.textContent=this.mark(p.id)+p.name+(p.goal==='win'?' (ganas)':' (tablas)')})}
+  const d=$('#fnDraw');if(d)d.hidden=!(this.P&&this.P.goal==='draw')},
+ load(id){
+  const P=FIN.find(x=>x.id===id)||FIN[0];this.P=P;this.over=false;this.failed=false;this.slips=0;this.hints=0;this.undos=0;this.idea=false;this.moves=0;this.base=null;this.busy=false;
+  Engine.stop();A.epoch++;
+  A.game=new Chess(P.fen);A.startFen=P.fen;A.viewIdx=null;A.userColor=P.user;board.flipped=P.user==='b';board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();
+  const sel=$('#fnSel');if(sel)sel.value=P.id;this.info();
+  const side=P.user==='w'?'blancas':'negras';
+  Chat.say(`<b>${esc(P.name)}</b> · ${esc(P.cat)}<br>Llevas las <b>${side}</b>. ${P.goal==='win'?'<b>Objetivo: ganar.</b>':`<b>Objetivo: empatar</b> (resistir ${P.max} jugadas sin perder la posición, lograr ahogado o ver que el rival acepte tablas con «Ofrecer tablas»).`} ${esc(P.intro)}<br><span class="small">Stockfish juega al máximo. ${P.goal==='win'&&P.end==='mate'?'Hay que dar mate antes de la regla de los 50 movimientos.':''}</span>`);
+  Chat.chips([{label:'Pista',fn:()=>this.hint()},{label:'Ver la idea',fn:()=>this.showIdea()}]);
+  this.afterMove();
+ },
+ cpUser(line,fen){
+  if(!line)return null;const sg=fen.split(' ')[1]===A.userColor?1:-1;
+  const v=line.type==='mate'?(line.val>0?1000:-1000):Math.max(-1000,Math.min(1000,line.val));return sg*v;
+ },
+ txt(cp){return cp>=900?'ganada':cp<=-900?'perdida':fmtEv(cp)},
+ async afterMove(){
+  const ep=A.epoch;if(this.over)return;
+  if(this.checkEnd())return;
+  if(A.game.turn()!==A.userColor){return this.engineMove()}
+  A.status(this.statusTxt());this.base=null;
+  try{const r=await Engine.search({fen:A.game.fen(),depth:18,movetime:600,skill:20});
+   if(ep!==A.epoch||this.over)return;if(r.line)this.base={cp:this.cpUser(r.line,A.game.fen()),best:r.best};
+  }catch(e){}
+ },
+ statusTxt(){const hm=+A.game.fen().split(' ')[4]||0;return this.P.goal==='draw'?`Resiste: ${this.moves}/${this.P.max} jugadas`:(hm>=40?`Regla de 50: ${hm}/100`:'Tu turno')},
+ async engineMove(){
+  const ep=A.epoch;this.busy=true;A.status('Stockfish piensa…');
+  try{const r=await Engine.search({fen:A.game.fen(),depth:20,movetime:800,skill:20});
+   if(ep!==A.epoch||this.over)return;
+   if(r.best){A.game.move({from:r.best.slice(0,2),to:r.best.slice(2,4),promotion:r.best[4]});A.epoch++;A.viewIdx=null;A.sync();A.updateControls()}
+  }catch(e){Chat.say('El motor no responde.','bad');this.busy=false;return}
+  this.busy=false;this.afterMove();
+ },
+ sideOf(fen){return fen.split(' ')[1]},
+ pawns(col){const b=A.game.board();let n=0;for(const r of b)for(const c of r)if(c&&c.type==='p'&&c.color===col)n++;return n},
+ async onMove(m){
+  if(this.over)return;const ep=A.epoch;const fenBefore=A.fens[A.fens.length-2];const P=this.P;this.moves++;
+  const g=A.game;
+  if(g.in_checkmate())return this.finish(true,'¡Jaque mate!');
+  if(g.game_over())return this.drawEnd();
+  this.busy=true;A.status('Evaluando…');
+  let r;try{r=await Engine.search({fen:g.fen(),depth:20,movetime:800,skill:20})}catch(e){this.busy=false;return}
+  if(ep!==A.epoch||this.over)return;
+  const e=r.line?this.cpUser(r.line,g.fen()):null;const base=this.base;
+  if(e!=null)setEval({cp:A.userColor==='w'?e:-e,text:fmtEv(A.userColor==='w'?e:-e)});
+  const bestSan=base&&base.best?uciToSan(fenBefore,base.best):'';
+  let lost=false;
+  if(e!=null&&base){
+   const loss=base.cp-e;
+   if(P.goal==='win'&&base.cp>=150&&e<60)lost=true;
+   if(P.goal==='draw'&&base.cp>=-150&&e<=-250)lost=true;
+   if(lost){this.busy=false;this.failed=true;return this.finish(false,`<b>${esc(m.san)}</b> ${P.goal==='win'?'deja escapar la victoria':'pierde las tablas'} (evaluación ${this.txt(e)}).${bestSan?` Era mejor <b>${esc(bestSan)}</b>.`:''}`)}
+   if(loss>=100&&bestSan){this.slips++;Chat.say(`Imprecisión con <b>${esc(m.san)}</b> (${this.txt(base.cp)} → ${this.txt(e)}). Era mejor <b>${esc(bestSan)}</b>.`,'warn')}
+  }
+  // conversión
+  if(P.goal==='win'&&P.end==='conv'){
+   const promo=!!m.promotion,cap=m.captured&&this.pawns(A.userColor==='w'?'b':'w')===0;
+   if((promo||cap)&&e!=null&&e>=600){this.busy=false;return this.finish(true,promo?'¡Coronaste y la posición está ganada!':'¡Capturaste el peón y la posición está ganada!')}
+  }
+  if(P.goal==='draw'&&this.moves>=P.max&&e!=null&&e>=-150){this.busy=false;return this.finish(true,`¡Resististe ${P.max} jugadas sin perder la posición!`)}
+  // respuesta del motor
+  if(!r.best){this.busy=false;return}
+  g.move({from:r.best.slice(0,2),to:r.best.slice(2,4),promotion:r.best[4]});A.epoch++;A.viewIdx=null;A.sync();A.updateControls();
+  this.busy=false;this.base=e!=null?{cp:e,best:null}:null;this.afterMove();
+ },
+ drawKind(){const g=A.game;return g.in_stalemate()?'ahogado':g.insufficient_material()?'material insuficiente':g.in_threefold_repetition()?'repetición de posición':'regla de los 50 movimientos'},
+ drawEnd(){const P=this.P,k=this.drawKind();
+  if(P.goal==='draw')return this.finish(true,`¡Tablas por ${k}!`);
+  return this.finish(false,`Tablas por ${k}: la victoria se escapó.`)},
+ checkEnd(){
+  const g=A.game;if(!g.game_over())return false;
+  if(g.in_checkmate()){const loser=g.turn();this.finish(loser!==A.userColor,loser!==A.userColor?'¡Jaque mate!':'Te dieron jaque mate.');return true}
+  this.drawEnd();return true;
+ },
+ finish(ok,msg){
+  if(this.over)return;this.over=true;this.busy=false;Engine.stop();
+  const P=this.P,s=this.st(),x=s[P.id]||(s[P.id]={ok:0,fail:0,clean:0,last:'',t:0,best:0});
+  const clean=ok&&!this.failed&&!this.hints&&!this.undos&&!this.idea&&this.slips===0;
+  if(ok){x.ok++;if(clean)x.clean++;x.last=clean?'clean':'ok'}else{x.fail++;x.last='fail'}
+  x.t=Date.now();if(ok&&(!x.best||this.moves<x.best))x.best=this.moves;
+  store.set('fin',s);store.set('lastChange',Date.now());Log.add('fin',1,ok);
+  Snd.play(ok?'win':'lose',.5);A.status(ok?'¡Logrado!':'No lo lograste');this.info();
+  Chat.say(`${ok?'<b>✓ ':'<b>✗ '}${msg}</b>${ok?(clean?'<br>Sin ayudas ni imprecisiones: cuenta como dominado.':`<br>Logrado${this.hints?', con pistas':''}${this.undos?', con jugadas deshechas':''}${this.idea?', viendo la idea':''}${this.slips?`, con ${this.slips} imprecisión${this.slips===1?'':'es'}`:''}. Repítelo sin ayuda para dominarlo.`):''}<br><br><b>La idea:</b> ${P.idea}`,ok?'ok':'bad');
+  Chat.chips([{label:'Siguiente sugerido',pri:true,fn:()=>this.load(this.suggest().id)},{label:'Repetir',fn:()=>this.load(P.id)},...(ok?[]:[{label:'Deshacer la última jugada',fn:()=>this.undo()}])]);
+ },
+ async hint(){
+  if(this.over||this.busy||A.game.turn()!==A.userColor)return;
+  let b=this.base&&this.base.best;
+  if(!b){const r=await Engine.search({fen:A.game.fen(),depth:18,movetime:700,skill:20});b=r.best}
+  if(!b)return;this.hints++;board.arrows=[[b.slice(0,2),b.slice(2,4),'rgba(70,130,230,.85)']];board.draw();
+  Chat.say(`Pista de Stockfish: <b>${esc(uciToSan(A.game.fen(),b))}</b>. (Con pistas no cuenta como dominado.)`,'warn');
+ },
+ showIdea(){if(!this.P)return;this.idea=true;Chat.say('<b>La idea:</b> '+this.P.idea+'<br><span class="small">(Verla antes de resolver quita el «sin ayuda».)</span>')},
+ undo(){
+  if(this.busy)return;if(A.hist.length===0)return;Engine.stop();A.epoch++;
+  const n=A.game.turn()===A.userColor?2:1;for(let i=0;i<n;i++)A.game.undo();
+  if(A.game.turn()!==A.userColor&&A.hist.length===0){/* posición inicial con turno del motor: lo repite */}
+  this.over=false;this.undos++;this.moves=Math.max(0,this.moves-1);A.viewIdx=null;board.arrows=[];A.sync();A.updateControls();this.afterMove();
+ },
+ async offerDraw(){
+  if(this.over||this.busy||!this.P||this.P.goal!=='draw')return;
+  this.busy=true;A.status('Stockfish evalúa…');const ep=A.epoch;
+  const r=await Engine.search({fen:A.game.fen(),depth:22,movetime:1200,skill:20});
+  this.busy=false;if(ep!==A.epoch||this.over)return;
+  const e=r.line?this.cpUser(r.line,A.game.fen()):null;
+  if(e!=null&&Math.abs(e)<=40)return this.finish(true,'Stockfish acepta las tablas: la posición está igualada.');
+  Chat.say(`Stockfish rechaza las tablas (evaluación ${e==null?'?':this.txt(e)}). Sigue resistiendo.`,'warn');A.status(this.statusTxt());
+ }
+};
+
+/* === RETOS: táctica contrarreloj === */
+const Storm={
+ on:false,cur:null,score:0,solved:0,fails:0,lives:3,streak:0,end:0,timer:null,used:null,dur:3,src:'mates',pause:false,calcOld:false,
+ st(){const s=store.get('storm',{});s.best=s.best||{};s.hist=s.hist||[];return s},
+ key(){return this.dur+'|'+this.src},
+ canMove(){return this.on&&!this.pause&&Tac.canMove()},
+ enter(box){
+  const s=this.st();
+  box.innerHTML=`<div class="g2"><label>Duración<select id="stDur"><option value="1">1 minuto</option><option value="3">3 minutos</option><option value="5">5 minutos</option></select></label>
+  <label>Ejercicios<select id="stSrc"><option value="mates">Solo mates (1, 2 y 3)</option><option value="mix">Mixto (mates y tácticas)</option></select></label></div>
+  <div class="row"><button id="stGo" class="pri">Empezar</button><button id="stStop" hidden>Terminar</button></div><div id="stHud"></div><div class="small" id="stRec"></div>`;
+  $('#stDur').value=this.dur;$('#stSrc').value=this.src;
+  $('#stDur').onchange=e=>{this.dur=+e.target.value;this.rec()};$('#stSrc').onchange=e=>{this.src=e.target.value;this.rec()};
+  $('#stGo').onclick=()=>this.start();$('#stStop').onclick=()=>this.finish('Terminaste antes de tiempo.');
+  this.rec();this.intro();
+ },
+ rec(){const s=this.st(),b=s.best[this.key()];const el=$('#stRec');if(el)el.textContent=b?`Tu récord (${this.dur} min, ${this.src==='mates'?'mates':'mixto'}): ${b} puntos.`:'Aún no tienes récord con esta configuración.'},
+ intro(){
+  A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();A.status('');
+  Chat.say('<b>Táctica contrarreloj.</b><br>Resuelve todos los ejercicios que puedas antes de que se acabe el tiempo. Empiezan fáciles y se endurecen. Cada ejercicio vale 1 punto (mate en 1), 2 (mate en 2) o 3 (más difíciles), y cada 5 aciertos seguidos suman un punto extra. Tienes <b>3 vidas</b>: un fallo quita una vida y muestra la solución.');
+  Chat.chips([{label:'Empezar',pri:true,fn:()=>this.start()}]);
+ },
+ pool(k){return k==='m1'?PZ_MATE.filter(p=>p.n===1):k==='m2'?PZ_MATE.filter(p=>p.n===2):k==='m3'?PZ_MATE.filter(p=>p.n===3):PUZZLES},
+ pts(p){return p.n?p.n>=3?3:p.n:2},
+ pick(){
+  const lv=Math.min(4,Math.floor(this.solved/3));
+  const W=this.src==='mates'?[[['m1',1]],[['m1',.6],['m2',.4]],[['m2',.8],['m1',.2]],[['m2',.5],['m3',.5]],[['m3',.8],['m2',.2]]]:
+   [[['m1',.6],['bs',.4]],[['m1',.3],['bs',.4],['m2',.3]],[['m2',.6],['bs',.4]],[['m2',.4],['m3',.3],['bs',.3]],[['m3',.6],['bs',.2],['m2',.2]]];
+  const w=W[lv];let r=Math.random(),k=w[0][0];for(const [kk,pp] of w){if(r<pp){k=kk;break}r-=pp}
+  let P=this.pool(k==='bs'?'bs':k).filter(p=>!this.used.has(p.fen));
+  if(!P.length)P=this.pool(k).concat(this.pool('m2')).filter(p=>!this.used.has(p.fen));
+  if(!P.length){this.used.clear();P=this.pool('m1')}
+  const p=P[Math.floor(Math.random()*P.length)];this.used.add(p.fen);return p;
+ },
+ start(){
+  Engine.stop();this.on=true;this.score=0;this.solved=0;this.fails=0;this.lives=3;this.streak=0;this.used=new Set();this.pause=false;
+  this.calcOld=Tac.calc;Tac.calc=false;this.end=Date.now()+this.dur*60000;
+  $('#stGo').hidden=true;$('#stStop').hidden=false;['stDur','stSrc'].forEach(i=>$('#'+i).disabled=true);
+  clearInterval(this.timer);this.timer=setInterval(()=>this.tick(),100);
+  this.next();this.hud();
+ },
+ next(){
+  if(!this.on)return;this.cur=this.pick();Tac.col='storm';Tac.i=0;Tac.load();
+  Chat.clear();const who=A.userColor==='w'?'blancas':'negras',p=this.cur;
+  Chat.say(`<b>${p.n?'Mate en '+p.n:esc(p.theme||'Táctica')}</b> · juegan ${who}. ${p.n?`Da mate en ${p.n}.`:'Encuentra la mejor jugada.'}`);
+  A.status('Contrarreloj');this.pause=false;
+ },
+ tick(){if(!this.on)return;if(Date.now()>=this.end)return this.finish('¡Se acabó el tiempo!');this.hud()},
+ fmt(ms){ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')},
+ hud(){const el=$('#stHud');if(!el)return;const left=this.end-Date.now();
+  el.innerHTML=`<div class="stbox"><div class="stt${left<10000?' low':''}">${this.fmt(left)}</div><div>Puntos <b>${this.score}</b></div><div>${'♥'.repeat(this.lives)}<span class="dim">${'♥'.repeat(3-this.lives)}</span></div><div class="small">Racha ${this.streak}</div></div>`},
+ ok(){
+  if(!this.on||this.pause)return;const p=this.cur;this.pause=true;Tac.done=true;Tac.lock=true;
+  this.solved++;this.streak++;this.score+=this.pts(p)+(this.streak%5===0?1:0);try{Tac.stat(true)}catch(e){}
+  Snd.play('ok',.08);this.hud();setTimeout(()=>this.next(),300);
+ },
+ fail(){
+  if(!this.on||this.pause)return;const p=this.cur;this.pause=true;Tac.done=true;Tac.lock=true;
+  this.fails++;this.lives--;this.streak=0;try{Tac.stat(false)}catch(e){}
+  let sol='';try{const L=Tac.solLine(p);sol=L&&L[0]?L[0]:''}catch(e){}
+  if(sol){try{const c=new Chess(p.fen);const m=c.move(sol);if(m){board.arrows=[[m.from,m.to]];board.draw()}}catch(e){}}
+  Chat.say(`✗ Fallaste.${sol?` Era <b>${esc(Tac.fmt?Tac.fmt(sol):sol)}</b>.`:''}`,'bad');this.hud();
+  if(this.lives<=0)return setTimeout(()=>this.finish('Te quedaste sin vidas.'),900);
+  setTimeout(()=>this.next(),1400);
+ },
+ finish(msg){
+  if(!this.on)return;this.on=false;clearInterval(this.timer);Tac.calc=this.calcOld;Tac.lock=true;Tac.done=true;
+  const s=this.st(),k=this.key(),old=s.best[k]||0,nw=this.score>old;if(nw)s.best[k]=this.score;
+  const d=new Date();s.hist.push({t:Date.now(),d:Log.key(d),dur:this.dur,src:this.src,score:this.score,solved:this.solved,fails:this.fails});s.hist=s.hist.slice(-40);
+  store.set('storm',s);store.set('lastChange',Date.now());
+  const acc=this.solved+this.fails?Math.round(this.solved/(this.solved+this.fails)*100):0;
+  A.status('Fin del reto');Chat.clear();
+  Chat.say(`<b>${esc(msg)}</b><br>Puntos: <b>${this.score}</b> · resueltos ${this.solved} · fallos ${this.fails} · acierto ${acc}%.${nw&&this.score>0?'<br><b>¡Nuevo récord!</b>':old?`<br>Tu récord: ${old}.`:''}`,nw&&this.score>0?'ok':'');
+  Chat.chips([{label:'Otra vez',pri:true,fn:()=>{Reto.open('storm')}},{label:'Táctica normal',fn:()=>Mode.set('tactics')}]);
+  const g=$('#stGo'),st=$('#stStop');if(g)g.hidden=false;if(st)st.hidden=true;['stDur','stSrc'].forEach(i=>{const e=$('#'+i);if(e)e.disabled=false});this.rec();this.hud();
+ },
+ leave(){if(this.on){this.on=false;clearInterval(this.timer);Tac.calc=this.calcOld}Tac.lock=false;Engine.stop()}
+};
+
+/* === RETOS: partida con reloj y gestión del tiempo === */
+const TCS=[['1+0','Bala 1+0'],['3+0','Blitz 3+0'],['3+2','Blitz 3+2'],['5+0','Blitz 5+0'],['5+3','Blitz 5+3'],['10+0','Rápida 10+0'],['10+5','Rápida 10+5'],['15+10','Rápida 15+10'],['30+0','Clásica 30+0']];
+const Clk={...Play,
+ level:3,color:'w',coach:true,tcs:'5+3',tc:{m:5,i:3},ck:{w:0,b:0},run:null,t0:0,timer:null,times:[],lossLog:[],started:false,
+ canMove(){return !this.counted&&!this.thinking&&!A.game.game_over()&&A.game.turn()===A.userColor&&this.run===A.userColor},
+ hist(){return store.get('clkhist',[])},
+ enter(box){
+  box.innerHTML=`<div class="g2"><label>Ritmo<select id="ckTc">${TCS.map(t=>`<option value="${t[0]}">${t[1]}</option>`).join('')}</select></label>
+  <label>Nivel de Stockfish<select id="ckLv">${LEVELS.map((l,i)=>`<option value="${i}">${l.n}</option>`).join('')}</select></label></div>
+  <div class="g2"><label>Tu color<select id="ckCol"><option value="w">Blancas</option><option value="b">Negras</option><option value="r">Aleatorio</option></select></label>
+  <label style="flex-direction:row;align-items:center;gap:8px;margin-top:18px"><input type="checkbox" id="ckCoach" ${this.coach?'checked':''}> Medir mis errores (más lento)</label></div>
+  <div id="ckClocks"></div>
+  <div class="row"><button id="ckNew" class="pri">Nueva partida</button><button id="ckRes">Rendirse</button></div><div class="small" id="ckHist"></div>`;
+  $('#ckTc').value=this.tcs;$('#ckLv').value=this.level;$('#ckCol').value=this.color;
+  $('#ckTc').onchange=e=>{this.tcs=e.target.value};$('#ckLv').onchange=e=>{this.level=+e.target.value};$('#ckCol').onchange=e=>{this.color=e.target.value};$('#ckCoach').onchange=e=>{this.coach=e.target.checked};
+  $('#ckNew').onclick=()=>this.newGame();$('#ckRes').onclick=()=>this.resign();
+  this.hh();this.intro();
+ },
+ intro(){
+  A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();A.status('');
+  Chat.say('<b>Partida con reloj.</b><br>Elige el ritmo y juega contra Stockfish con el reloj corriendo. Al terminar verás un <b>informe de gestión del tiempo</b>: cuánto gastaste en cada fase, tus jugadas más lentas y si tus errores llegaron con prisa. Si el reloj llega a cero, pierdes (salvo que el rival no pueda dar mate).');
+  Chat.chips([{label:'Nueva partida',pri:true,fn:()=>this.newGame()}]);
+ },
+ hh(){const el=$('#ckHist');if(!el)return;const h=this.hist().slice(-5).reverse();el.innerHTML=h.length?'<b>Últimas partidas con reloj</b><br>'+h.map(r=>`${esc(r.d)} · ${esc(r.tc)} · ${r.res==='w'?'ganada':r.res==='l'?'perdida':'tablas'}${r.flag?' (por tiempo)':''} · media ${r.avg} s/jugada · errores: ${r.errs}${r.errsLow?` (${r.errsLow} con poco tiempo)`:''}`).join('<br>'):''},
+ leave(){this.stopTick();Engine.stop();this.run=null},
+ stopTick(){clearInterval(this.timer);this.timer=null},
+ newGame(){
+  this.stopTick();const [m,i]=this.tcs.split('+').map(Number);this.tc={m,i};this.ck={w:m*60000,b:m*60000};this.run=null;this.times=[];this.lossLog=[];this.flagged=false;
+  $('#ckNew').blur();
+  Play.newGame.call(this);
+  this.timer=setInterval(()=>this.tick(),100);this.draw();
+ },
+ startRun(c){this.run=c;this.t0=Date.now()},
+ afterMove(){
+  if(!this.counted&&!A.game.game_over()&&A.game.turn()===A.userColor&&!this.run)this.startRun(A.userColor);
+  return Play.afterMove.call(this);
+ },
+ tick(){
+  if(this.counted){this.stopTick();return}
+  if(this.run){const rem=this.ck[this.run]-(Date.now()-this.t0);if(rem<=0){this.ck[this.run]=0;this.draw();return this.flag(this.run)}}
+  this.draw();
+ },
+ left(c){return Math.max(0,this.ck[c]-(this.run===c?Date.now()-this.t0:0))},
+ fmt(ms){const s=Math.ceil(ms/1000);if(ms<20000)return (Math.max(0,ms)/1000).toFixed(1);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')},
+ draw(){
+  const u=A.userColor,e=u==='w'?'b':'w';const lu=this.left(u),le=this.left(e);
+  const box=(n,ms,act)=>`<div class="ck${act?' act':''}${ms<20000?' low':''}"><span>${n}</span><b>${this.fmt(ms)}</b></div>`;
+  const el=$('#ckClocks');if(el)el.innerHTML=box('Stockfish',le,this.run===e||(this.thinking&&!this.run&&A.game.turn()===e))+box('Tú',lu,this.run===u);
+  const st=$('#status');if(st&&!this.counted)st.textContent=`⏱ Tú ${this.fmt(lu)} · Stockfish ${this.fmt(le)}`;
+ },
+ async onMove(m){
+  const u=A.userColor;
+  if(this.run===u){
+   const spent=Date.now()-this.t0;this.ck[u]=this.ck[u]-spent;
+   if(this.ck[u]<=0){this.ck[u]=0;this.run=null;A.game.undo();A.sync();return this.flag(u)}
+   this.ck[u]+=this.tc.i*1000;this.times.push({ply:A.hist.length,san:m.san,spent,left:this.ck[u],base:this.tc.m*60000});this.run=null;
+  }
+  return Play.onMove.call(this,m);
+ },
+ sim(c){
+  const ply=A.hist.length;const rem=this.ck[c];const open=ply<14?.35:1;
+  const v=rem/38*open*(.4+Math.random()*1.3);return Math.max(600,Math.min(v,rem/6));
+ },
+ async engineMove(){
+  const ep=A.epoch,L=LEVELS[this.level],ec=A.game.turn();this.thinking=true;this.run=null;A.status('Stockfish piensa…');this.draw();
+  const t0=Date.now();
+  try{
+   const r=await Engine.search({fen:A.game.fen(),depth:L.depth,movetime:L.ms,skill:L.skill,elo:L.elo});
+   if(ep!==A.epoch)return;
+   const used=Math.max(Date.now()-t0,this.sim(ec));this.ck[ec]-=used;
+   if(this.ck[ec]<=0){this.ck[ec]=0;this.thinking=false;return this.flag(ec)}
+   this.ck[ec]+=this.tc.i*1000;
+   if(r.best){A.game.move({from:r.best.slice(0,2),to:r.best.slice(2,4),promotion:r.best[4]});A.epoch++;A.viewIdx=null;A.sync();A.updateControls()}
+  }catch(e){Chat.say('El motor no responde. Prueba recargar la página.','bad');this.thinking=false;return}
+  this.thinking=false;this.afterMove();
+ },
+ checkEnd(){const r=Play.checkEnd.call(this);if(r){this.run=null;this.stopTick();this.draw()}return r},
+ hasMat(c){const b=A.game.board();for(const r of b)for(const x of r)if(x&&x.color===c&&x.type!=='k')return true;return false},
+ flag(c){
+  if(this.counted)return;this.counted=true;this.flagged=c===A.userColor?'u':'e';this.run=null;this.stopTick();Engine.stop();A.epoch++;this.thinking=false;
+  let t,res;
+  if(c===A.userColor){if(this.hasMat(c==='w'?'b':'w')){t='Se acabó tu tiempo. Ganó Stockfish.';res='l'}else{t='Se acabó tu tiempo, pero Stockfish no puede dar mate: tablas.';res='d'}}
+  else{if(this.hasMat(A.userColor)){t='A Stockfish se le acabó el tiempo. ¡Ganaste!';res='w'}else{t='A Stockfish se le acabó el tiempo, pero no puedes dar mate: tablas.';res='d'}}
+  A.status(t);this.draw();this.finishGame(t,res);
+ },
+ finishGame(t,res){
+  this.stopTick();this.run=null;Play.finishGame.call(this,t,res);this.report(res);this.draw();this.hh();
+ },
+ report(res){
+  const T=this.times;if(!T.length)return;
+  const sec=x=>Math.round(x/1000),tot=T.reduce((s,x)=>s+x.spent,0),avg=Math.round(tot/T.length/1000);
+  const open=T.filter(x=>x.ply<=20),mid=T.filter(x=>x.ply>20&&x.ply<=50),end=T.filter(x=>x.ply>50);
+  const share=tot?Math.round(open.reduce((s,x)=>s+x.spent,0)/tot*100):0;
+  const ph=(n,a)=>a.length?`${n}: ${a.length} jugada${a.length===1?'':'s'}, ${Math.round(a.reduce((s,x)=>s+x.spent,0)/a.length/1000)} s de media`:'';
+  const long=T.slice().sort((a,b)=>b.spent-a.spent).slice(0,3).filter(x=>x.spent>8000);
+  const loss=ply=>{const l=this.lossLog.find(x=>x.ply===ply);return l?l.loss:null};
+  const base=this.tc.m*60000;const errs=T.filter(x=>(loss(x.ply)||0)>=90),low=errs.filter(x=>x.left<base*.2),quick=errs.filter(x=>x.spent<3000);
+  const measured=this.coach&&this.lossLog.length>0;
+  let h='<b>Informe de tiempo</b><br>';
+  h+=`Gastaste ${Math.floor(tot/60000)} min ${sec(tot)%60} s en ${T.length} jugadas (media ${avg} s). `;
+  const last=T[T.length-1];h+=`Te quedaban ${this.fmt(last.left)} al final.<br>`;
+  h+=[ph('Apertura (hasta la jugada 10)',open),ph('Medio juego',mid),ph('Final',end)].filter(Boolean).join('<br>')+'<br>';
+  if(long.length)h+='Tus jugadas más lentas: '+long.map(x=>`${esc(x.san)} (jugada ${Math.ceil(x.ply/2)}, ${sec(x.spent)} s${loss(x.ply)!=null?`, ${loss(x.ply)>=90?'error':'sin error'}`:''})`).join(' · ')+'.<br>';
+  const tips=[];
+  if(share>=40&&T.length>12)tips.push(`Usaste el <b>${share}%</b> de tu tiempo en las 10 primeras jugadas. Apóyate en tu repertorio para llegar al medio juego con más reloj.`);
+  if(this.flagged==='u')tips.push('Perdiste por tiempo. Fija un presupuesto por jugada (tiempo/40) y, si pasas de él, juega la mejor jugada que ya tengas.');
+  else if(last.left<base*.1&&this.tc.m>=3)tips.push('Acabaste con muy poco reloj. Con increment bajo, deja siempre una reserva para el final.');
+  if(measured){
+   if(errs.length&&low.length>=Math.ceil(errs.length/2))tips.push(`<b>${low.length} de tus ${errs.length} errores</b> llegaron con menos del 20% del tiempo: tu problema es la gestión del reloj, no el cálculo.`);
+   if(quick.length>=2)tips.push(`${quick.length} errores llegaron tras pensar menos de 3 segundos: antes de jugar, haz un chequeo de seguridad (jaques, capturas, piezas sin defensa).`);
+   if(long.some(x=>(loss(x.ply)||0)<30)&&long.length)tips.push('Pensaste mucho en jugadas que no eran difíciles. Si la posición es clara, juega y ahorra el tiempo para los momentos críticos.');
+   if(!errs.length)tips.push('No cometiste errores graves medidos por el entrenador. ¡Prueba un ritmo más rápido o un nivel superior!');
+  }else tips.push('Activa «Medir mis errores» para relacionar el tiempo con tus errores.');
+  if(tips.length)h+='<br><b>Consejos</b><ul>'+tips.map(x=>`<li>${x}</li>`).join('')+'</ul>';
+  Chat.say(h,'');
+  const hist=this.hist();hist.push({t:Date.now(),d:Log.key(),tc:this.tcs,res,flag:!!this.flagged&&this.flagged==='u',avg,share,errs:errs.length,errsLow:low.length,left:Math.round(last.left/1000),lv:this.level,n:T.length});
+  store.set('clkhist',hist.slice(-40));store.set('lastChange',Date.now());Log.add('clk',1);
+ },
+ undo(){Chat.say('Con reloj no se pueden deshacer jugadas.','warn')},
+ hint(){Chat.say('Con reloj no hay pistas.','warn')},
+ resign(){if(!this.started||A.game.game_over()||this.counted)return;this.stopTick();this.run=null;Play.resign.call(this);this.draw()}
+};
+
+/* === RETOS (contenedor) === */
+const Reto={
+ free:false,sub:store.get('retoSub','storm'),
+ SUBS(){return {storm:Storm,fin:Fin,clk:Clk}},
+ S(){return this.SUBS()[this.sub]||Storm},
+ canMove(){const s=this.S();return s.canMove?!!s.canMove():false},
+ onMove(m){const s=this.S();if(s.onMove)return s.onMove(m)},
+ enter(){
+  $('#ctl').innerHTML=`<div class="seg" style="margin-bottom:8px">${[['storm','Contrarreloj'],['fin','Finales teóricos'],['clk','Partida con reloj']].map(([k,l])=>`<button data-rs="${k}">${l}</button>`).join('')}</div><div id="rtBox"></div>`;
+  $('#ctl').querySelectorAll('[data-rs]').forEach(b=>b.onclick=()=>this.open(b.dataset.rs));
+  this.open(this.sub);
+ },
+ open(sub){
+  const old=this.S();if(old.leave)old.leave();
+  this.sub=sub;store.set('retoSub',sub);Engine.stop();A.epoch++;board.arrows=[];board.marks=[];
+  $('#ctl').querySelectorAll('[data-rs]').forEach(b=>b.classList.toggle('on',b.dataset.rs===sub));
+  const box=$('#rtBox');box.innerHTML='';this.S().enter(box);
+ },
+ leave(){const s=this.S();if(s.leave)s.leave()},
+ goFin(id){Fin.pending=id||null;this.sub='fin';store.set('retoSub','fin');Mode.set('reto')},
+ summary(){
+  const s=Storm.st(),f=Fin.st(),ch=Clk.hist();
+  const bests=Object.entries(s.best);const sg=s.hist.length;
+  let h='<h3>Retos</h3><table>';
+  h+=`<tr><td>Contrarreloj</td><td>${sg?`${sg} intento${sg===1?'':'s'}${bests.length?' · mejor: <b>'+Math.max(...bests.map(x=>x[1]))+'</b> puntos':''}`:'—'}</td></tr>`;
+  const tried=Object.keys(f).length;h+=`<tr><td>Finales teóricos</td><td>${tried?`dominados sin ayuda: <b>${Fin.mastered()}</b> de ${FIN.length} · probados: ${tried}`:'—'}</td></tr>`;
+  const l=ch[ch.length-1];h+=`<tr><td>Partidas con reloj</td><td>${l?`${ch.length} · última: ${esc(l.tc)}, ${l.res==='w'?'ganada':l.res==='l'?'perdida':'tablas'}, ${l.avg} s/jugada${l.errs?`, ${l.errs} error${l.errs===1?'':'es'}`:''}`:'—'}</td></tr>`;
+  return h+'</table>';
+ }
+};
+
+/* === EXPLORADOR DE APERTURAS (con tus partidas) === */
+const Expl={
+ free:true,color:store.get('explColor','w'),N:null,sig:'',tot:0,pts:0,rt:null,
+ canMove(){return A.live()},
+ games(){if(!Games.list.length)Games.list=store.get('games_pgn',[]);return Games.list},
+ enter(){
+  $('#ctl').innerHTML=`<div class="g2"><label>Juego con<select id="exCol"><option value="w">Blancas</option><option value="b">Negras</option></select></label>
+  <label>Mi nombre en el PGN<input id="exName" placeholder="Ej.: EJGamez"></label></div>
+  <div class="row"><button id="exHome" class="pri">Volver al inicio</button><button id="exPlay">Jugar desde aquí</button></div>
+  <div class="small">Mueve las piezas en el tablero o pulsa una jugada de la tabla: verás qué jugaste tú y qué jugaron tus rivales en cada posición, con tus resultados.</div>`;
+  $('#exCol').value=this.color;$('#exName').value=store.get('myname','');
+  $('#exCol').onchange=e=>{this.color=e.target.value;store.set('explColor',this.color);this.reset()};
+  $('#exName').onchange=e=>{store.set('myname',e.target.value);this.sig='';this.render()};
+  $('#exHome').onclick=()=>this.reset();$('#exPlay').onclick=()=>Play.fromPosition(A.curFen(),this.color);
+  Chat.chips([]);this.reset();
+ },
+ leave(){},
+ reset(){
+  Engine.stop();A.epoch++;A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;A.userColor=this.color;board.flipped=this.color==='b';board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();A.status('Explorador');this.render();
+ },
+ go(sans){
+  A.epoch++;A.game=new Chess();for(const s of sans){if(!A.game.move(s,{sloppy:true}))break}
+  A.startFen=new Chess().fen();A.viewIdx=null;board.arrows=[];A.sync();A.updateControls();this.render();
+ },
+ onMove(){this.render()},
+ onNav(){this.render()},
+ build(){
+  const G=this.games(),sig=G.length+'|'+store.get('myname','')+'|'+this.color+'|'+Object.keys(Games.anAll()).length;
+  if(this.N&&this.sig===sig)return;this.sig=sig;
+  const pg={};try{Games.perGame().forEach(p=>pg[p.gi]=p.acc)}catch(e){}
+  const N=new Map();let tot=0,pts=0;const color=this.color;
+  G.forEach((g,gi)=>{
+   if(Games.mySide(g)!==color)return;let m;try{m=Games.meta(g)}catch(e){return}
+   if(!m||(m.hdr&&m.hdr.FEN))return;
+   const r=g.result,sc=r==='1/2-1/2'?.5:r==='1-0'?(color==='w'?1:0):r==='0-1'?(color==='b'?1:0):null;
+   tot++;if(sc!=null)pts+=sc;
+   m.hist.forEach((mv,k)=>{
+    const key=Rep.key(m.fens[k]);let node=N.get(key);if(!node){node={n:0,mv:new Map()};N.set(key,node)}
+    node.n++;let e=node.mv.get(mv.san);if(!e){e={san:mv.san,n:0,w:0,d:0,l:0,s:0,sn:0,a:0,an:0,to:Rep.key(m.fens[k+1]),g:[]};node.mv.set(mv.san,e)}
+    e.n++;if(sc!=null){e.sn++;e.s+=sc;if(sc===1)e.w++;else if(sc===.5)e.d++;else e.l++}
+    if(pg[gi]!=null){e.a+=pg[gi];e.an++}if(e.g.length<40)e.g.push([gi,k+1]);
+   });
+  });
+  this.N=N;this.tot=tot;this.pts=pts;this.rt=null;this.spotsC=null;
+ },
+ rtree(){if(!this.rt)this.rt=Rep.tree(this.color);return this.rt},
+ wdl(e){const t=e.w+e.d+e.l||1;return `<div class="wdl" title="${e.w} ganadas · ${e.d} tablas · ${e.l} perdidas"><i style="width:${e.w/t*100}%;background:var(--acc)"></i><i style="width:${e.d/t*100}%;background:var(--mut)"></i><i style="width:${e.l/t*100}%;background:var(--bad)"></i></div>`},
+ spots(){
+  if(this.spotsC)return this.spotsC;const out=[],seen=new Set(),color=this.color;
+  const dfs=(key,path)=>{if(path.length>=18)return;const node=this.N.get(key);if(!node)return;
+   for(const e of node.mv.values()){const p=path.concat(e.san);if(e.sn>=3)out.push({path:p,n:e.sn,pc:e.s/e.sn,mine:(path.length%2===0)===(color==='w')});
+    const sk=key+'|'+e.san;if(e.n>=2&&!seen.has(sk)){seen.add(sk);dfs(e.to,p)}}};
+  dfs(Rep.key(new Chess().fen()),[]);
+  const pick=(f,cmp)=>{const L=out.filter(f).sort(cmp),keep=[];for(const s of L){if(keep.some(k=>s.path.length>k.path.length&&k.path.every((x,i)=>x===s.path[i])&&s.n<=k.n))continue;keep.push(s);if(keep.length>=5)break}return keep};
+  return this.spotsC={weak:pick(s=>s.pc<=.34,(a,b)=>b.n-a.n||a.pc-b.pc||a.path.length-b.path.length),strong:pick(s=>s.pc>=.7,(a,b)=>b.n-a.n||b.pc-a.pc||a.path.length-b.path.length)};
+ },
+ lt(sans){return Rep.lineText(new Chess().fen(),sans,200)},
+ render(){
+  const el=Chat.el;if(!el)return;this.build();
+  const G=this.games(),fen=A.curFen(),key=Rep.key(fen),turn=fen.split(' ')[1],color=this.color,mine=turn===color;
+  const sans=A.hist.slice(0,A.viewIdx==null?A.hist.length:A.viewIdx).map(m=>m.san);
+  let h='<div class="panel">';
+  if(!G.length){el.innerHTML='<div class="panel"><h3>Explorador de aperturas</h3>Importa tus partidas en «Partidas» (archivo PGN de Lichess o Chess.com) y escribe tu nombre de usuario: aquí verás tus estadísticas por posición.<div class="row" style="margin-top:8px"><button id="exGo" class="pri">Ir a Partidas</button></div></div>';const b=el.querySelector('#exGo');if(b)b.onclick=()=>Mode.set('games');return}
+  if(!this.tot){el.innerHTML=`<div class="panel"><h3>Explorador de aperturas</h3>No encontré partidas con ${color==='w'?'blancas':'negras'} a tu nombre (${esc(store.get('myname','')||'sin nombre')}). Escribe tu nombre exactamente como aparece en el PGN (puedes poner varios separados por coma) o cambia el color.</div>`;return}
+  h+=`<h3 style="margin-top:0">Explorador · con ${color==='w'?'blancas':'negras'}</h3><div class="small">${this.tot} partida${this.tot===1?'':'s'} · puntos ${this.tot?Math.round(this.pts/this.tot*100):0}%</div>`;
+  h+=`<div class="exline"><a href="#" data-p="">Inicio</a>${sans.map((s,i)=>` · <a href="#" data-p="${i+1}">${i%2===0?(i/2+1)+'. ':''}${esc(s)}</a>`).join('')}</div>`;
+  const node=this.N.get(key);let gh='';
+  const rn=this.rtree().get(key);
+  if(!node){h+='<div style="margin:8px 0">Ninguna de tus partidas llegó a esta posición.</div>';
+   if(rn)h+=`<div class="small">Tu repertorio aquí: <b>${Object.values(rn).map(x=>esc(x.san)).join(' / ')}</b>.</div>`}
+  else{
+   const rows=[...node.mv.values()].sort((a,b)=>b.n-a.n);
+   h+=`<div class="small" style="margin:6px 0">${mine?'Jugadas <b>tuyas</b> en esta posición':'Respuestas de tus <b>rivales</b>'} (${node.n} partida${node.n===1?'':'s'}):</div>`;
+   h+='<table class="extbl"><tr><th>Jugada</th><th>Partidas</th><th style="width:26%">Resultado</th><th>Pts</th><th>Prec.</th><th></th></tr>';
+   rows.forEach(e=>{
+    const inRep=rn?!!rn[clean(e.san)]:null;const pc=e.sn?Math.round(e.s/e.sn*100):null;
+    const cls=pc==null||e.sn<3?'':pc>=65?'xg':pc<=35?'xb':'';
+    let tag='';if(rn){tag=inRep?'<span title="Está en tu repertorio">📖</span>':mine?'<span title="Fuera de tu repertorio" class="warnT">⚠</span>':'<span title="Hueco: el rival se sale de tu repertorio" class="warnT">hueco</span>'}
+    h+=`<tr><td><button class="exmv" data-mv="${esc(e.san)}">${esc(e.san)}</button> ${tag}</td><td>${e.n} <span class="small">(${Math.round(e.n/node.n*100)}%)</span></td><td>${this.wdl(e)}</td><td class="${cls}">${pc==null?'–':pc+'%'}</td><td>${e.an?Math.round(e.a/e.an)+'%':'–'}</td><td>${!mine&&rn&&!inRep&&e.n>=1?`<button data-hole="${esc(e.san)}" class="sm">+ Hueco</button>`:''}</td></tr>`});
+   h+='</table>';
+   if(rn){
+    const reps=Object.values(rn).map(x=>x.san);const top=rows[0];
+    if(mine&&top&&!rn[clean(top.san)]&&top.n/node.n>=.5&&top.n>=2)h+=`<div class="callout">Sueles jugar <b>${esc(top.san)}</b> (${Math.round(top.n/node.n*100)}% de las veces), pero tu repertorio dice <b>${esc(reps.join(' / '))}</b>.</div>`;
+    else if(mine&&!reps.some(r=>rows.some(x=>clean(x.san)===clean(r))))h+=`<div class="callout">Tu repertorio aquí es <b>${esc(reps.join(' / '))}</b>, pero nunca lo has jugado en estas partidas.</div>`;
+    else h+=`<div class="small">Tu repertorio aquí: <b>${esc(reps.join(' / '))}</b>.</div>`;
+   }else if(this.rtree().size)h+='<div class="small">Tu repertorio no cubre esta posición.</div>';
+   // partidas por aquí
+   const seen=new Set(),gl=[];for(const e of rows)for(const [gi,ply] of e.g){if(seen.has(gi))continue;seen.add(gi);gl.push([gi,ply,e.san])}
+   if(gl.length){gh='<h4>Partidas por esta posición</h4>'+gl.slice(0,6).map(([gi,ply,san])=>{const g=G[gi];return `<div class="small"><a href="#" data-og="${gi}" data-ply="${ply}">${esc(g.white)} – ${esc(g.black)}</a> · ${esc(g.result)}${g.date&&g.date!=='????.??.??'?' · '+esc(g.date):''} · jugó ${esc(san)}</div>`}).join('')+(gl.length>6?`<div class="small">…y ${gl.length-6} más</div>`:'')}
+  }
+  if(!sans.length){
+   const sp=this.spots();
+   const sec=(t,L,c)=>L.length?`<h4>${t}</h4>`+L.map(s=>`<div class="small"><a href="#" data-path="${esc(s.path.join(' '))}">${esc(this.lt(s.path))}</a> · <span class="${c}">${Math.round(s.pc*100)}%</span> en ${s.n} partidas · ${s.mine?'jugada tuya':'respuesta del rival'}</div>`).join(''):'';
+   h+=sec('Donde más puntos pierdes',sp.weak,'xb')+sec('Tus mejores líneas',sp.strong,'xg');
+   if(!sp.weak.length&&!sp.strong.length)h+='<div class="small" style="margin-top:8px">Con más partidas aparecerán aquí tus líneas más rentables y las que peor te van (hacen falta al menos 3 partidas por línea).</div>';
+  }
+  h+=gh+'</div>';el.innerHTML=h;
+  el.querySelectorAll('[data-mv]').forEach(b=>b.onclick=()=>{const m=A.game.move(b.dataset.mv,{sloppy:true});if(!m)return;A.epoch++;A.viewIdx=null;board.arrows=[];A.sync();A.updateControls();this.render()});
+  el.querySelectorAll('[data-p]').forEach(a=>a.onclick=e=>{e.preventDefault();const n=a.dataset.p===''?0:+a.dataset.p;this.go(sans.slice(0,n))});
+  el.querySelectorAll('[data-path]').forEach(a=>a.onclick=e=>{e.preventDefault();this.go(a.dataset.path.split(' '))});
+  el.querySelectorAll('[data-og]').forEach(a=>a.onclick=e=>{e.preventDefault();const gi=+a.dataset.og,ply=+a.dataset.ply;Mode.set('games',()=>{Games.idx=gi;Games.fillSel();Games.open(gi);A.goto(ply)})});
+  el.querySelectorAll('[data-hole]').forEach(b=>b.onclick=()=>{const ok=Rep.addHole({color,line:sans,played:b.dataset.hole});b.textContent=ok?'Añadido ✓':'Ya existe';b.disabled=true});
+ }
+};
+
+/* === AJUSTES === */
+const Cfg={
+ DEF:{theme:'dark',bd:'wood',fs:100,coords:true,dots:true,hl:true,ev:true,start:'today'},
+ BOARDS:{wood:['Madera','#f0d9b5','#b58863'],green:['Verde','#eeeed2','#769656'],blue:['Azul','#dee3e6','#8ca2ad'],gray:['Gris','#e8e8e8','#9a9a9a'],coral:['Coral','#f3e5d0','#c97c5d']},
+ get(){return {...this.DEF,...store.get('cfg',{})}},
+ set(k,v){const c=this.get();c[k]=v;store.set('cfg',c);this.apply()},
+ theme(c){return c.theme==='auto'?(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):c.theme},
+ apply(){
+  const c=this.get(),r=document.documentElement,b=document.body;
+  r.dataset.theme=this.theme(c);
+  const bd=this.BOARDS[c.bd]||this.BOARDS.wood;r.style.setProperty('--light',bd[1]);r.style.setProperty('--dark',bd[2]);
+  r.style.setProperty('--fs',(+c.fs||100)/100);
+  b.classList.toggle('nocoords',!c.coords);b.classList.toggle('nodots',!c.dots);b.classList.toggle('nohl',!c.hl);b.classList.toggle('noeval',!c.ev);
+ },
+ startMode(){const c=this.get();if(c.start==='last'){const m=store.get('lastMode','today');if(MODES[m]&&!['play','blind','edit','coach'].includes(m))return m}return 'today'},
+ size(){let n=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);n+=k.length+(localStorage.getItem(k)||'').length}}catch(e){}return n},
+ fmt(n){return n>1048576?(n/1048576).toFixed(1)+' MB':Math.round(n/1024)+' KB'},
+ open(){
+  const c=this.get();const el=$('#cfgPop');
+  const sel=(id,opts,v)=>`<select id="${id}">${opts.map(([k,l])=>`<option value="${k}"${k===v?' selected':''}>${esc(l)}</option>`).join('')}</select>`;
+  const chk=(id,l,v)=>`<label class="cfgrow"><input type="checkbox" id="${id}"${v?' checked':''}> ${esc(l)}</label>`;
+  el.innerHTML=`<div class="cfgbox" role="dialog" aria-label="Ajustes"><div class="cfghead"><b>Ajustes</b><button id="cfgX" class="b" aria-label="Cerrar">✕</button></div>
+  <h4>Apariencia</h4>
+  <label class="cfgrow">Tema ${sel('cfTheme',[['dark','Oscuro'],['light','Claro'],['auto','Automático (según tu sistema)']],c.theme)}</label>
+  <label class="cfgrow">Colores del tablero ${sel('cfBd',Object.entries(this.BOARDS).map(([k,v])=>[k,v[0]]),c.bd)}</label>
+  <label class="cfgrow">Tamaño del texto ${sel('cfFs',[['90','Pequeño'],['100','Normal'],['115','Grande'],['130','Muy grande']],String(c.fs))}</label>
+  <h4>Tablero</h4>
+  ${chk('cfCo','Mostrar coordenadas (a–h, 1–8)',c.coords)}${chk('cfDo','Mostrar puntos de jugadas legales',c.dots)}${chk('cfHl','Resaltar la última jugada y el jaque',c.hl)}${chk('cfEv','Mostrar la barra de evaluación',c.ev)}
+  <h4>Al abrir la aplicación</h4>
+  <label class="cfgrow">Empezar en ${sel('cfSt',[['today','Hoy (plan del día)'],['last','Donde lo dejé']],c.start)}</label>
+  <h4>Atajos de teclado</h4>
+  <div class="small cfgkeys"><span><kbd>←</kbd> <kbd>→</kbd> jugada anterior / siguiente</span><span><kbd>Inicio</kbd> <kbd>Fin</kbd> primera / última</span><span><kbd>F</kbd> girar el tablero</span><span><kbd>M</kbd> silenciar / activar sonido</span><span><kbd>?</kbd> abrir estos ajustes</span><span><kbd>Esc</kbd> cerrar</span></div>
+  <h4>Pantalla y datos</h4>
+  <div class="row"><button id="cfFull">Pantalla completa</button><button id="cfBk" class="pri">Descargar respaldo</button><button id="cfProg">Más opciones de respaldo</button></div>
+  <div class="small">Datos guardados en este navegador: <b>${this.fmt(this.size())}</b>. La aplicación funciona sin conexión: es un único archivo y tu progreso se guarda en este navegador (haz respaldos de vez en cuando).</div>
+  <div class="row"><button id="cfReset">Restablecer ajustes</button><button id="cfWipe" class="danger">Borrar todos mis datos…</button></div><div class="small" id="cfMsg"></div></div>`;
+  el.hidden=false;
+  const on=(id,f)=>{const e=$('#'+id);if(e)e.onchange=f};
+  on('cfTheme',e=>this.set('theme',e.target.value));on('cfBd',e=>this.set('bd',e.target.value));on('cfFs',e=>this.set('fs',+e.target.value));
+  on('cfCo',e=>this.set('coords',e.target.checked));on('cfDo',e=>this.set('dots',e.target.checked));on('cfHl',e=>this.set('hl',e.target.checked));on('cfEv',e=>this.set('ev',e.target.checked));on('cfSt',e=>this.set('start',e.target.value));
+  $('#cfgX').onclick=()=>this.close();
+  el.onclick=e=>{if(e.target===el)this.close()};
+  $('#cfFull').onclick=()=>{try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen()}catch(e){}};
+  $('#cfBk').onclick=()=>{Backup.download();$('#cfMsg').textContent='✓ Respaldo descargado.'};
+  $('#cfProg').onclick=()=>{this.close();Prog.view='resumen';store.set('progView','resumen');Mode.set('progress')};
+  $('#cfReset').onclick=()=>{store.set('cfg',{});this.apply();this.open();$('#cfMsg').textContent='Ajustes restablecidos.'};
+  let armed=0;$('#cfWipe').onclick=()=>{
+   const b=$('#cfWipe');if(!armed){armed=1;b.textContent='¿Seguro? Se borra TODO. Pulsa otra vez para confirmar';setTimeout(()=>{armed=0;if($('#cfWipe'))$('#cfWipe').textContent='Borrar todos mis datos…'},5000);return}
+   try{localStorage.clear()}catch(e){}location.reload();
+  };
+  $('#cfgX').focus();
+ },
+ close(){const el=$('#cfgPop');el.hidden=true;el.innerHTML=''},
+ isOpen(){return !$('#cfgPop').hidden}
 };
 
 /* =============== MODO A CIEGAS =============== */
@@ -4225,7 +4946,7 @@ const Log={
   }catch(e){}
  },
  today(){return this.all()[this.key()]||{min:0,srs:0,exam:0,tac:0,str:0,play:0,les:0,gam:0,ok:0,n:0}},
- active(d){return d&&(d.min>=.5||d.srs||d.exam||d.tac||d.str||d.play||d.les||d.gam)},
+ active(d){return d&&(d.min>=.5||d.srs||d.exam||d.tac||d.str||d.play||d.les||d.gam||d.fin||d.clk)},
  streak(){
   const L=this.all();let cur=0,d=new Date();if(!this.active(L[this.key(d)]))d.setDate(d.getDate()-1);
   while(this.active(L[this.key(d)])){cur++;d.setDate(d.getDate()-1)}
@@ -4293,13 +5014,14 @@ const Today={
   if(T.gam&&un>0)tasks.push({id:'gam',title:'Analiza una de tus partidas',desc:`${un} partida${un===1?'':'s'} importada${un===1?'':'s'} sin analizar.`,target:1,done:td.gam,min:5,go:()=>Mode.set('games')});
   const ps=store.get('prog',{});let pend=null;for(const l of Lesson.all()){if(Rep.isGames(l))continue;for(const c of l.chapters)if(!pend&&!(ps[l.id]||[]).includes(c.id))pend={l,c}}
   if(T.les&&pend)tasks.push({id:'les',title:'Completa un capítulo',desc:`${pend.l.title}: ${pend.c.title}`,target:1,done:td.les,min:8,go:()=>{Lesson.li=Lesson.all().indexOf(pend.l);Lesson.ci=pend.l.chapters.indexOf(pend.c);Mode.set('lesson')}});
+  if(S>=30){const fp=Fin.suggest();tasks.push({id:'fin',title:'Un final teórico: '+fp.name,desc:fp.goal==='win'?'Practica la técnica de conversión contra Stockfish.':'Practica la defensa y aprende a empatar.',target:1,done:td.fin||0,min:6,go:()=>Reto.goFin(fp.id)})}
   if(T.play)tasks.push({id:'play',title:'Una partida contra Stockfish',desc:'Aplica lo estudiado en una partida completa.',target:1,done:td.play,min:15,go:()=>Mode.set('play')});
   return {S,tasks};
  },
  render(){
   const {S,tasks}=this.plan();this.tasks=tasks;const st=Log.streak(),td=Log.today();
   const tot=tasks.reduce((a,t)=>a+t.target,0),got=tasks.reduce((a,t)=>a+Math.min(t.done,t.target),0),pct=tot?Math.round(got/tot*100):0,doneN=tasks.filter(t=>t.done>=t.target).length;
-  let h=Backup.banner()+Coach.todayCard()+Evo.todayCard()+`<h3>Plan de hoy</h3><div class="row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="small">Sesión:</span>${[15,30,45].map(m=>`<button data-sess="${m}" class="${m===S?'pri':''}">${m} min</button>`).join('')}</div>`;
+  let h=Backup.banner()+Coach.todayCard()+Evo.todayCard()+Nb.todayCard()+Lvl.todayCard()+`<h3>Plan de hoy</h3><div class="row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="small">Sesión:</span>${[15,30,45].map(m=>`<button data-sess="${m}" class="${m===S?'pri':''}">${m} min</button>`).join('')}</div>`;
   h+=`<div style="margin:10px 0 4px"><b>${pct}%</b> completado · ${doneN} de ${tasks.length} tareas · ${Math.round(td.min)} min hoy · racha <b>${st.cur}</b> día${st.cur===1?'':'s'} (mejor: ${st.best})</div><div class="bar"><i style="width:${pct}%"></i></div>`;
   h+='<table style="margin-top:8px">'+tasks.map((t,i)=>{const ok=t.done>=t.target;return `<tr><td style="width:22px">${ok?'✓':'○'}</td><td><b>${esc(t.title)}</b><br><span class="small">${esc(t.desc)}</span></td><td style="white-space:nowrap">${Math.min(t.done,t.target)}/${t.target}<br><span class="small">~${t.min} min</span></td><td><button data-task="${i}" class="${ok?'':'pri'}">${ok?'Repetir':'Ir'}</button></td></tr>`}).join('')+'</table>';
   const nxt=tasks.findIndex(t=>t.done<t.target);
@@ -4311,7 +5033,7 @@ const Today={
   h+='<h3>Esta semana</h3><div style="display:flex;gap:8px;align-items:flex-end;height:70px">'+days.map(x=>`<div style="flex:1;text-align:center;font-size:11px;color:var(--mut)"><div style="height:${Math.max(3,x.m/mx*52)}px;background:${x.m?'var(--acc)':'var(--line)'};border-radius:3px;opacity:${x.t?1:.7}"></div>${x.n}<br>${x.m}</div>`).join('')+`</div><div class="small">Total: ${wk} min. Meta sugerida: 30 min al día, 5 días a la semana.</div>`;
   h+=Evo.weekDetails();
   h+=this.profile();
-  Chat.el.innerHTML='<div class="panel">'+h+'</div>';Evo.bindToday(Chat.el,()=>this.render());
+  Chat.el.innerHTML='<div class="panel">'+h+'</div>';Evo.bindToday(Chat.el,()=>this.render());Nb.bind(Chat.el);Lvl.bindToday(Chat.el);
   Chat.el.querySelectorAll('[data-sess]').forEach(b=>b.onclick=()=>{store.set('todayMin',+b.dataset.sess);this.render()});
   Backup.bind(Chat.el,()=>this.render());Coach.bind(Chat.el,()=>this.render());
   Chat.el.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{const t=this.tasks[+b.dataset.task];if(t)t.go()});
@@ -4426,6 +5148,116 @@ function parseStudyPGN(text){
 const wp=cp=>{cp=Math.max(-1000,Math.min(1000,cp));return 50+50*(2/(1+Math.exp(-0.00368208*cp))-1)};
 const CLS_TXT={best:'Mejor jugada',good:'Buena jugada',inacc:'Imprecisión',mistake:'Error',blunder:'Error grave'};
 const CLS_SYM={inacc:'?!',mistake:'?',blunder:'??'};
+/* === CUADERNO DE PARTIDAS === */
+const Nb={
+ all(){return store.get('gnotes',{})},
+ get(id){return this.all()[id]||{note:'',tags:[],flag:'',mv:{}}},
+ put(id,patch){
+  const a=this.all();const o={note:'',tags:[],flag:'',mv:{},...(a[id]||{}),...patch,upd:Date.now()};
+  if(!o.note&&!o.tags.length&&!o.flag&&!Object.keys(o.mv).length)delete a[id];else a[id]=o;
+  store.set('gnotes',a);store.set('lastChange',Date.now());
+ },
+ drop(id){const a=this.all();if(a[id]){delete a[id];store.set('gnotes',a)}},
+ clean(s){return String(s||'').split(',').map(x=>x.replace(/[<>"&]/g,'').trim().slice(0,24)).filter((x,i,r)=>x&&r.indexOf(x)===i).slice(0,12)},
+ auto(g){
+  this._at=this._at||{};const key=g.id+'|'+store.get('myname','');if(this._at[key])return this._at[key];
+  const t=[];const side=Games.mySide(g);
+  if(side){t.push(side==='w'?'Blancas':'Negras');const r=g.result;const sc=r==='1/2-1/2'?.5:r==='1-0'?(side==='w'?1:0):r==='0-1'?(side==='b'?1:0):null;
+   if(sc!=null)t.push(sc===1?'Ganada':sc===.5?'Tablas':'Perdida')}
+  try{const m=Games.meta(g);const o=Games.openLabel(m,side||'w').replace(/^(Blancas|Negras) · /,'');if(o)t.push(o)}catch(e){}
+  if(Games.anAll()[g.id])t.push('Analizada');
+  return this._at[key]=t;
+ },
+ flagMark(f){return f==='rev'?'⚑ ':f==='fav'?'★ ':''},
+ revCount(){const a=this.all();return Object.keys(a).filter(k=>a[k].flag==='rev'&&Games.list.some(g=>g.id===k)).length},
+ /* panel en el lateral */
+ render(){
+  const box=$('#nbBox');if(!box)return;const g=Games.list[Games.idx];
+  if(!g){box.innerHTML='';return}
+  const n=this.get(g.id);
+  const has=n.note||n.tags.length||n.flag||Object.keys(n.mv).length;
+  box.innerHTML=`<details class="nbd" id="nbD"${has||store.get('nbOpen',false)?' open':''}><summary>Notas y etiquetas de esta partida${has?' ●':''}</summary><div class="nb"><div class="row" style="display:flex;gap:6px;flex-wrap:wrap"><button id="nbRev" class="${n.flag==='rev'?'pri':''}" title="Para revisar más tarde">⚑ Para revisar</button><button id="nbFav" class="${n.flag==='fav'?'pri':''}" title="Partida favorita">★ Favorita</button></div>
+  <label>Etiquetas (separadas por coma)<input id="nbTags" maxlength="200" placeholder="torneo, ritmo lento, apertura nueva" value="${esc(n.tags.join(', '))}"></label>
+  <label>Notas de la partida<textarea id="nbNote" rows="3" placeholder="Qué aprendiste, qué probar la próxima vez…">${esc(n.note)}</textarea></label>
+  <label><span id="nbMvL">Nota de la jugada</span><div style="display:flex;gap:6px"><input id="nbMv" maxlength="300" placeholder="Comentario sobre esta posición" style="flex:1"><button id="nbMvS">Guardar</button></div></label>
+  <div id="nbMvList" class="small"></div></div></details>`;
+  $('#nbD').ontoggle=e=>store.set('nbOpen',e.target.open);
+  const save=p=>this.put(g.id,p);
+  $('#nbRev').onclick=()=>{const c=this.get(g.id).flag;save({flag:c==='rev'?'':'rev'});this.render();Games.fillSel()};
+  $('#nbFav').onclick=()=>{const c=this.get(g.id).flag;save({flag:c==='fav'?'':'fav'});this.render();Games.fillSel()};
+  $('#nbTags').onchange=e=>{save({tags:this.clean(e.target.value)});e.target.value=this.get(g.id).tags.join(', ')};
+  $('#nbNote').onchange=e=>save({note:e.target.value.trim().slice(0,2000)});
+  const sv=()=>{const ply=this.ply();if(!ply)return;const v=$('#nbMv').value.trim().slice(0,300);const mv={...this.get(g.id).mv};if(v)mv[ply]=v;else delete mv[ply];save({mv});this.moves()};
+  $('#nbMvS').onclick=sv;$('#nbMv').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();sv()}};
+  $('#nbMv').onfocus=()=>{};
+  this.moves();this.onNav();
+ },
+ ply(){return A.viewIdx==null?A.hist.length:A.viewIdx},
+ moves(){
+  const g=Games.list[Games.idx],el=$('#nbMvList');if(!g||!el)return;const mv=this.get(g.id).mv;
+  const ks=Object.keys(mv).map(Number).sort((a,b)=>a-b);
+  el.innerHTML=ks.length?'<b>Notas por jugada</b><br>'+ks.map(k=>`<a href="#" data-ply="${k}">${esc(Games.label(k))}</a>: ${esc(mv[k])}`).join('<br>'):'';
+  el.querySelectorAll('[data-ply]').forEach(a=>a.onclick=e=>{e.preventDefault();A.goto(+a.dataset.ply)});
+ },
+ onNav(){
+  const g=Games.list[Games.idx],l=$('#nbMvL'),inp=$('#nbMv');if(!g||!l||!inp)return;
+  const p=this.ply();if(document.activeElement===inp&&inp.dataset.ply==p)return;
+  inp.dataset.ply=p;
+  if(p<1){l.textContent='Nota de la jugada (avanza a una jugada)';inp.value='';inp.disabled=$('#nbMvS').disabled=true;return}
+  inp.disabled=$('#nbMvS').disabled=false;l.textContent='Nota de '+Games.label(p);inp.value=this.get(g.id).mv[p]||'';
+ },
+ /* vista Cuaderno */
+ flt:{q:'',flag:'',res:'',col:'',tag:''},
+ view(){
+  Games.run++;Chat.clear();
+  const f=this.flt;const tags=new Set();Games.list.forEach(g=>{this.get(g.id).tags.forEach(t=>tags.add(t));this.auto(g).forEach(t=>{if(!/^(Blancas|Negras|Ganada|Tablas|Perdida|Analizada)$/.test(t))tags.add(t)})});
+  const op=(v,l,c)=>`<option value="${esc(v)}"${c===v?' selected':''}>${esc(l)}</option>`;
+  Chat.el.innerHTML=`<div class="panel"><h3>Cuaderno de partidas</h3>
+  <div class="nbf"><input id="nbQ" placeholder="Buscar: jugadores, apertura, notas, etiquetas…" value="${esc(f.q)}">
+  <select id="nbFl">${op('','Todas',f.flag)}${op('rev','⚑ Para revisar',f.flag)}${op('fav','★ Favoritas',f.flag)}${op('note','Con notas',f.flag)}${op('err','Con errores serios',f.flag)}</select>
+  <select id="nbRs">${op('','Cualquier resultado',f.res)}${op('Ganada','Ganadas',f.res)}${op('Tablas','Tablas',f.res)}${op('Perdida','Perdidas',f.res)}</select>
+  <select id="nbCl">${op('','Ambos colores',f.col)}${op('Blancas','Blancas',f.col)}${op('Negras','Negras',f.col)}</select>
+  <select id="nbTg">${op('','Todas las etiquetas',f.tag)}${[...tags].sort().map(t=>op(t,t,f.tag)).join('')}</select></div>
+  <div id="nbList"></div></div>`;
+  const re=()=>{f.q=$('#nbQ').value;f.flag=$('#nbFl').value;f.res=$('#nbRs').value;f.col=$('#nbCl').value;f.tag=$('#nbTg').value;this.list()};
+  ['#nbQ'].forEach(s=>$(s).oninput=re);['#nbFl','#nbRs','#nbCl','#nbTg'].forEach(s=>$(s).onchange=re);
+  this.list();
+ },
+ pick(){
+  const f=this.flt,q=f.q.toLowerCase().split(/\s+/).filter(Boolean);const pg={};Games.perGame().forEach(p=>pg[p.gi]=p);
+  const out=[];
+  Games.list.forEach((g,i)=>{
+   const n=this.get(g.id),at=this.auto(g);
+   if(f.flag==='rev'||f.flag==='fav'){if(n.flag!==f.flag)return}
+   if(f.flag==='note'&&!n.note&&!Object.keys(n.mv).length)return;
+   if(f.flag==='err'&&!(pg[i]&&pg[i].err>0))return;
+   if(f.res&&!at.includes(f.res))return;if(f.col&&!at.includes(f.col))return;
+   if(f.tag&&!n.tags.includes(f.tag)&&!at.includes(f.tag))return;
+   if(q.length){const hay=[g.white,g.black,g.event,g.date,n.note,...n.tags,...at,...Object.values(n.mv)].join(' ').toLowerCase();if(!q.every(w=>hay.includes(w)))return}
+   out.push({g,i,n,at,p:pg[i]});
+  });
+  return out;
+ },
+ list(){
+  const el=$('#nbList');if(!el)return;const r=this.pick();
+  if(!Games.list.length){el.innerHTML='<div class="small">Aún no tienes partidas. Importa un PGN primero.</div>';return}
+  if(!r.length){el.innerHTML='<div class="small">Ninguna partida coincide con esos filtros.</div>';return}
+  r.sort((a,b)=>(b.g.date||'').localeCompare(a.g.date||'')||b.i-a.i);
+  el.innerHTML=`<div class="small" style="margin-bottom:6px">${r.length} partida${r.length===1?'':'s'}</div>`+r.slice(0,150).map(x=>{
+   const res=x.at.find(t=>/^(Ganada|Tablas|Perdida)$/.test(t))||x.g.result;
+   const tg=[...x.n.tags,...x.at.filter(t=>!/^Analizada$/.test(t))].slice(0,8).map(t=>`<span class="chip2">${esc(t)}</span>`).join('');
+   const note=x.n.note?`<div class="small nbn">${esc(x.n.note.slice(0,160))}${x.n.note.length>160?'…':''}</div>`:'';
+   const mc=Object.keys(x.n.mv).length;
+   return `<div class="nbrow" data-i="${x.i}" tabindex="0"><div><b>${this.flagMark(x.n.flag)}${esc(x.g.white)} – ${esc(x.g.black)}</b> <span class="small">· ${esc(res)}${x.g.date&&x.g.date!=='????.??.??'?' · '+esc(x.g.date):''}${x.p?` · precisión ${Math.round(x.p.acc)}%`:''}${x.p&&x.p.err?` · ${x.p.err} error${x.p.err===1?'':'es'} serio${x.p.err===1?'':'s'}`:''}${mc?` · ${mc} nota${mc===1?'':'s'} de jugada`:''}</span></div><div>${tg}</div>${note}</div>`}).join('')+(r.length>150?'<div class="small">Mostrando 150; afina la búsqueda.</div>':'');
+  el.querySelectorAll('.nbrow').forEach(d=>{const go=()=>{Games.idx=+d.dataset.i;Games.fillSel();Games.open(Games.idx)};d.onclick=go;d.onkeydown=e=>{if(e.key==='Enter')go()}});
+ },
+ todayCard(){
+  const n=this.revCount();if(!n)return '';
+  return `<div class="panel" style="margin-bottom:10px"><b>Cuaderno</b>: tienes <b>${n}</b> partida${n===1?'':'s'} marcada${n===1?'':'s'} para revisar. <button data-nbgo class="pri" style="margin-left:6px">Abrir cuaderno</button></div>`;
+ },
+ bind(root){const b=root.querySelector('[data-nbgo]');if(b)b.onclick=()=>{this.flt={q:'',flag:'rev',res:'',col:'',tag:''};Games.openNb=true;Mode.set('games')}}
+};
+
 const Games={
  free:false,list:[],idx:0,run:0,pending:null,cmp:null,
  canMove(){return false},
@@ -4434,6 +5266,7 @@ const Games={
  enter(){
   this.list=store.get('games_pgn',[]);
   $('#ctl').innerHTML=`<label>Partida<select id="gmSel"></select></label>
+  <div class="row"><button id="gmNb">Cuaderno (buscar y filtrar)</button></div><div id="nbBox"></div>
   <div class="g2"><label>Mi nombre en el PGN<input id="gmName" placeholder="Ej.: EJGamez"></label><label>Juego con<select id="gmSide"><option value="auto">Automático</option><option value="w">Blancas</option><option value="b">Negras</option></select></label></div>
   <div class="row"><button id="gmImp">Importar archivo PGN</button><button id="gmPaste">Pegar PGN</button></div>
   <textarea id="gmTxt" rows="4" placeholder="Pega aquí una o varias partidas en PGN…" hidden></textarea>
@@ -4448,18 +5281,20 @@ const Games={
    inp.onchange=async()=>{let t='';for(const f of inp.files)t+='\n\n'+await f.text();this.addText(t)};inp.click()};
   $('#gmPaste').onclick=()=>{const h=$('#gmTxt').hidden;$('#gmTxt').hidden=!h;$('#gmLoad').hidden=!h};
   $('#gmLoad').onclick=()=>{this.addText($('#gmTxt').value);$('#gmTxt').value='';$('#gmTxt').hidden=true;$('#gmLoad').hidden=true};
+  $('#gmNb').onclick=()=>Nb.view();
   $('#gmAn').onclick=()=>this.analyze();$('#gmAll').onclick=()=>this.askBatch();$('#gmDiag').onclick=()=>this.diagnose();$('#gmPuz').onclick=()=>this.savePuzzles();
   $('#gmExp').onclick=()=>{const g=this.list[this.idx];if(g)downloadText(`${g.white}-vs-${g.black}.pgn`.replace(/[^\w.\-]+/g,'_'),g.pgn)};
   $('#gmDel').onclick=()=>this.del();
   Chat.clear();
   if(this.pending){const t=this.pending;this.pending=null;return this.addText(t,true)}
   if(!this.list.length){this.fillSel();this.empty();return}
+  if(this.openNb){this.openNb=false;this.fillSel();Nb.view();return}
   this.fillSel();this.open(Math.min(this.idx,this.list.length-1));
  },
  leave(){this.run++;Engine.stop()},
- fillSel(){$('#gmSel').innerHTML=this.list.map((g,i)=>`<option value="${i}">${esc(g.white)} – ${esc(g.black)} · ${esc(g.result)}${g.date&&g.date!=='????.??.??'?' · '+esc(g.date):''} (${g.n} j.)</option>`).join('');$('#gmSel').value=this.idx},
+ fillSel(){$('#gmSel').innerHTML=this.list.map((g,i)=>`<option value="${i}">${Nb.flagMark((Nb.all()[g.id]||{}).flag)}${esc(g.white)} – ${esc(g.black)} · ${esc(g.result)}${g.date&&g.date!=='????.??.??'?' · '+esc(g.date):''} (${g.n} j.)</option>`).join('');$('#gmSel').value=this.idx},
  empty(){
-  A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];setEval(null);A.sync();A.updateControls();A.status('');
+  A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];setEval(null);A.sync();A.updateControls();A.status('');Nb.render();
   Chat.say('<b>Revisión de partidas.</b><br>Importa un archivo <b>.pgn</b> (por ejemplo, tus partidas de Lichess o Chess.com) o pega el texto del PGN. Luego pulsa «Analizar partida» y el motor revisará cada jugada: precisión, errores, gráfica de ventaja y los momentos críticos. Tus errores se pueden convertir en problemas para entrenar. Si importas varias, «Analizar todas» las revisa en lote y «Mi diagnóstico» te dice qué estudiar primero.');
   Chat.chips([{label:'Importar archivo PGN',pri:true,fn:()=>$('#gmImp').click()},{label:'Pegar PGN',fn:()=>$('#gmPaste').click()}]);
  },
@@ -4487,10 +5322,10 @@ const Games={
   if(an&&an.ev.length===A.fens.length){this.report()}
   else{setEval(null);A.status('');Chat.say(`<b>${esc(g.white)}</b> vs <b>${esc(g.black)}</b> · ${esc(g.result)}${g.event&&g.event!=='?'?'<br>'+esc(g.event):''}<br>Tienes las <b>${A.userColor==='w'?'blancas':'negras'}</b>. Recorre la partida con las flechas del teclado o pulsa «Analizar partida» para que el motor la revise.`);
    Chat.chips([{label:'Analizar partida',pri:true,fn:()=>this.analyze()}])}
-  Rep.noteGame(g,A.userColor);
+  Rep.noteGame(g,A.userColor);Nb.render();
  },
  del(){
-  const g=this.list[this.idx];if(!g)return;const an=this.anAll();delete an[g.id];store.set('games_an',an);
+  const g=this.list[this.idx];if(!g)return;const an=this.anAll();delete an[g.id];store.set('games_an',an);Nb.drop(g.id);
   this.list.splice(this.idx,1);this.save();this.idx=Math.max(0,this.idx-1);Chat.clear();this.fillSel();this.list.length?this.open(this.idx):this.empty();
  },
  async analyze(){
@@ -4787,7 +5622,7 @@ const Games={
   Chat.say(`<b>${esc(this.label(k))}</b> — ${CLS_TXT[o.cls]}.<br>Evaluación: de <b>${this.ev(an.ev[k-1],o.col)}</b> a <b>${this.ev(an.ev[k],o.col)}</b> (desde tu perspectiva).<br>${why}${line?`<br><span class="small">Línea sugerida: ${esc(line)}</span>`:''}<br><span class="small">Tema a repasar: ${ph}.</span>`,o.cls==='inacc'?'warn':'bad');
  },
  onNav(idx){
-  const g=this.list[this.idx];if(!g)return;const an=this.anAll()[g.id];
+  const g=this.list[this.idx];if(!g)return;Nb.onNav();const an=this.anAll()[g.id];
   const cur=document.getElementById('gmCur');
   if(!an||an.ev.length!==A.fens.length){A.status(idx>0?this.label(idx):'');return}
   if(cur){const n=an.ev.length;const x=idx/(n-1||1)*300;cur.setAttribute('x1',x);cur.setAttribute('x2',x)}
@@ -5027,14 +5862,14 @@ const Evo={
   };
   const dl=$$('#goDel');if(dl)dl.onclick=()=>{if(confirm('¿Borrar tus objetivos?')){try{localStorage.removeItem('goal')}catch(e){}store.set('lastChange',Date.now());Prog.enter()}};
  },
- render(view){return view==='obj'?this.goalsHtml():this.evolHtml()},
- bind(root,view){if(view==='obj')this.bindGoals(root);else this.bindEvo(root)}
+ render(view){return view==='obj'?this.goalsHtml():view==='nivel'?Lvl.html():this.evolHtml()},
+ bind(root,view){if(view==='obj')this.bindGoals(root);else if(view==='nivel')Lvl.bind(root);else this.bindEvo(root)}
 };
 
 /* =============== PROGRESO =============== */
 const Prog={
  free:false,view:store.get('progView','resumen'),canMove(){return false},
- seg(){return `<div class="seg" style="margin-bottom:10px;flex-wrap:wrap">${[['resumen','Resumen'],['evol','Evolución'],['obj','Objetivos']].map(([k,l])=>`<button data-pv="${k}" class="${this.view===k?'on':''}">${l}</button>`).join('')}</div>`},
+ seg(){return `<div class="seg" style="margin-bottom:10px;flex-wrap:wrap">${[['resumen','Resumen'],['evol','Evolución'],['obj','Objetivos'],['nivel','Nivel']].map(([k,l])=>`<button data-pv="${k}" class="${this.view===k?'on':''}">${l}</button>`).join('')}</div>`},
  enter(){
   $('#ctl').innerHTML='<div class="small">Tu avance se guarda automáticamente en este navegador. Abajo puedes respaldarlo o sincronizarlo.</div>';Chat.clear();
   A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;board.flipped=false;board.arrows=[];board.marks=[];setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();A.status('');
@@ -5049,6 +5884,7 @@ const Prog={
    h+=`<tr><td>${esc(t)}</td><td>${n?Math.round(pct*100)+'%':'—'}</td><td><div class="bar"><i style="width:${n?pct*100:0}%"></i></div></td></tr>`;
    if(n&&pct<wv){wv=pct;weak=t}}
   {const cs=store.get('cstats',{n:0,ok:0});if(cs.n)h+=`</table><div style="margin-top:6px">Cálculo sin mover piezas: <b>${Math.round(cs.ok/cs.n*100)}%</b> (${cs.ok}/${cs.n})</div><table>`}
+  {h+='</table>'+Reto.summary()+'<table>'}
   {const es=ErrSRS.stats();h+='</table><h3>Mis errores (repaso espaciado)</h3>'+(es.total?`<div>Problemas: <b>${es.total}</b> · Pendientes hoy: <b>${es.due}</b> · Nuevos: ${es.nuevos} · En repaso: ${es.rep} · Dominados: <b>${es.dom}</b></div>`:'<div class="small">Aún no guardaste errores de tus partidas (Partidas › Mi diagnóstico).</div>')}
   h+='<h3>Partidas contra Stockfish</h3>'+`<div>Ganadas ${gs.w} · Tablas ${gs.d} · Perdidas ${gs.l}</div>`;
   h+=Rep.panel();h+=Struct.panel();h+=Backup.panel();h+=Coach.panel();h+='<h3>Qué practicar ahora</h3><ul>';
@@ -5093,6 +5929,12 @@ const Backup={
    case 'thist':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [w,ts] of Object.entries(v)){const a=o[w]?{...o[w]}:{};for(const [t,c] of Object.entries(ts)){const q=a[t];a[t]=q?(q[1]>=c[1]?q:c):c}o[w]=a}return o}
    case 'errsrs':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [c,d] of Object.entries(v))o[c]=o[c]?this.best(o[c],d,q=>+q.last||0):d;return o}
    case 'blind':return isO(x)&&isO(v)?this.best(x,v,q=>(+q.g||0)+(+q.qn||0)+(+q.cn||0)+(+q.ill||0)):x;
+   case 'gnotes':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [id,d] of Object.entries(v)){const c=o[id];if(!c){o[id]=d;continue}const w=(+d.upd||0)>(+c.upd||0)?d:c,l=w===d?c:d;o[id]={...w,tags:[...new Set([...(w.tags||[]),...(l.tags||[])])],mv:{...(l.mv||{}),...(w.mv||{})},note:w.note||l.note}}return o}
+   case 'lvl':{if(!Array.isArray(x)||!Array.isArray(v))return x;return this.uni(x,v,e=>String(e&&e.t)).sort((a,b)=>a.t-b.t).slice(-20)}
+   case 'lvlSeen':{if(!Array.isArray(x)||!Array.isArray(v))return x;return [...new Set([...x,...v])].slice(-300)}
+   case 'fin':{if(!isO(x)||!isO(v))return x;const o={...x};for(const [c,d] of Object.entries(v))o[c]=o[c]?this.best(o[c],d,q=>(+q.t||0)):d;return o}
+   case 'storm':{if(!isO(x)||!isO(v))return x;const o={best:{...(x.best||{})},hist:this.uni(x.hist||[],v.hist||[],e=>String(e&&e.t)).sort((a,b)=>a.t-b.t).slice(-40)};for(const [k,n] of Object.entries(v.best||{}))o.best[k]=Math.max(+o.best[k]||0,+n||0);return o}
+   case 'clkhist':{if(!Array.isArray(x)||!Array.isArray(v))return x;return this.uni(x,v,e=>String(e&&e.t)).sort((a,b)=>a.t-b.t).slice(-40)}
    case 'games_an':return isO(x)&&isO(v)?{...v,...x}:x;
    default:return x;
   }
@@ -5368,7 +6210,7 @@ const Coach={
 };
 
 /* =============== CONTROL DE PESTAÑAS =============== */
-const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,blind:Blind,edit:Edit,coach:Coach,progress:Prog};
+const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,blind:Blind,reto:Reto,expl:Expl,edit:Edit,coach:Coach,progress:Prog};
 const Mode={
  set(name,after){
   if(A.mode&&A.mode.leave)A.mode.leave();Engine.stop();anToken++;$('#bStopAn').hidden=true;
@@ -5415,7 +6257,9 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>Mode.set(b.da
  document.addEventListener('pointerdown',()=>Snd.init(),{passive:true});document.addEventListener('keydown',()=>Snd.init());
 })();
 Engine.init().catch(()=>{});
-Coach.syncTab();Backup.init().finally(()=>Mode.set('today'));
+Cfg.apply();$('#cfgBtn').onclick=e=>{e.stopPropagation();Cfg.isOpen()?Cfg.close():Cfg.open()};
+try{matchMedia('(prefers-color-scheme: light)').addEventListener('change',()=>Cfg.apply())}catch(e){}
+Coach.syncTab();Backup.init().finally(()=>Mode.set(Cfg.startMode()));
 window.__app={Coach,Backup,store,Log,Today,Snd,PZ_MATE,PZ_POS,MateU,STRUCTS,Struct,Rep,Exam,parseStudyPGN,Games,PZ,parsePGN,SRS,Rev,A,Lesson,Tac,Play,Edit,Engine,PUZZLES,LESSONS,Mode,board,whiteEval};
 </script>
 </body>
