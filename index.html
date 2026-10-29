@@ -2734,7 +2734,7 @@ function setEval(ev){
  f.style.height=(100/(1+Math.exp(-ev.cp/260)))+'%';t.textContent=ev.text.replace('+','');
 }
 let anToken=0;
-async function analyze(){
+async function analyzeSimple(){
  const fen=A.curFen();const tok=++anToken;$('#bStopAn').hidden=false;$('#engineLines').innerHTML='<div>Analizando…</div>';
  try{
   const r=await Engine.search({fen,...Engine.prof().an,onInfo:lines=>{if(tok===anToken)showLines(fen,lines)}});
@@ -2750,6 +2750,7 @@ function showLines(fen,lines){
 }
 $('#bAnalyze').onclick=()=>Ana.on?Ana.run(true):Ana.enter();
 $('#bStopAn').onclick=()=>{anToken++;Engine.stop();$('#bStopAn').hidden=true};
+const analyze=()=>Ana.enter();
 
 
 /* =============== TABLERO DE ANÁLISIS (jugadas libres con variantes y evaluación continua) =============== */
@@ -2758,11 +2759,19 @@ const Ana={
  DEPTH:{r:{depth:12,movetime:800},n:{depth:18,movetime:2500},p:{depth:30,movetime:9000}},
  MARK:{best:'✓',inacc:'?!',mist:'?',blun:'??'},KCLS:{inacc:'inacc',mist:'mistake',blun:'blunder'},
  TXT:{best:'Mejor jugada o equivalente',good:'Buena jugada',inacc:'Imprecisión',mist:'Error',blun:'Error grave'},
- allowed(){return !['blind','reto','exam','edit','coach','progress'].includes(document.body.dataset.m)},
+ block(){
+  const m=document.body.dataset.m;
+  if(m==='exam')return 'No se puede analizar durante el examen.';
+  if(m==='blind'&&Blind.started&&!Blind.over)return 'Termina o abandona la partida a ciegas para poder analizar.';
+  if(m==='reto'&&(Storm.on||(Reto.sub==='clk'&&Clk.started&&!Clk.counted)))return 'No se puede analizar durante un reto en curso.';
+  if(typeof Lvl!=='undefined'&&Lvl.on)return 'No se puede analizar durante la prueba de nivel.';
+  return '';
+ },
  mk(par,m,fen){const n={id:++this.nid,par,san:m?m.san:null,from:m?m.from:null,to:m?m.to:null,pr:(m&&m.promotion)||null,fen,ch:[],ev:null,d:0,bu:null,bs:null,pvs:null,cls:null,said:false};this.nodes[n.id]=n;if(par)par.ch.push(n.id);return n},
  enter(){
   if(this.on)return;
-  if(!this.allowed())return analyze();
+  const m0=document.body.dataset.m;if(['edit','coach','progress'].includes(m0))return analyzeSimple();
+  const bl=this.block();if(bl){Chat.say(bl,'warn');return}
   if(A.mode&&A.mode.thinking){Chat.say('Espera a que Stockfish termine su jugada y vuelve a pulsar «Analizar».','warn');return}
   Engine.stop();anToken++;$('#bStopAn').hidden=true;
   this.saved={game:A.game,startFen:A.startFen,viewIdx:A.viewIdx,marks:board.marks,arrows:board.arrows};
@@ -3700,13 +3709,16 @@ const Storm={
  st(){const s=store.get('storm',{});s.best=s.best||{};s.hist=s.hist||[];return s},
  key(){return this.dur+'|'+this.src},
  canMove(){return this.on&&!this.pause&&Tac.canMove()},
+ onMove(m){return Tac.onMove(m)},
  enter(box){
   const s=this.st();
-  box.innerHTML=`<div class="g2"><label>Duración<select id="stDur"><option value="1">1 minuto</option><option value="3">3 minutos</option><option value="5">5 minutos</option></select></label>
+  box.innerHTML=`<div class="g2"><label>Duración<select id="stDur"><option value="1">1 minuto</option><option value="2">2 minutos</option><option value="3">3 minutos</option><option value="5">5 minutos</option><option value="10">10 minutos</option><option value="15">15 minutos</option></select></label>
   <label>Ejercicios<select id="stSrc"><option value="mates">Solo mates (1, 2 y 3)</option><option value="mix">Mixto (mates y tácticas)</option></select></label></div>
+  <label class="small" style="display:flex;gap:8px;align-items:center;margin:4px 0">¿Otro tiempo? Escribe los minutos (1–60) <input id="stCus" type="number" min="1" max="60" step="1" style="width:70px"></label>
   <div class="row"><button id="stGo" class="pri">Empezar</button><button id="stStop" hidden>Terminar</button></div><div id="stHud"></div><div class="small" id="stRec"></div>`;
-  $('#stDur').value=this.dur;$('#stSrc').value=this.src;
-  $('#stDur').onchange=e=>{this.dur=+e.target.value;this.rec()};$('#stSrc').onchange=e=>{this.src=e.target.value;this.rec()};
+  $('#stDur').value=this.dur;if($('#stDur').value!==String(this.dur)){$('#stDur').value='';$('#stCus').value=this.dur}$('#stSrc').value=this.src;
+  $('#stDur').onchange=e=>{this.dur=+e.target.value;$('#stCus').value='';this.rec()};
+  $('#stCus').oninput=e=>{const v=Math.round(+e.target.value);if(v>=1&&v<=60){this.dur=v;$('#stDur').value=String(v);if($('#stDur').value!==String(v))$('#stDur').value='';this.rec()}};$('#stSrc').onchange=e=>{this.src=e.target.value;this.rec()};
   $('#stGo').onclick=()=>this.start();$('#stStop').onclick=()=>this.finish('Terminaste antes de tiempo.');
   this.rec();this.intro();
  },
@@ -3731,7 +3743,7 @@ const Storm={
  start(){
   Engine.stop();this.on=true;this.score=0;this.solved=0;this.fails=0;this.lives=3;this.streak=0;this.used=new Set();this.pause=false;
   this.calcOld=Tac.calc;Tac.calc=false;this.end=Date.now()+this.dur*60000;
-  $('#stGo').hidden=true;$('#stStop').hidden=false;['stDur','stSrc'].forEach(i=>$('#'+i).disabled=true);
+  $('#stGo').hidden=true;$('#stStop').hidden=false;['stDur','stSrc','stCus'].forEach(i=>$('#'+i).disabled=true);
   clearInterval(this.timer);this.timer=setInterval(()=>this.tick(),100);
   this.next();this.hud();
  },
@@ -3768,7 +3780,7 @@ const Storm={
   A.status('Fin del reto');Chat.clear();
   Chat.say(`<b>${esc(msg)}</b><br>Puntos: <b>${this.score}</b> · resueltos ${this.solved} · fallos ${this.fails} · acierto ${acc}%.${nw&&this.score>0?'<br><b>¡Nuevo récord!</b>':old?`<br>Tu récord: ${old}.`:''}`,nw&&this.score>0?'ok':'');
   Chat.chips([{label:'Otra vez',pri:true,fn:()=>{Reto.open('storm')}},{label:'Táctica normal',fn:()=>Mode.set('tactics')}]);
-  const g=$('#stGo'),st=$('#stStop');if(g)g.hidden=false;if(st)st.hidden=true;['stDur','stSrc'].forEach(i=>{const e=$('#'+i);if(e)e.disabled=false});this.rec();this.hud();
+  const g=$('#stGo'),st=$('#stStop');if(g)g.hidden=false;if(st)st.hidden=true;['stDur','stSrc','stCus'].forEach(i=>{const e=$('#'+i);if(e)e.disabled=false});this.rec();this.hud();
  },
  leave(){if(this.on){this.on=false;clearInterval(this.timer);Tac.calc=this.calcOld}Tac.lock=false;Engine.stop()}
 };
