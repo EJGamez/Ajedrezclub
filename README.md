@@ -114,5 +114,13 @@ Tres modos de práctica:
 ## Explorador de aperturas (pestaña «Aperturas»)
 Construido con tus partidas importadas (necesita tu nombre de usuario tal como aparece en el PGN). Elige si juegas con blancas o negras y mueve las piezas del tablero o pulsa una jugada de la tabla: para cada posición ves qué jugaste tú y qué jugaron tus rivales, cuántas veces, el resultado (barra de ganadas/tablas/perdidas), los puntos y la precisión media (si analizaste las partidas). Se cruza con tu repertorio: 📖 marca lo que está en el libro, ⚠ lo que juegas fuera de él, «hueco» las respuestas del rival que no cubres (con botón «+ Hueco» para guardarlas), y avisa cuando sueles jugar algo distinto de lo que dice tu repertorio. En el inicio aparecen «Donde más puntos pierdes» y «Tus mejores líneas» (líneas con al menos 3 partidas), y cada posición lista las partidas que pasaron por ella, que se abren en Partidas en esa jugada.
 
+## Modo análisis (botón «🔍 Analizar»)
+Disponible en Lecciones, Repaso, Táctica, Peones, Partidas, Jugar y Aperturas. Al pulsar «Analizar» la posición que estás viendo se convierte en un tablero libre:
+
+- **Mueve piezas de cualquier bando.** Cada posición se evalúa con Stockfish (3 mejores líneas, flechas azules en el tablero y barra de evaluación).
+- **Aviso por jugada:** tras cada jugada tuya el chat dice si fue mejor jugada, buena, imprecisión (?!), error (?) o error grave (??), cuánto cambió la evaluación y cuál era la mejor.
+- **Variantes:** vuelve atrás con las flechas (o pulsando una jugada de la lista) y prueba otra; queda como variante entre paréntesis, con la evaluación de cada jugada.
+- Botones: **Mejor jugada** (juega la del motor), **Jugar / + línea** junto a cada línea del motor (juega su primera jugada o añade la línea entera), **Quitar jugada**, **Reiniciar**, **Profundidad** (rápida/normal/profunda; «Profundizar» analiza a fondo), **Copiar PGN** (con variantes y evaluaciones), **Copiar FEN**, **Jugar desde aquí** (partida contra Stockfish desde esa posición) y **Salir del análisis** (la posición original queda como estaba).
+
 ## Ajustes (botón ⚙ o tecla «?»)
 Tema oscuro, claro o automático; colores del tablero (madera, verde, azul, gris, coral); tamaño del texto; mostrar u ocultar coordenadas, puntos de jugadas legales, resaltado de la última jugada y barra de evaluación; empezar en «Hoy» o donde lo dejaste; pantalla completa; descarga de respaldo, restablecer ajustes y borrar todos los datos (con doble confirmación). Atajos: ← → (jugadas), Inicio/Fin, F (girar), M (sonido), ? (ajustes), Esc (cerrar). La aplicación funciona sin conexión porque es un único archivo; los ajustes son de cada navegador y no se sincronizan entre equipos.
