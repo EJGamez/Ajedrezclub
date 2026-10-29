@@ -5,6 +5,9 @@ App web para estudiar y practicar: lecciones guiadas con chat de entrenador (Ape
 ## Usar
 Abre `index.html` en Chrome/Edge (funciona sin internet). Progreso y lecciones propias se guardan en el navegador (exporta/importa JSON desde «Crear lección»).
 
+## Navegación
+Las secciones están agrupadas: **Hoy**, **Estudiar** (Lecciones, Aperturas, Peones, Repaso, Examen), **Practicar** (Táctica, Retos, A ciegas), **Jugar**, **Analizar** (Partidas, Crear) y **Progreso**. Al pulsar un grupo vuelves al último apartado que usaste en él; los apartados del grupo aparecen a su lado (o bajo el título en móvil). En pantallas estrechas los grupos pasan a una **barra inferior fija**.
+
 ## Partidas (PGN)
 Pestaña «Partidas»: importa archivos `.pgn` (o pega el texto), analiza cada jugada con Stockfish, ve la precisión, la gráfica de ventaja y los momentos críticos, y guarda tus errores como problemas en «Táctica › Mis errores». Hay partidas de prueba en `ejemplos/`. Las partidas contra Stockfish también se pueden exportar a PGN y revisar.
 
@@ -21,6 +24,10 @@ Cada estructura también existe como **lección** (Lecciones → «Estructura: �
 
 ## Táctica: colecciones de ejercicios
 En «Táctica» elige colección: **Básicos y mis errores**, **Mate en 1** (30), **Mate en 2** (40), **Mate en 3** (24) y **Mejorar la posición** (33). Los mates cubren patrones (pasillo, ahogado, jaque doble, escalera, sacrificios de dama/torre/alfil/caballo y mates con cada pieza); la app acepta cualquier mate válido, no solo el de la solución. Los ejercicios de plan (torre a columna abierta, caballo a un puesto fuerte, rupturas, desarrollo…) explican la idea y muestran la evaluación del motor. Todos se generaron y verificaron con Stockfish; tu porcentaje por patrón aparece en Progreso.
+
+**Banco de táctica y Elo táctico.** Además hay un **banco de 391 ejercicios** generados con Stockfish a partir de partidas simuladas (horquillas, clavadas, ensartadas, jaques descubiertos, piezas colgadas, sacrificios, defensas…). Cada uno se verificó con el motor: la primera jugada es la mejor y claramente superior a la segunda. Se pueden practicar todos «de fácil a difícil» o por tema («Banco · Horquilla», etc.). Su dificultad es una **estimación** (no calibrada con jugadores reales) entre ≈800 y ≈1800.
+
+La colección **Entrenamiento adaptativo (Elo táctico)** elige ejercicios cercanos a tu nivel: aciertas a la primera y subes, fallas y bajas (se parte de 1200). La evolución aparece en Progreso › Evolución. Cualquier ejercicio del banco que falles se añade a **Mis errores** y vuelve a salir al día siguiente, y luego a intervalos crecientes, hasta que lo domines. Los ejercicios del banco también alimentan el modo mixto del contrarreloj.
 
 ## Finales de peones
 Tres lecciones (Lecciones → «Finales de peones: básico / intermedio / avanzado») con 12 posiciones: regla del cuadrado, rey en 6ª, casillas clave, oposición, peón de torre, defensa, flanqueo, ruptura 3 contra 3, peón pasado alejado, Réti y zugzwang. Las posiciones y las jugadas clave se verificaron con Stockfish 16; si juegas otra jugada que también gana, se acepta como variante. Los datos están en `ENDS` dentro de `src/template.html`.

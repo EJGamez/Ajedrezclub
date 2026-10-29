@@ -10,7 +10,10 @@ sfw = base64.b64encode((root / 'libs/stockfish-19-lite-single.wasm').read_bytes(
 for x in (cj, sf, sfjs):
     assert '</script' not in x
 build = datetime.date.today().isoformat()
-out = t.replace('__BUILD__', build).replace('__CHESSJS__', cj).replace('__SF__', sf).replace('__SFJS__', sfjs).replace('__SFWASM__', sfw)
+tac = (root / 'data' / 'tactics.json')
+tactics = tac.read_text(encoding='utf-8').strip() if tac.exists() else '[]'
+assert '</script' not in tactics
+out = t.replace('__TACTICS__', tactics).replace('__BUILD__', build).replace('__CHESSJS__', cj).replace('__SF__', sf).replace('__SFJS__', sfjs).replace('__SFWASM__', sfw)
 (root / 'index.html').write_text(out, encoding='utf-8')
 
 # --- archivos para publicar como web / app instalable (GitHub Pages) ---
