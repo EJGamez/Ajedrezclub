@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Entrenador de Ajedrez</title>
+<meta name="description" content="Entrenador de ajedrez gratuito que funciona sin conexión: plan diario, lecciones, táctica, finales, repaso de errores y revisión de partidas con Stockfish.">
+<meta name="theme-color" content="#161512">
+<meta property="og:title" content="Entrenador de Ajedrez"><meta property="og:description" content="Mejora de forma independiente: plan diario, lecciones, táctica, finales y revisión de partidas con Stockfish. Funciona sin conexión.">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="icons/icon.svg"><link rel="apple-touch-icon" href="icons/icon-180.png">
+<script>window.__errs=[];(function(){var f=function(m){try{window.__errs.push(String(m).slice(0,200));if(window.__errs.length>30)window.__errs.shift()}catch(e){}};addEventListener('error',function(e){f((e.message||'error')+(e.lineno?' @'+e.lineno:''))});addEventListener('unhandledrejection',function(e){f('promesa: '+(e.reason&&e.reason.message||e.reason))})})();</script>
 <style>
 :root{--k:1;--bg:#161512;--panel:#201e1b;--panel2:#2a2724;--line:#3a3632;--txt:#e8e4dc;--mut:#9b958a;--acc:#8ab34a;--acc2:#e0a83a;--bad:#d9594c;--light:#f0d9b5;--dark:#b58863}
 *{box-sizing:border-box}
@@ -189,10 +194,16 @@ body.nocoords .sq[data-f]::after,body.nocoords .sq[data-r]::before{display:none}
 body.nodots .dot,body.nodots .cap{display:none}
 body.nohl .sq.last,body.nohl .sq.check{box-shadow:none}
 body.noeval #evalbar{display:none}
-#cfgBtn{padding:5px 8px;font-size:16px;line-height:1}
-#cfgPop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.55);display:flex;align-items:flex-start;justify-content:center;padding:40px 12px;overflow:auto}#cfgPop[hidden]{display:none}
+#cfgBtn,#fbBtn{padding:5px 8px;font-size:16px;line-height:1}
+#cfgPop,#relPop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.55);display:flex;align-items:flex-start;justify-content:center;padding:40px 12px;overflow:auto}#cfgPop[hidden],#relPop[hidden]{display:none}#relPop{z-index:90}
 .cfgbox{background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:14px 18px 18px;width:min(520px,100%);box-shadow:0 12px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:8px}
 .cfgbox h4{margin:10px 0 0;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+@media(max-width:900px){#wideBtn{display:none}}
+.cfgbox .row{display:flex;flex-wrap:wrap;gap:8px}
+@media(max-width:700px){nav#tabs{flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none;order:5}nav#tabs::-webkit-scrollbar{display:none}nav button{white-space:nowrap;flex:none}}
+.cfgcol{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mut)}.cfgcol input,.cfgcol textarea,.cfgcol select{font:inherit;color:var(--txt);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
+.fbgrid{display:flex;flex-direction:column;gap:6px}.fbrow{display:grid;grid-template-columns:120px 84px 1fr;gap:6px;align-items:center;font-size:13px}.fbrow select,.fbrow input,#fbOut{font:inherit;color:var(--txt);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 6px;min-width:0;width:100%}#fbOut{font:12px/1.4 ui-monospace,Consolas,monospace;resize:vertical}
+@media(max-width:560px){.fbrow{grid-template-columns:1fr 84px}.fbrow input{grid-column:1/-1}}
 .cfghead{display:flex;justify-content:space-between;align-items:center;font-size:17px}
 .cfgrow{display:flex;align-items:center;justify-content:space-between;gap:10px}.cfgrow select{width:auto;min-width:170px}.cfgrow input[type=checkbox]{width:auto;flex:none;order:-1;margin-right:4px}
 label.cfgrow:has(input[type=checkbox]){justify-content:flex-start}
@@ -221,6 +232,7 @@ label.cfgrow:has(input[type=checkbox]){justify-content:flex-start}
   </nav>
   <label id="sizeBox" title="Tamaño del tablero (doble clic para restablecer)">Tablero <input type="range" id="sizeK" min="60" max="140" step="5" value="100"></label>
   <button id="sndBtn" class="b" title="Sonido" aria-label="Sonido"></button>
+  <button id="fbBtn" class="b" title="Enviar comentarios" aria-label="Enviar comentarios">&#128172;</button>
   <button id="cfgBtn" class="b" title="Ajustes (?)" aria-label="Ajustes">&#9881;</button>
   <button id="wideBtn" class="b" title="Hace el chat más ancho y el tablero más pequeño">Chat amplio</button>
   <span id="engstat">Cargando motor…</span>
@@ -253,7 +265,7 @@ label.cfgrow:has(input[type=checkbox]){justify-content:flex-start}
     <div id="chips"></div>
   </aside>
 </main>
-<footer>Motor: Stockfish.js 19 (GPLv3), con Stockfish 10 de respaldo · Reglas: chess.js (BSD). Todo funciona sin conexión; tu progreso y tus lecciones se guardan en este navegador.</footer>
+<footer>v<span id="ver"></span> beta · Motor: Stockfish.js 19 (GPLv3), con Stockfish 10 de respaldo · Reglas: chess.js (BSD). Todo funciona sin conexión; tu progreso y tus lecciones se guardan en este navegador.</footer>
 
 <script id="sfsrc" type="text/plain">/*!
  * Stockfish.js (http://github.com/nmrugg/stockfish.js)
@@ -2688,7 +2700,7 @@ $('#bPrev').onclick=()=>A.goto((A.viewIdx==null?A.hist.length:A.viewIdx)-1);
 $('#bNext').onclick=()=>A.goto((A.viewIdx==null?A.hist.length:A.viewIdx)+1);
 $('#bEnd').onclick=()=>A.goto(A.hist.length);
 $('#bFlip').onclick=()=>{board.flipped=!board.flipped;board.draw()};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&typeof Cfg!=='undefined'&&Cfg.isOpen()){Cfg.close();return}if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='ArrowLeft')$('#bPrev').click();if(e.key==='ArrowRight')$('#bNext').click();if(e.key==='Home'){e.preventDefault();$('#bStart').click()}if(e.key==='End'){e.preventDefault();$('#bEnd').click()}if(e.key==='f'||e.key==='F')$('#bFlip').click();if(e.key==='m'||e.key==='M'){Snd.on=!Snd.on;Snd.save();$('#sndOn').checked=Snd.on}if(e.key==='?'){Cfg.isOpen()?Cfg.close():Cfg.open()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&typeof Rel!=='undefined'&&$('#relPop')&&!$('#relPop').hidden&&!$('#wlSkip')){Rel.close();return}if(e.key==='Escape'&&typeof Cfg!=='undefined'&&Cfg.isOpen()){Cfg.close();return}if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='ArrowLeft')$('#bPrev').click();if(e.key==='ArrowRight')$('#bNext').click();if(e.key==='Home'){e.preventDefault();$('#bStart').click()}if(e.key==='End'){e.preventDefault();$('#bEnd').click()}if(e.key==='f'||e.key==='F')$('#bFlip').click();if(e.key==='m'||e.key==='M'){Snd.on=!Snd.on;Snd.save();$('#sndOn').checked=Snd.on}if(e.key==='?'){Cfg.isOpen()?Cfg.close():Cfg.open()}});
 
 /* Eval bar + análisis */
 function setEval(ev){
@@ -3866,6 +3878,7 @@ const Cfg={
   ${chk('cfCo','Mostrar coordenadas (a–h, 1–8)',c.coords)}${chk('cfDo','Mostrar puntos de jugadas legales',c.dots)}${chk('cfHl','Resaltar la última jugada y el jaque',c.hl)}${chk('cfEv','Mostrar la barra de evaluación',c.ev)}
   <h4>Al abrir la aplicación</h4>
   <label class="cfgrow">Empezar en ${sel('cfSt',[['today','Hoy (plan del día)'],['last','Donde lo dejé']],c.start)}</label>
+  ${Rel.settings()}
   <h4>Atajos de teclado</h4>
   <div class="small cfgkeys"><span><kbd>←</kbd> <kbd>→</kbd> jugada anterior / siguiente</span><span><kbd>Inicio</kbd> <kbd>Fin</kbd> primera / última</span><span><kbd>F</kbd> girar el tablero</span><span><kbd>M</kbd> silenciar / activar sonido</span><span><kbd>?</kbd> abrir estos ajustes</span><span><kbd>Esc</kbd> cerrar</span></div>
   <h4>Pantalla y datos</h4>
@@ -3876,7 +3889,7 @@ const Cfg={
   const on=(id,f)=>{const e=$('#'+id);if(e)e.onchange=f};
   on('cfTheme',e=>this.set('theme',e.target.value));on('cfBd',e=>this.set('bd',e.target.value));on('cfFs',e=>this.set('fs',+e.target.value));
   on('cfCo',e=>this.set('coords',e.target.checked));on('cfDo',e=>this.set('dots',e.target.checked));on('cfHl',e=>this.set('hl',e.target.checked));on('cfEv',e=>this.set('ev',e.target.checked));on('cfSt',e=>this.set('start',e.target.value));
-  $('#cfgX').onclick=()=>this.close();
+  Rel.bindSettings();$('#cfgX').onclick=()=>this.close();
   el.onclick=e=>{if(e.target===el)this.close()};
   $('#cfFull').onclick=()=>{try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen()}catch(e){}};
   $('#cfBk').onclick=()=>{Backup.download();$('#cfMsg').textContent='✓ Respaldo descargado.'};
@@ -3890,6 +3903,101 @@ const Cfg={
  },
  close(){const el=$('#cfgPop');el.hidden=true;el.innerHTML=''},
  isOpen(){return !$('#cfgPop').hidden}
+};
+
+/* =============== VERSIÓN, BIENVENIDA, COMENTARIOS E INSTALACIÓN =============== */
+const APP_VERSION='1.0.0-beta.1',APP_BUILD='2026-10-29';
+const DEMO_PGN="[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.04\"]\n[White \"Invitado\"]\n[Black \"Rival1\"]\n[Result \"1/2-1/2\"]\n[Opening \"Ruy López\"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. d3 b5 7. Bb3 Bb7 8. Nc3 d6 9. Nd5 Na5 10. Nxe7 Kxe7 11. Re1 h6 12. Bd2 Nxb3 13. axb3 Ke8 14. h3 Qd7 15. c4 Rb8 16. Nh4 g6 17. f4 Qe7 18. Nf3 Nd7 19. Qc2 Kd8 20. cxb5 axb5 21. Rec1 c5 22. Rf1 exf4 23. Bxf4 b4 24. Nd2 f6 25. Nc4 Ne5 26. Ra5 Ra8 27. Bxe5 fxe5 28. Rxa8+ Bxa8 29. Qf2 Bc6 30. Qf6 Rg8 31. Rf2 Kd7 32. Rf1 h5 33. Nb6+ Kd8 34. Qf2 h4 35. Nd5 Bxd5 36. exd5 Ke8 37. Ra1 Qd8 38. Rf1 Qe7 39. Qe3 Rf8 40. Rxf8+ Qxf8 1/2-1/2\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.06\"]\n[White \"Rival2\"]\n[Black \"Invitado\"]\n[Result \"1-0\"]\n[Opening \"Siciliana Najdorf\"]\n\n1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. a4 g6 7. Be3 Nc6 8. Nxc6 bxc6 9. a5 Qc7 10. Be2 c5 11. h4 h5 12. Qd2 Be6 13. f3 Qb7 14. e5 Nd7 15. f4 Bg4 16. Qd5 O-O-O 17. Bxg4 hxg4 18. Qc4 Bh6 19. Ra3 Bf8 20. Rb3 Qc6 21. O-O g3 22. e6 fxe6 23. Qxe6 Rxh4 24. Rb6 Qxb6 25. axb6 Rh5 26. Qc4 Kb7 27. Ra1 Nxb6 28. Qxa6+ Kc6 29. Qb5+ Kb7 30. Na4 Kc7 31. Nxb6 e6 32. Nd5+ Kc8 33. Ra8# 1-0\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.08\"]\n[White \"Invitado\"]\n[Black \"Rival3\"]\n[Result \"1/2-1/2\"]\n[Opening \"Gambito de dama\"]\n\n1. d4 d5 2. c4 e6 3. Nc3 Nf6 4. Bg5 Be7 5. e3 O-O 6. Qc2 h6 7. h4 c5 8. dxc5 Na6 9. Bxf6 Bxf6 10. Rd1 Qa5 11. cxd5 Nxc5 12. g4 Bd7 13. Ne2 Rac8 14. Rd2 Na4 15. dxe6 fxe6 16. Rxd7 Bxc3+ 17. bxc3 Nxc3 18. Qd2 Rxf2 19. Rd3 Rxe2+ 20. Bxe2 Qc7 21. Rxc3 Qxc3 22. a3 Qa1+ 23. Bd1 Qf6 24. g5 hxg5 25. hxg5 Qxg5 26. Qf2 Rc3 27. Rh3 Qa5 28. Ke2 Qb5+ 29. Ke1 Qa5 30. Ke2 Rxa3 31. Bc2 Qa6+ 32. Kd2 Qa5+ 33. Kc1 Qc5 34. Qh4 Ra1+ 35. Kd2 Qa5+ 36. Ke2 Qb5+ 37. Kf2 Qf1+ 38. Kg3 Qf6 39. Qxf6 gxf6 40. Kf4 Rf1+ 1/2-1/2\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.10\"]\n[White \"Rival4\"]\n[Black \"Invitado\"]\n[Result \"1-0\"]\n[Opening \"Caro-Kann avance\"]\n\n1. e4 c6 2. d4 d5 3. e5 Bf5 4. Nf3 e6 5. Be2 c5 6. O-O cxd4 7. Nxd4 Be4 8. Be3 Nd7 9. Nc3 a6 10. Nxe4 dxe4 11. c4 Qc7 12. Qa4 Be7 13. Rfd1 Nh6 14. c5 Nf5 15. Nxf5 exf5 16. e6 fxe6 17. Bc4 Rf8 18. Bxe6 Rd8 19. Rxd7 Qc6 20. Rxd8+ Bxd8 21. Qxc6+ bxc6 22. Re1 Ba5 23. Rd1 f4 24. Bd4 Bb4 25. Bc4 e3 26. a3 Bd2 27. Kf1 h5 28. b4 Rf5 29. Bd3 Rd5 30. fxe3 Bxe3 31. Bc3 Kf8 32. Be2 Rxd1+ 33. Bxd1 f3 34. g3 Bh6 35. Bb2 g5 36. Be5 g4 37. Bc2 Be3 38. Bd3 a5 39. bxa5 Bxc5 40. Bc7 Bd4 1-0\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.12\"]\n[White \"Invitado\"]\n[Black \"Rival5\"]\n[Result \"1/2-1/2\"]\n[Opening \"Italiana\"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. c3 Nf6 5. d3 d6 6. Nbd2 a5 7. a4 O-O 8. Bb3 h6 9. h3 Re8 10. g4 Nh7 11. Nf1 Ne7 12. Rg1 d5 13. Ng3 f6 14. Nf5 c6 15. Rg3 Be6 16. Qe2 Qb6 17. Bc2 dxe4 18. dxe4 Ng6 19. N3h4 Nf4 20. Bxf4 exf4 21. Rd3 Qxb2 22. Rb1 Qa2 23. Rxb7 Ra7 24. Rdd7 Rxb7 25. Rxb7 Bf7 26. Kf1 f3 27. Qd1 Ng5 28. Nxf3 Nxf3 29. Rxf7 Qxf7 30. Qxf3 Rd8 31. Qe2 Rd7 32. Bb1 Kh7 33. Nh4 Rb7 34. Bd3 g6 35. e5 Qd5 36. Bxg6+ Kg7 37. Be4 Rb1+ 38. Kg2 Qd1 39. Qxd1 Rxd1 40. e6 Rd2 1/2-1/2\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.14\"]\n[White \"Rival6\"]\n[Black \"Invitado\"]\n[Result \"1/2-1/2\"]\n[Opening \"India de rey\"]\n\n1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Nf3 O-O 6. Qd2 Nbd7 7. h3 e5 8. d5 Nc5 9. Qc2 Nh5 10. Be3 a6 11. b4 Nxe4 12. Nxe4 f5 13. Nfd2 f4 14. Bb6 cxb6 15. a4 Bd7 16. Ra3 b5 17. c5 dxc5 18. bxc5 Nf6 19. Nxf6+ Bxf6 20. Ne4 Kg7 21. Qd2 Bf5 22. Nd6 e4 23. Be2 Qc7 24. Rc3 Rad8 25. Rc1 Rxd6 26. cxd6 Qxd6 27. O-O bxa4 28. Bg4 a3 29. Bxf5 gxf5 30. Rfd1 Rf7 31. Qa2 Re7 32. Rc8 e3 33. Qe2 Re5 34. Qa2 Kh6 35. Kh1 Kg5 36. Rc2 Kh6 37. Qc4 Re7 38. Qd3 Kg5 39. h4+ Kh6 40. fxe3 Kg7 1/2-1/2\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.16\"]\n[White \"Invitado\"]\n[Black \"Rival7\"]\n[Result \"0-1\"]\n[Opening \"Inglesa\"]\n\n1. c4 e5 2. Nc3 Nf6 3. Nf3 Nc6 4. g3 d5 5. cxd5 Nxd5 6. Nxd5 Qxd5 7. d3 Bb4+ 8. Bd2 Bg4 9. Bg2 Bxd2+ 10. Qxd2 Nd4 11. Qc3 Bxf3 12. Bxf3 Nxf3+ 13. exf3 O-O-O 14. Ke2 h5 15. Qb3 Qd7 16. Rhc1 h4 17. Rc3 hxg3 18. hxg3 g5 19. Rac1 c6 20. Qa4 Kb8 21. Qg4 Qe7 22. Qe4 Qe6 23. Qc4 Rd5 24. Qb3 Ka8 25. Qc4 f5 26. Kd2 a6 27. Re1 Rh2 28. Re2 Qh6 29. Kc2 Qh3 30. Kb3 Qf1 31. Rcc2 Rd4 32. Qc3 Qd1 33. Re3 f4 34. gxf4 gxf4 35. Re1 Qxf3 36. Qa5 Rxd3+ 37. Rc3 Rxc3+ 38. bxc3 Qxf2 39. Rxe5 Qb2+ 40. Kc4 Rh8 0-1\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.18\"]\n[White \"Rival8\"]\n[Black \"Invitado\"]\n[Result \"1-0\"]\n[Opening \"Francesa\"]\n\n1. e4 e6 2. d4 d5 3. Nc3 Bb4 4. e5 c5 5. a3 Bxc3+ 6. bxc3 Ne7 7. Qg4 Nf5 8. Bd3 Qa5 9. Bd2 Rg8 10. Nf3 c4 11. Bxf5 exf5 12. Qh3 Rh8 13. Qg3 Rg8 14. Ng5 Rh8 15. e6 f6 16. Nxh7 Qa6 17. O-O Qxe6 18. Qxg7 Nc6 19. Rae1 Ne5 20. Nxf6+ Kd8 21. Rxe5 Rg8 22. Nxg8 Qd7 23. Rxd5 Rb8 24. Qf6+ Kc7 25. Bf4+ Qd6 26. Rc5+ Kd7 27. Qxd6+ Ke8 28. Qe7# 1-0\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.20\"]\n[White \"Invitado\"]\n[Black \"Rival9\"]\n[Result \"0-1\"]\n[Opening \"Eslava\"]\n\n1. d4 d5 2. c4 c6 3. Nf3 Nf6 4. Nc3 dxc4 5. a4 Bf5 6. Nh4 Bg6 7. Nxg6 hxg6 8. e4 e5 9. Be3 Na6 10. dxe5 Qxd1+ 11. Rxd1 Ng4 12. Bxc4 Nxe5 13. Bxa6 bxa6 14. Ke2 Rb8 15. Rd2 Nc4 16. Rc2 Nxe3 17. fxe3 Rh5 18. Nb1 Rc5 19. Rhc1 Rxb2 20. Rxb2 Rxc1 21. Nd2 Bd6 22. Rb7 a5 23. Rxa7 Bb4 24. Nb3 Rc3 25. Nd4 Rc1 26. e5 c5 27. Nc6 c4 28. Nd4 Rg1 29. Kf3 g5 30. h4 gxh4 31. Kf2 Rd1 32. e6 Rd2+ 33. Kf3 fxe6 34. Rc7 e5 35. Nf5 c3 36. Nxg7+ Kf8 37. g3 h3 38. Ke4 h2 39. Kf5 Rd6 40. Ne6+ Rxe6 0-1\n\n[Event \"Partida de ejemplo\"]\n[Site \"Entrenador de Ajedrez\"]\n[Date \"2026.10.22\"]\n[White \"Rival10\"]\n[Black \"Invitado\"]\n[Result \"1/2-1/2\"]\n[Opening \"Defensa Petrov\"]\n\n1. e4 e5 2. Nf3 Nf6 3. Nxe5 d6 4. Nf3 Nxe4 5. d4 d5 6. g3 Bd6 7. Bg2 O-O 8. Qd3 c5 9. O-O Na6 10. c3 Re8 11. Re1 cxd4 12. Qd1 Qf6 13. cxd4 Bf5 14. Nc3 Nxc3 15. bxc3 h6 16. Rxe8+ Rxe8 17. Nh4 Be6 18. Rb1 g5 19. Nf3 Re7 20. h4 Qf5 21. Rb3 Bc8 22. hxg5 hxg5 23. Bxg5 Re4 24. Bd8 Re8 25. Nh4 Qg4 26. Qxg4+ Bxg4 27. Bg5 b6 28. Rb1 Rc8 29. Bd2 Nc7 30. Bf1 Be6 31. Re1 a6 32. Bd3 Bf8 33. Rb1 b5 34. Kg2 Ne8 35. f4 Nf6 36. f5 Bd7 37. Kf3 Ne4 38. Bxe4 dxe4+ 39. Kxe4 Re8+ 40. Kd5 Rd8 1/2-1/2";
+const Rel={
+ SECS:[['today','Hoy (plan del día)'],['lesson','Lecciones'],['review','Repaso'],['exam','Examen'],['tactics','Táctica'],['struct','Peones'],['games','Partidas'],['play','Jugar'],['blind','A ciegas'],['expl','Aperturas'],['reto','Retos'],['edit','Crear'],['progress','Progreso']],
+ inst:null,
+ init(){
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();this.inst=e;const b=$('#rlInst');if(b)b.hidden=false});
+  window.addEventListener('appinstalled',()=>{this.inst=null;const b=$('#rlInst');if(b)b.hidden=true});
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+  try{if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
+  $('#fbBtn').onclick=e=>{e.stopPropagation();this.feedback()};
+  if(!store.get('welcomed',false)){
+   if(Object.keys(Log.all()).length||(store.get('games_pgn',[])||[]).length){store.set('welcomed',true)}
+   else setTimeout(()=>this.welcome(),400);
+  }
+ },
+ pop(html,cls){let el=$('#relPop');if(!el){el=document.createElement('div');el.id='relPop';document.body.appendChild(el)}
+  el.innerHTML=`<div class="cfgbox ${cls||''}" role="dialog">${html}</div>`;el.hidden=false;el.onclick=e=>{if(e.target===el&&cls!=='wel')this.close()};
+  const x=el.querySelector('.rlX');if(x)x.onclick=()=>this.close();el.scrollTop=0;return el},
+ close(){const el=$('#relPop');if(el){el.hidden=true;el.innerHTML=''}},
+ welcome(){
+  const nm=esc(store.get('myname','')||'');
+  this.pop(`<div class="cfghead"><b>♞ Bienvenido al Entrenador de Ajedrez</b></div>
+  <div>Es una aplicación para <b>mejorar de forma independiente</b>: plan diario, lecciones, repaso espaciado de tus errores, táctica, finales teóricos, revisión de tus partidas con Stockfish y más. Estás probando una <b>versión beta</b>.</div>
+  <div class="small">🔒 Todo funciona en tu navegador: no hay cuentas ni servidor. Tu progreso se guarda en este dispositivo (hay respaldo en Ajustes). No se envía nada a ninguna parte salvo que tú copies o descargues tus comentarios.</div>
+  <label class="cfgcol">Tu nombre de usuario en Lichess / Chess.com (opcional; sirve para reconocer tus partidas)<input id="wlName" type="text" value="${nm}" placeholder="Ej.: Invitado" autocomplete="off"></label>
+  <div class="row"><button id="wlLvl" class="pri">Hacer la prueba de nivel (10–15 min)</button><button id="wlToday">Ver el plan de hoy</button><button id="wlDemo">Probar con partidas de ejemplo</button></div>
+  <div class="small">Al terminar de probar, pulsa <b>💬</b> (arriba) para valorar cada apartado y contarnos qué mejorar. ¡Gracias por ayudar!</div>
+  <div class="row"><button id="wlSkip">Cerrar</button></div>`,'wel');
+  const done=()=>{const v=$('#wlName').value.trim();if(v)store.set('myname',v);store.set('welcomed',true);this.close()};
+  $('#wlSkip').onclick=done;
+  $('#wlToday').onclick=()=>{done();Mode.set('today')};
+  $('#wlLvl').onclick=()=>{done();Prog.view='nivel';store.set('progView','nivel');Mode.set('progress')};
+  $('#wlDemo').onclick=()=>{const v=$('#wlName').value.trim();if(!v&&!store.get('myname',''))store.set('myname','Invitado');done();Mode.set('games',()=>Games.addText(DEMO_PGN))};
+ },
+ stats(){
+  const L=Log.all(),days=Object.keys(L).length;let t={};for(const d of Object.values(L))for(const k of ['les','tac','srs','exam','play','gam','str','fin','clk','lvl'])t[k]=(t[k]||0)+(d[k]||0);
+  return {days,games:(store.get('games_pgn',[])||[]).length,errs:Object.keys(store.get('errsrs',{})||{}).length,t};
+ },
+ tech(){
+  const e=window.__errs||[];
+  return [`Versión: ${APP_VERSION} (compilada ${APP_BUILD})`,`Motor: ${Engine.kind||'no cargó'}`,`Pantalla: ${innerWidth}×${innerHeight} (dpr ${devicePixelRatio||1})`,`Idioma: ${navigator.language||'?'}`,`Navegador: ${navigator.userAgent}`,`Modo actual: ${store.get('lastMode','?')}`,`Tema: ${Cfg.get().theme}`,`Instalada/offline: ${matchMedia&&matchMedia('(display-mode: standalone)').matches?'sí':'no'} · ${/^https?:$/.test(location.protocol)?'web':'archivo local'}`,`Errores recientes: ${e.length?'\n  '+e.slice(-10).join('\n  '):'ninguno'}`].join('\n');
+ },
+ fbBuild(d){
+  const L=[];L.push('COMENTARIOS · ENTRENADOR DE AJEDREZ');L.push(`Fecha: ${new Date().toLocaleString('es')}`);
+  if(d.lvl)L.push(`Nivel de ajedrez: ${d.lvl}`);if(d.days)L.push(`Tiempo probando: ${d.days}`);
+  L.push('','VALORACIÓN POR APARTADO (1 = mal, 5 = excelente)');
+  for(const [k,n] of this.SECS){const r=d.rate[k],c=(d.cm[k]||'').trim();if(r||c)L.push(`- ${n}: ${r?r+'/5':'sin valorar'}${c?' — '+c:''}`)}
+  if(!Object.keys(d.rate).some(k=>d.rate[k])&&!Object.values(d.cm).some(x=>(x||'').trim()))L.push('(sin valoraciones)');
+  const T=[['Lo que más me gustó',d.good],['Lo que falló o no entendí',d.bad],['Lo que añadiría o cambiaría',d.add]];
+  for(const [h,v] of T)if((v||'').trim())L.push('',h.toUpperCase(),v.trim());
+  if((d.contact||'').trim())L.push('',`Contacto (opcional): ${d.contact.trim()}`);
+  if(d.tech)L.push('','DATOS TÉCNICOS',this.tech());
+  if(d.use){const s=this.stats();L.push('','USO (solo contadores)',`Días con actividad: ${s.days} · Partidas importadas: ${s.games} · Errores guardados: ${s.errs}`,`Ejercicios: lecciones ${s.t.les||0}, táctica ${s.t.tac||0}, repaso ${s.t.srs||0}, examen ${s.t.exam||0}, finales ${s.t.fin||0}, peones ${s.t.str||0}`)}
+  return L.join('\n');
+ },
+ feedback(){
+  const D=store.get('fbDraft',{rate:{},cm:{},tech:true,use:true});D.rate=D.rate||{};D.cm=D.cm||{};
+  const LV=['','Principiante (menos de 1000)','Intermedio (1000–1600)','Avanzado (1600–2000)','Fuerte (más de 2000)','Sin elo / no sé'];
+  const rows=this.SECS.map(([k,n])=>`<div class="fbrow"><span>${esc(n)}</span><select data-r="${k}"><option value="">—</option>${[1,2,3,4,5].map(i=>`<option value="${i}"${D.rate[k]==i?' selected':''}>${'★'.repeat(i)}</option>`).join('')}</select><input type="text" data-c="${k}" placeholder="Comentario (opcional)" value="${esc(D.cm[k]||'')}"></div>`).join('');
+  this.pop(`<div class="cfghead"><b>💬 Enviar comentarios</b><button class="b rlX" aria-label="Cerrar">✕</button></div>
+  <div class="small">Valora solo lo que hayas probado. Al final se prepara un texto que puedes <b>copiar</b> o <b>descargar</b> y enviarnos por el medio que prefieras. Se guarda un borrador mientras escribes.</div>
+  <label class="cfgcol">Tu nivel de ajedrez<select id="fbLvl">${LV.map(x=>`<option value="${esc(x)}"${D.lvl===x?' selected':''}>${esc(x||'—')}</option>`).join('')}</select></label>
+  <h4>Apartados</h4><div class="fbgrid">${rows}</div>
+  <label class="cfgcol">Lo que más te gustó<textarea id="fbGood" rows="2">${esc(D.good||'')}</textarea></label>
+  <label class="cfgcol">Lo que falló o no entendiste<textarea id="fbBad" rows="3">${esc(D.bad||'')}</textarea></label>
+  <label class="cfgcol">Lo que añadirías o cambiarías<textarea id="fbAdd" rows="3">${esc(D.add||'')}</textarea></label>
+  <label class="cfgcol">Contacto (opcional)<input id="fbCt" type="text" value="${esc(D.contact||'')}" placeholder="Correo o usuario, si quieres que te respondamos"></label>
+  <label class="cfgrow"><input type="checkbox" id="fbTech"${D.tech!==false?' checked':''}> Incluir datos técnicos (versión, navegador, errores)</label>
+  <label class="cfgrow"><input type="checkbox" id="fbUse"${D.use!==false?' checked':''}> Incluir contadores de uso (sin tus partidas ni tu nombre)</label>
+  <h4>Vista previa</h4><textarea id="fbOut" rows="9" readonly></textarea>
+  <div class="row"><button id="fbCopy" class="pri">Copiar</button><button id="fbDl">Descargar .txt</button><button id="fbShare" hidden>Compartir…</button><button id="fbClr">Borrar borrador</button></div><div class="small" id="fbMsg"></div>`,'fb');
+  const el=$('#relPop'),get=()=>{const d={rate:{},cm:{},lvl:$('#fbLvl').value,good:$('#fbGood').value,bad:$('#fbBad').value,add:$('#fbAdd').value,contact:$('#fbCt').value,tech:$('#fbTech').checked,use:$('#fbUse').checked};
+   el.querySelectorAll('[data-r]').forEach(s=>{if(s.value)d.rate[s.dataset.r]=+s.value});el.querySelectorAll('[data-c]').forEach(s=>{if(s.value.trim())d.cm[s.dataset.c]=s.value});return d};
+  const upd=()=>{const d=get();store.set('fbDraft',d);$('#fbOut').value=this.fbBuild(d)};
+  el.querySelectorAll('select,input,textarea').forEach(x=>{x.oninput=upd;x.onchange=upd});upd();
+  const msg=t=>{$('#fbMsg').textContent=t};
+  $('#fbCopy').onclick=async()=>{const t=$('#fbOut').value;try{await navigator.clipboard.writeText(t);msg('✓ Copiado. Pégalo en tu mensaje.')}catch(e){const o=$('#fbOut');o.removeAttribute('readonly');o.select();try{document.execCommand('copy');msg('✓ Copiado.')}catch(_){msg('Selecciona el texto de la vista previa y cópialo.')}o.setAttribute('readonly','')}};
+  $('#fbDl').onclick=()=>{const b=new Blob([$('#fbOut').value],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='comentarios-entrenador-ajedrez.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);msg('✓ Archivo descargado.')};
+  if(navigator.share){$('#fbShare').hidden=false;$('#fbShare').onclick=()=>navigator.share({title:'Comentarios · Entrenador de Ajedrez',text:$('#fbOut').value}).catch(()=>{})}
+  $('#fbClr').onclick=()=>{store.set('fbDraft',{rate:{},cm:{},tech:true,use:true});this.feedback()};
+ },
+ settings(){
+  const iosTip=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!matchMedia('(display-mode: standalone)').matches;
+  return `<h4>Versión y comentarios</h4><div class="small">Versión <b>${APP_VERSION}</b> (compilada ${APP_BUILD}).</div>
+  <div class="row"><button id="rlFb" class="pri">💬 Enviar comentarios</button><button id="rlWel">Ver la bienvenida</button><button id="rlInst"${this.inst?'':' hidden'}>Instalar como aplicación</button></div>
+  ${iosTip?'<div class="small">En iPhone/iPad: Compartir → «Añadir a pantalla de inicio» para instalarla.</div>':''}`;
+ },
+ bindSettings(){
+  $('#rlFb').onclick=()=>{Cfg.close();this.feedback()};$('#rlWel').onclick=()=>{Cfg.close();this.welcome()};
+  $('#rlInst').onclick=async()=>{if(!this.inst)return;this.inst.prompt();try{await this.inst.userChoice}catch(e){}this.inst=null;$('#rlInst').hidden=true};
+ }
 };
 
 /* =============== MODO A CIEGAS =============== */
@@ -6257,6 +6365,7 @@ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>Mode.set(b.da
  document.addEventListener('pointerdown',()=>Snd.init(),{passive:true});document.addEventListener('keydown',()=>Snd.init());
 })();
 Engine.init().catch(()=>{});
+$('#ver').textContent=APP_VERSION;Rel.init();
 Cfg.apply();$('#cfgBtn').onclick=e=>{e.stopPropagation();Cfg.isOpen()?Cfg.close():Cfg.open()};
 try{matchMedia('(prefers-color-scheme: light)').addEventListener('change',()=>Cfg.apply())}catch(e){}
 Coach.syncTab();Backup.init().finally(()=>Mode.set(Cfg.startMode()));

@@ -55,6 +55,20 @@ Edita `src/template.html` (lecciones en `LESSONS`, problemas en `PUZZLES`, nivel
 
     python3 build.py
 
+## Probar y compartir (versión beta)
+
+**Como página web (GitHub Pages).** En el repositorio: *Settings → Pages → Build and deployment → Deploy from a branch → Branch `main`, carpeta `/ (root)` → Save*. En un minuto queda publicada en `https://TU-USUARIO.github.io/ChessGame/`. Ese enlace es el que se comparte. Desde el móvil o el navegador de escritorio se puede **instalar como aplicación** (Ajustes ⚙ → «Instalar como aplicación», o «Añadir a pantalla de inicio» en iPhone) y después funciona **sin conexión**.
+
+**Como archivo descargable.** Basta con enviar `index.html` (≈4 MB): es la aplicación completa, también el motor Stockfish. Se abre con doble clic en cualquier navegador y no necesita internet.
+
+**Importante:** el progreso se guarda en el navegador y *por dirección*: la versión web, la instalada y el archivo abierto desde el disco tienen datos separados. Para pasar de una a otra se usa el respaldo (Ajustes → Descargar respaldo → Más opciones).
+
+**Qué ve quien la prueba.** Al abrirla por primera vez aparece una bienvenida (explica que los datos quedan en su dispositivo, permite hacer la prueba de nivel o cargar **10 partidas de ejemplo**). El botón **💬** (y Ajustes) abre «Enviar comentarios»: valoración de 1 a 5 de cada apartado, comentarios libres y, opcionalmente, datos técnicos (versión, navegador, errores recientes) y contadores de uso. Se genera un texto que la persona **copia o descarga** y te envía por el medio que prefiera. La aplicación no hace ninguna petición a servidores externos ni envía nada por sí sola.
+
+**Publicar una versión nueva.** Editar `src/template.html`, ejecutar `python3 build.py` (regenera `index.html`, `sw.js` y `manifest.webmanifest`; sube el número de `APP_VERSION` en la plantilla si quieres que aparezca en los comentarios) y hacer commit + push. El servicio sin conexión busca siempre primero la versión nueva.
+
+Archivos de publicación: `index.html`, `sw.js`, `manifest.webmanifest`, `icons/`, `.nojekyll`.
+
 ## Licencias
 Stockfish.js 19 (WASM, lite, GPLv3) como motor principal, Stockfish.js 10 (asm.js) como respaldo y chess.js (BSD), todo en `libs/`. Por incluir Stockfish, el proyecto se distribuye bajo GPLv3.
 
