@@ -263,6 +263,7 @@ label.cfgrow:has(input[type=checkbox]){justify-content:flex-start}
     <button data-g="study" data-m="review">Repaso</button>
     <button data-g="study" data-m="exam">Examen</button>
     <button data-g="prac" data-m="tactics">Táctica</button>
+    <button data-g="prac" data-m="pos" title="Estudiar y practicar la mejora de la posición por ideas y niveles">Posición</button>
     <button data-g="prac" data-m="reto" title="Contrarreloj, finales teóricos y partidas con reloj">Retos</button>
     <button data-g="prac" data-m="blind" title="Partida sin ver las piezas">A ciegas</button>
     <button data-g="ana" data-m="games">Partidas</button>
@@ -395,6 +396,7 @@ const LESSONS=[{
 
 /* =============== CONTENIDO: TÁCTICA =============== */
 const TAC_BANK=__TACTICS__;
+const POS_BANK=__POSBANK__;
 const PZ=()=>PUZZLES.concat(store.get('mypuz',[]));
 const PUZZLES=[
  {fen:'6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1',theme:'Mate de pasillo',sol:['Rd8#'],expl:'El rey negro no tiene casillas de escape porque sus propios peones lo encierran. Siempre busca el mate de pasillo cuando el rey rival no tiene "ventana".'},
@@ -412,7 +414,7 @@ const PZ_MATE=[{"fen":"8/5Q2/7k/R5p1/4P3/2P1K2P/6P1/5R2 w - - 0 39","n":1,"pat":
 const PZ_POS=[{"fen":"r4rk1/5p1p/1pn2Qp1/2pqp3/P7/1P2PP2/6RP/R1B1K3 w Q - 0 20","best":"Rd2","ev":-28,"sec":[["e4",-170],["Ra3",-203]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"1rq2k1r/3nbppp/4p3/1QpnP3/8/P3BNP1/1P1N1P1P/R3KR2 w Q - 1 18","best":"Qd3","ev":3,"sec":[["Qa5",-65],["Qc4",-91]],"cat":"Actividad de la dama","idea":"La dama pasa a d3, donde ejerce más presión sin exponerse a ataques."},{"fen":"r2qk2r/1b2npp1/p3p2p/1pb5/P7/2PB1N1P/2P1QPP1/R1B2RK1 b kq a3 0 14","best":"O-O","ev":-4,"sec":[["Bxf3",-52],["Qa5",-71]],"cat":"Seguridad del rey","idea":"Enrocar (O-O) pone al rey a salvo y conecta las torres: es la prioridad antes de iniciar cualquier plan."},{"fen":"r1b1k2r/pp1nppbp/2n3p1/2P5/2N5/3BP3/PP1B1PPP/2RK2NR w kq - 3 11","best":"b4","ev":99,"sec":[["Ke2",-19],["Bb1",-24]],"cat":"Ruptura de peones","idea":"El avance b4 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1r2bk1/1b3pp1/1p1qpn1p/1N1pn3/1pP5/PQ2P2P/1B1NBPP1/2RR2K1 b - - 1 20","best":"Qb8","ev":24,"sec":[["Qc6",-121],["Qd8",-196]],"cat":"Actividad de la dama","idea":"La dama pasa a b8, donde ejerce más presión sin exponerse a ataques."},{"fen":"2r2k2/5pp1/1ppqp3/3r1nBQ/P2P4/7P/1P3PP1/R2R2K1 b - - 2 25","best":"Kg8","ev":10,"sec":[["Ke8",-63],["Ne7",-65]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g8): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2qk2r/pp1n2pp/2pp1p2/b3p1Bb/3PP3/1BP2N1P/PP3PP1/R2QK2R w KQkq - 0 12","best":"Be3","ev":35,"sec":[["Bh4",-14],["Bc1",-23]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e3, una diagonal más activa."},{"fen":"3r1rk1/1bp2pb1/pq2p2p/3n2p1/2NP4/3B2PP/PB2QP2/2R2RK1 b - - 8 24","best":"Qa7","ev":19,"sec":[["Qb5",-105],["Qc6",-108]],"cat":"Actividad de la dama","idea":"La dama pasa a a7, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b1k2r/1ppqnp2/p3p2p/4b1p1/3PB3/N1P5/P3QPPP/R1B2RK1 b kq - 0 15","best":"Bg7","ev":-32,"sec":[["Bf6",-106],["Bd6",-129]],"cat":"Alfil a la gran diagonal","idea":"El alfil en g7 domina la gran diagonal y presiona el flanco rival."},{"fen":"2q2k1r/3nbppp/4p3/2pnP3/8/P2QBNP1/1r1N1P1P/R3KR2 w Q - 0 19","best":"Nc4","ev":0,"sec":[["Rc1",-52],["Rh1",-64]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia c4, una casilla más útil para tu plan."},{"fen":"rn1qk2r/pbpp1pbp/1p2p1p1/4P3/3Pn3/3B1N2/PPP1QPP1/RNB1K2R b KQkq - 4 10","best":"f5","ev":-5,"sec":[["d5",-52],["Nc5",-338]],"cat":"Ruptura de peones","idea":"El avance f5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn1qkbnr/pp1bpppp/8/1Bp1P3/P2p4/8/1PPP1PPP/RNBQK1NR w KQkq - 2 6","best":"e6","ev":65,"sec":[["d3",20],["Nf3",20]],"cat":"Ruptura de peones","idea":"El avance e6 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/1B3PPP/R2QK2R b KQ - 2 15","best":"e5","ev":40,"sec":[["Nd7",-18],["Rab8",-38]],"cat":"Ruptura de peones","idea":"El avance e5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r1b1kb1r/1p3ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3QK2R b Kkq - 2 16","best":"Bd7","ev":39,"sec":[["Qg5",-30],["Qd8",-56]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bd7) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r3kb1r/1pq1ppp1/p1n2n2/3P3p/B3p2N/1Q2P3/PP3PPP/R1B1K2R b KQkq - 1 12","best":"b5","ev":-7,"sec":[["Rc8",-54],["Rd8",-60]],"cat":"Ruptura de peones","idea":"El avance b5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"rn3rk1/p3pp1p/2p3p1/q2Pb3/NpP1P1b1/5NP1/P3QPBP/2RR2K1 w - - 2 18","best":"Qc2","ev":14,"sec":[["Nb2",-88],["d6",-249]],"cat":"Actividad de la dama","idea":"La dama pasa a c2, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1b2rk1/1p2qpbp/n2p2p1/p3p3/3Pn3/2N1BN2/PP2BPPP/R2Q1RK1 w - - 0 12","best":"Nd5","ev":77,"sec":[["Nxe4",28],["Na4",-66]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d5, una casilla más útil para tu plan."},{"fen":"rnbq1rk1/pp3p2/2p2npb/3P3p/3Pp3/PQN1P3/1P1B1PPP/2R1KBNR w K - 1 10","best":"Bc4","ev":71,"sec":[["dxc6",17],["Na4",-43]],"cat":"Desarrollo","idea":"Desarrollar el alfil (Bc4) hacia una casilla activa antes de comprometer otras piezas."},{"fen":"r1bqkb1r/5ppp/p1p2n2/2Pp4/1P2p3/3BP3/P1P2PPP/RNBQK2R w KQkq - 0 9","best":"Be2","ev":0,"sec":[["Bf1",-45],["Bb2",-285]],"cat":"Reagrupar piezas","idea":"El alfil se reubica en e2, una diagonal más activa."},{"fen":"rn2kb1r/p2p1pp1/b1p1p2p/q3P3/2pP4/2P4N/P1Q1BPPP/R1B1K2R b KQkq - 1 11","best":"d5","ev":58,"sec":[["d6",-8],["Bc8",-19]],"cat":"Ruptura de peones","idea":"El avance d5 gana espacio y restringe las piezas rivales, o prepara una ruptura posterior."},{"fen":"r2qkb1r/1pp1pp1p/p4n2/3pPbB1/2P5/4P3/PP3PPP/RN1QKB1R b KQkq - 0 8","best":"Ne4","ev":-37,"sec":[["Ng4",-178],["Rg8",-178]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp1b1p2/2n2Pp1/2p1p2p/3pP2q/N1PP2R1/PP2N1Bn/R1BQ2K1 b kq - 6 19","best":"Ng4","ev":56,"sec":[["Bg4",-108],["Qxf6",-344]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a g4: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r2k3r/p1p1n3/1p3p2/4n2p/2PpPR2/P6P/P3B1PB/R5K1 b - - 0 19","best":"Nd7","ev":-29,"sec":[["Rf8",-114],["d3",-121]],"cat":"Reagrupar piezas","idea":"El caballo se reagrupa hacia d7, una casilla más útil para tu plan."},{"fen":"6kr/ppq2p2/6p1/3Q1p1p/3Pr3/P1P2NbP/1P3P2/4RRK1 b - - 0 24","best":"Kg7","ev":-6,"sec":[["Rxe1",-113],["Bd6",-143]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (g7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"rnb1k2r/ppqn1ppp/4p3/1NbpP1B1/8/5N2/PPP1BPPP/R2QK2R b KQkq - 3 9","best":"Qb6","ev":-40,"sec":[["Qc6",-101],["Qa5+",-129]],"cat":"Actividad de la dama","idea":"La dama pasa a b6, donde ejerce más presión sin exponerse a ataques."},{"fen":"r1r3k1/1R3pb1/pN2p1pp/2n5/2Pp2P1/4P2P/5P1B/5R1K w - - 2 27","best":"Re7","ev":0,"sec":[["Nxc8",-121],["Rc7",-135]],"cat":"Torre a la séptima","idea":"La torre en la séptima fila (e7) ataca los peones rivales y limita al rey."},{"fen":"rnbqk1nr/1pp1b1pp/p3p3/3p4/3P1Bp1/2N2N2/PPP1PP1P/R2QKB1R w KQkq - 0 7","best":"Ne5","ev":29,"sec":[["Nd2",-67],["Ng1",-97]],"cat":"Caballo a un puesto fuerte","idea":"El caballo llega a e5: ningún peón rival puede atacarlo y está protegido por un peón, un puesto fuerte desde el que domina el centro."},{"fen":"r3k2r/pp3ppp/2nb1q2/1Bpp3b/8/1P2PN1P/P2P1PP1/RN1Q1RK1 w kq - 0 11","best":"Nc3","ev":14,"sec":[["Bxc6+",-61],["Na3",-78]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nc3) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r1b1k1nr/pp2ppbp/2n3p1/2P5/2N5/4P3/PP1B1PPP/2RK1BNR b kq - 0 9","best":"Nf6","ev":-21,"sec":[["Be6",-77],["Bf5",-85]],"cat":"Desarrollo","idea":"Desarrollar el caballo (Nf6) hacia una casilla activa: cada pieza sin mover es una desventaja."},{"fen":"r2k3r/p2nq1pp/2pp1p2/4p3/4P3/1BP1QP1P/PP3P2/2KR3R b - - 2 18","best":"Kc7","ev":12,"sec":[["Kc8",-59],["h5",-86]],"cat":"Actividad del rey","idea":"El rey se acerca al centro (c7): en posiciones con pocas piezas es una pieza de ataque."},{"fen":"r2q1rk1/5ppp/1pn1p3/2pp4/P2PN3/1P2PN2/5PbP/R1BQK2R w KQ - 0 14","best":"Rg1","ev":-38,"sec":[["Ng3",-159],["Nxc5",-342]],"cat":"Torre a columna semiabierta","idea":"La torre ocupa la columna g, semiabierta para ti: no tienes peones que la bloqueen y presionas el peón rival."},{"fen":"r3kb1r/1p1b1ppp/p3p3/q7/8/P1R1N3/1P2BPPP/3Q1RK1 b kq - 4 17","best":"Rd8","ev":44,"sec":[["Ba4",-5],["Be7",-5]],"cat":"Torre a columna abierta","idea":"La torre ocupa la columna d, que está abierta: presiona los puntos débiles rivales y prepara duplicar torres."},{"fen":"r4rk1/p4ppp/q1n1pn2/2Pp4/1P6/P4N2/5PPP/R1BQK2R w KQ - 1 15","best":"Bb2","ev":17,"sec":[["Bd2",-34],["Rb1",-39]],"cat":"Alfil a la gran diagonal","idea":"El alfil se desarrolla a b2 y domina la gran diagonal, presionando el flanco rival."}];
 PZ_MATE.forEach(p=>{p.theme=p.pat});PZ_POS.forEach(p=>{p.theme='Posicional: '+p.cat});
 const ALLPZ=()=>PZ().concat(PZ_MATE,PZ_POS,TAC_BANK);
-const COLS={basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},err:{n:'Mis errores (repaso)',get:()=>ErrSRS.session()},test:{n:'Prueba de nivel',get:()=>Lvl.list()},storm:{n:'Contrarreloj',get:()=>Storm.cur?[Storm.cur]:[]},pos:{n:'Mejorar la posición',get:()=>PZ_POS},theme:{n:'Tema',get:()=>ALLPZ().filter(p=>p.theme===Tac.theme)},elo:{n:'Entrenamiento adaptativo (Elo táctico)',get:()=>TElo.list()},bank:{n:'Banco de táctica: todos (de fácil a difícil)',get:()=>TAC_BANK.slice().sort((a,b)=>a.r-b.r)}};
+const COLS={mix:{n:'🎲 Progresivo de todo (de fácil a difícil)',get:()=>Mix.list()},basic:{n:'Básicos y mis errores',get:()=>PZ()},m1:{n:'Mate en 1',get:()=>PZ_MATE.filter(p=>p.n===1)},m2:{n:'Mate en 2',get:()=>PZ_MATE.filter(p=>p.n===2)},m3:{n:'Mate en 3',get:()=>PZ_MATE.filter(p=>p.n===3)},err:{n:'Mis errores (repaso)',get:()=>ErrSRS.session()},test:{n:'Prueba de nivel',get:()=>Lvl.list()},storm:{n:'Contrarreloj',get:()=>Storm.cur?[Storm.cur]:[]},pos:{n:'Mejorar la posición',get:()=>PZ_POS},theme:{n:'Tema',get:()=>ALLPZ().filter(p=>p.theme===Tac.theme)},elo:{n:'Entrenamiento adaptativo (Elo táctico)',get:()=>TElo.list()},bank:{n:'Banco de táctica: todos (de fácil a difícil)',get:()=>TAC_BANK.slice().sort((a,b)=>a.r-b.r)}};
 [...new Set(TAC_BANK.map(p=>p.theme))].sort().forEach(th=>{COLS['bt_'+th]={n:'Banco · '+th,get:()=>TAC_BANK.filter(p=>p.theme===th).sort((a,b)=>a.r-b.r)}});
 const MateU={
  canMate(c){for(const m of c.moves()){c.move(m);const ok=c.in_checkmate();c.undo();if(ok)return true}return false},
@@ -1211,11 +1213,33 @@ const TElo={
  show(){const el=$('#tpElo');if(!el)return;if(Tac.col!=='elo'){el.textContent='';return}const s=this.st();el.innerHTML=`Elo táctico: <b>${s.r}</b> · ${s.n} ejercicio${s.n===1?'':'s'}. Aciertas a la primera y subes; fallas y bajas. Los ejercicios se ajustan a tu nivel.`}
 };
 
+const Mix={
+ cur:null,
+ st(){return Object.assign({n:0,ok:0,streak:0,best:0,h:[],lv:800},store.get('mixs',{}))},
+ list(){if(!this.cur)this.pick();return this.cur?[this.cur]:[]},
+ pick(){
+  const pool=TElo.pool().concat(PZ_POS,POS_BANK.filter(p=>!p.model)),seen=store.get('mixSeen',[]),lv=this.st().lv;let c=pool.filter(p=>!seen.includes(p.fen));
+  if(!c.length){seen.length=0;c=pool}
+  const near=c.slice().sort((a,b)=>Math.abs(TElo.rate(a)-lv)-Math.abs(TElo.rate(b)-lv)||Math.random()-.5).slice(0,12);
+  const p=near[Math.floor(Math.random()*near.length)];this.cur=p;seen.push(p.fen);store.set('mixSeen',seen.slice(-Math.max(200,pool.length-20)));return p;
+ },
+ update(ok){
+  const s=this.st();s.n++;if(ok){s.ok++;s.streak++;s.best=Math.max(s.best,s.streak);s.lv=Math.min(2600,s.lv+25)}else{s.streak=0;s.lv=Math.max(600,s.lv-25)}
+  s.h=(s.h||[]).concat([ok?1:0]).slice(-30);store.set('mixs',s);this.show();
+ },
+ reset(){store.set('mixs',{n:0,ok:0,streak:0,best:0,h:[],lv:800});this.show()},
+ show(){
+  const el=$('#tpElo');if(!el||Tac.col!=='mix')return;const s=this.st();
+  const dots=(s.h||[]).map(x=>x?'<span style="color:#4caf50">●</span>':'<span style="color:#e57373">●</span>').join('');
+  el.innerHTML=s.n?`Nivel actual: <b>≈${s.lv}</b> (sube si aciertas, baja si fallas) · <b>${s.ok}/${s.n}</b> (${Math.round(100*s.ok/s.n)}%) · racha <b>${s.streak}</b> · mejor ${s.best}<br>${dots} <button id="mixReset" class="small" style="margin-left:6px">Reiniciar progreso</button>`:'Ejercicios de todos los temas, empezando fáciles (≈800): cada acierto a la primera sube el nivel y cada fallo lo baja. Aquí verás tu progreso.';
+  const b=$('#mixReset');if(b)b.onclick=()=>{if(confirm('¿Reiniciar el progreso de esta práctica al azar?'))this.reset()};
+ }
+};
 const Tac={
  free:false,i:0,s:0,tries:0,failed:false,done:false,col:'basic',mq:0,calc:false,
  canMove(){return !this.calc&&!this.done&&!this.lock},
  list(){return (COLS[this.col]||COLS.basic).get()},
- label(p,i){return p.n?`${i+1}. Mate en ${p.n}`:p.best?`${i+1}. Mejorar la posición`:p.theme==='Mis errores'?`${i+1}. Mi error (${ErrSRS.tag(p)})`:p.r?`${i+1}. ${p.theme} (${p.r})`:`${i+1}. ${p.theme}`},
+ label(p,i){if(this.col==='mix')return p.best?`Ejercicio ${Mix.st().n+1} · nivel ≈${TElo.rate(p)} · Mejorar la posición`:`Ejercicio ${Mix.st().n+1} · nivel ≈${TElo.rate(p)} (tema oculto)`;return p.n?`${i+1}. Mate en ${p.n}`:p.best?`${i+1}. Mejorar la posición`:p.theme==='Mis errores'?`${i+1}. Mi error (${ErrSRS.tag(p)})`:p.r?`${i+1}. ${p.theme} (${p.r})`:`${i+1}. ${p.theme}`},
  fill(){const L=this.list();$('#tpSel').innerHTML=L.map((p,i)=>`<option value="${i}">${esc(this.label(p,i))}</option>`).join('');if(this.i>=L.length)this.i=0;$('#tpSel').value=this.i},
  enter(){
   ErrSRS.reset();this.col=store.get('tcol','basic');if(this.col==='test'&&!Lvl.on)this.col='basic';if(!COLS[this.col]||(this.col==='theme'&&!this.theme))this.col='basic';
@@ -1226,17 +1250,18 @@ const Tac={
   <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpRand">Al azar</button><button id="tpNext" class="pri">Siguiente problema ▶</button></div>`;
   this.calc=!!store.get('tcalc',false);$('#tpCalc').checked=this.calc;$('#tpNot').value=store.get('tnot','es');
   $('#tpCalc').onchange=e=>{this.calc=e.target.checked;store.set('tcalc',this.calc);this.load()};$('#tpNot').onchange=e=>{store.set('tnot',e.target.value);this.load()};
-  $('#tpCol').value=this.col;this.i=0;if(this.col==='elo'&&!TElo.cur)TElo.pick();this.fill();
-  $('#tpCol').onchange=e=>{this.col=e.target.value;store.set('tcol',this.col);if(this.col==='err')ErrSRS.reset();if(this.col==='elo')TElo.pick();this.i=0;this.fill();this.load()};
+  $('#tpCol').value=this.col;this.i=0;if(this.col==='elo'&&!TElo.cur)TElo.pick();if(this.col==='mix'&&!Mix.cur)Mix.pick();this.fill();
+  $('#tpCol').onchange=e=>{this.col=e.target.value;store.set('tcol',this.col);if(this.col==='err')ErrSRS.reset();if(this.col==='elo')TElo.pick();if(this.col==='mix')Mix.pick();this.i=0;this.fill();this.load()};
   $('#tpSel').onchange=e=>{this.i=+e.target.value;this.load()};
   $('#tpHint').onclick=()=>this.hint();$('#tpRestart').onclick=()=>this.load();
-  $('#tpRand').onclick=()=>{if(this.col==='elo'){TElo.pick();this.i=0;this.fill();this.load();return}const L=this.list();this.i=Math.floor(Math.random()*L.length);$('#tpSel').value=this.i;this.load()};
-   $('#tpNext').onclick=()=>{if(this.col==='elo'){TElo.pick();this.i=0;this.fill();this.load();return}this.i=(this.i+1)%this.list().length;$('#tpSel').value=this.i;this.load()};
+  $('#tpRand').onclick=()=>{if(this.col==='elo'||this.col==='mix'){(this.col==='mix'?Mix:TElo).pick();this.i=0;this.fill();this.load();return}const L=this.list();this.i=Math.floor(Math.random()*L.length);$('#tpSel').value=this.i;this.load()};
+   $('#tpNext').onclick=()=>{if(this.col==='elo'||this.col==='mix'){(this.col==='mix'?Mix:TElo).pick();this.i=0;this.fill();this.load();return}this.i=(this.i+1)%this.list().length;$('#tpSel').value=this.i;this.load()};
   if(Lvl.on){this.calc=false;$('#tpCalc').checked=false;['tpCalc','tpSel','tpCol','tpHint','tpRestart','tpRand','tpNext','tpNot'].forEach(i=>{const e=$('#'+i);if(e)e.disabled=true});Lvl.i=0;Lvl.res=[];A.epoch++;A.game=new Chess();A.startFen=A.game.fen();A.viewIdx=null;A.sync();Chat.clear();Lvl.intro();return}
   this.load();
  },
  leave(){if(Lvl.on)Lvl.abort()},
- focusTheme(t){const mm=/^Mate en (\d)$/.exec(t);if(mm||t==='Mejorar la posición'){store.set('tcol',mm?'m'+mm[1]:'pos');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()});return}this.theme=t;store.set('tcol','theme');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()})},
+ focusTheme(t){if(t==='Mejorar la posición'){Mode.set('pos');return}
+ const mm=/^Mate en (\d)$/.exec(t);if(mm||t==='Mejorar la posición'){store.set('tcol',mm?'m'+mm[1]:'pos');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()});return}this.theme=t;store.set('tcol','theme');Mode.set('tactics',()=>{this.i=Math.floor(Math.random()*this.list().length);$('#tpSel').value=this.i;this.load()})},
  load(){
   const p=this.list()[this.i];
   if(!p){A.epoch++;Chat.clear();Chat.chips([]);A.status('');Chat.say(this.col==='err'?'<b>No tienes errores pendientes de repaso.</b><br>Cuando analices tus partidas y pulses «Guardar mis errores como problemas», aparecerán aquí; cada uno vuelve a salir con intervalos crecientes (1, 3, 7, 14, 30 días) hasta que lo domines.':'No hay problemas en esta colección.');return}
@@ -1245,10 +1270,12 @@ const Tac={
   this.s=0;this.tries=0;this.failed=false;this.done=false;this.lock=false;this.errInfo=null;this.mq=p.n||0;
   setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();
   const who=A.userColor==='w'?'blancas':'negras';
-  if(p.n)Chat.say(`<b>Problema ${this.i+1} · Mate en ${p.n}</b><br>Juegan ${who}. Da mate en ${p.n} jugada${p.n>1?'s':''}, pase lo que pase el rival.`);
+  if(p.t&&this.col==='posx')Chat.say(Pos.title(p,this.i,this.list().length));
+  else if(this.col==='mix')Chat.say(p.best?`<b>Ejercicio ${Mix.st().n+1} · nivel ≈${TElo.rate(p)} · Mejorar la posición</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`:`<b>Ejercicio ${Mix.st().n+1} · nivel ≈${TElo.rate(p)}</b><br>Juegan ${who}. Tema oculto: descubre la táctica${p.n?` (hay mate en ${p.n})`:''}.`);
+  else if(p.n)Chat.say(`<b>Problema ${this.i+1} · Mate en ${p.n}</b><br>Juegan ${who}. Da mate en ${p.n} jugada${p.n>1?'s':''}, pase lo que pase el rival.`);
   else if(p.best)Chat.say(`<b>Problema ${this.i+1} · Mejorar la posición</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`);
   else Chat.say(`<b>Problema ${this.i+1} · ${esc(p.theme)}</b><br>Juegan ${who}. Encuentra la mejor jugada.`);
-  A.status(this.calc?'Calcula la línea sin mover piezas':'Tu turno');Chat.chips([{label:'Pista',fn:()=>this.hint()}]);
+  A.status(this.calc?'Calcula la línea sin mover piezas':'Tu turno');Chat.chips([{label:'Pista',fn:()=>this.hint()}]);Mix.show();
   if(this.calc)this.calcUI(p);
  },
 
@@ -1331,6 +1358,8 @@ const Tac={
  stat(ok){{const q=this.list()[this.i];if(q&&q.theme==='Mis errores')this.errInfo=ErrSRS.grade(q.fen,ok);
   if(q&&q.r&&!ok&&q.theme!=='Mis errores'&&!Lvl.on&&!Storm.on){try{ErrSRS.adopt(q);ErrSRS.grade(q.fen,false);this.bankFail=true}catch(e){}}
   if(q&&this.col==='elo'&&!Lvl.on&&!Storm.on)TElo.update(q,ok);
+  if(q&&this.col==='mix'&&!Lvl.on&&!Storm.on)Mix.update(ok);
+  if(q&&this.col==='posx'&&q.t&&!Lvl.on&&!Storm.on)Pos.mark(q,ok);
   try{if(q){const w=Log.key(Evo.monday()),th=store.get('thist',{}),t=q.theme||(q.n?'Mate en '+q.n:'Otros'),o=th[w]||(th[w]={}),c=o[t]||(o[t]=[0,0]);if(ok)c[0]++;c[1]++;const ks=Object.keys(th).sort();if(ks.length>80)ks.slice(0,ks.length-80).forEach(k=>delete th[k]);store.set('thist',th)}}catch(e){}}if(this.calc){const q=store.get('cstats',{n:0,ok:0});q.n++;if(ok)q.ok++;store.set('cstats',q);Log.add('cal',1,ok)}Log.add('tac',1,ok);const s=store.get('tstats',{});const q2=this.list()[this.i],t=q2.theme||(q2.n?'Mate en '+q2.n:q2.best?'Mejorar la posición':'Otros');s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
  wrong(msg){if(Lvl.on){Lvl.answer(0);return}if(Storm.on){Storm.fail();return}this.tries++;this.lock=true;let note='';if(!this.failed){this.failed=true;this.errInfo=null;this.stat(false);const q=this.list()[this.i];if(q&&q.theme==='Mis errores')note=ErrSRS.note(q,this.errInfo)}if(!note&&this.bankFail)note='<br><span class="small">📅 Lo añadí a «Mis errores»: volverá a salir mañana hasta que lo domines.</span>';this.bankFail=false;Chat.say(msg+note,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
  onMove(m){
@@ -1376,9 +1405,9 @@ const Tac={
   if(clean(m.san)===clean(p.best))return this.solved();
   const s=(p.sec||[]).find(x=>clean(x[0])===clean(m.san));
   if(Lvl.on)return Lvl.answer(s&&s[1]>=-60?.5:0);
-  let msg=`<b>${esc(m.san)}</b> ${s?`es una jugada razonable (≈${fmtEv(s[1])} para ti), pero no es la mejor.`:'no es la mejor jugada.'}`;
+  let msg=`<b>${esc(this.fmt(m.san))}</b> ${s?`es una jugada razonable (≈${fmtEv(s[1])} para ti), pero no es la mejor.`:'no es la mejor jugada.'}`;
   const next=this.tries+1;
-  msg+=next>=3?` La mejor era <b>${esc(p.best)}</b> (≈${fmtEv(p.ev)}). Juégala para continuar.`:' Piensa en el plan: ¿qué pieza está peor situada, qué casilla débil o ruptura puedes aprovechar?';
+  msg+=next>=3?` La mejor era <b>${esc(this.fmt(p.best))}</b> (≈${fmtEv(p.ev)}). Juégala para continuar.`:(p.t?' '+Pos.q(p):' Piensa en el plan: ¿qué pieza está peor situada, qué casilla débil o ruptura puedes aprovechar?');
   this.wrong(msg);
   if(next>=3)setTimeout(()=>{const c=new Chess(A.game.fen());const x=c.move(p.best);if(x){board.arrows=[[x.from,x.to]];board.draw()}},900);
  },
@@ -1388,8 +1417,9 @@ const Tac={
   const p=this.list()[this.i];this.done=true;this.errInfo=null;if(!this.failed)this.stat(true);
   A.status('¡Resuelto!');Snd.play('ok',.12);let h;
   if(p.n)h=`<b>¡Mate!</b> ${esc(p.pat)}.<br>${p.expl}<br><span class="small">Línea: ${esc(p.line)}</span>`;
-  else if(p.best){const alt=p.sec&&p.sec[0];h=`<b>¡Correcto: ${esc(p.best)}!</b> ${p.idea}<br><span class="small">Stockfish: con ${esc(p.best)} tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(alt[0])}) deja ≈${fmtEv(alt[1])}`:''}.</span>`}
+  else if(p.best){const alt=p.sec&&p.sec[0];h=`<b>¡Correcto: ${esc(this.fmt(p.best))}!</b> ${this.ex({expl:p.idea})}<br><span class="small">Stockfish: con ${esc(this.fmt(p.best))} tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(this.fmt(alt[0]))}) deja ≈${fmtEv(alt[1])}`:''}.</span>`}
   else h=`<b>¡Correcto!</b> ${this.ex(p)}`;
+  if(p&&p.t&&p.tg){board.marks=p.tg.slice();board.draw()}
   Chat.say(h+(this.failed?'':'<br>Resuelto al primer intento.')+(p.theme==='Mis errores'&&!this.failed?ErrSRS.note(p,this.errInfo):''),'ok');
   Chat.chips([{label:'Siguiente problema ▶',pri:true,fn:()=>$('#tpNext').click()},{label:'Analizar con Stockfish',fn:analyze}]);
  },
@@ -4542,9 +4572,124 @@ const Coach={
 };
 
 /* =============== CONTROL DE PESTAÑAS =============== */
-const MODES={today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,blind:Blind,reto:Reto,expl:Expl,edit:Edit,coach:Coach,progress:Prog};
+
+/* =============== POSICIÓN: estudiar y practicar la mejora de la posición =============== */
+const POS_IDEAS=[
+ {id:'pieza',ic:'♞',n:'Mejorar la pieza peor colocada',
+  resumen:'Cuando no hay nada concreto que calcular, el plan más fiable es <b>localizar tu pieza más pasiva y llevarla a una casilla activa</b>.',
+  claves:['Cuenta las casillas que controla cada pieza: la que menos controla es la candidata a mejorar.','<b>Caballos</b>: cuanto más cerca del centro, más saltos útiles; en el borde pierden fuerza.','<b>Alfiles</b>: busca diagonales largas y abiertas; si tus propios peones lo bloquean, es un «alfil malo».','<b>Torres</b>: a columnas abiertas o semiabiertas; la torre encerrada en la esquina es la que debes activar.','<b>Dama</b>: activa, pero fuera del alcance de piezas menores rivales.'],
+  q:'¿Cuál es tu pieza peor colocada y a qué casilla puede ir ganando actividad?'},
+ {id:'casilla',ic:'⚑',n:'Casillas clave y puestos avanzados',
+  resumen:'Una <b>casilla clave</b> es la que ningún peón rival puede atacar. Si una pieza tuya se instala allí, el rival no puede echarla.',
+  claves:['Un <b>puesto avanzado</b> es una casilla en campo rival (5ª o 6ª fila) que los peones rivales ya no controlan.','Mejor si lo protege un peón propio: el caballo allí suele valer más que un alfil.','El alfil rinde en la <b>gran diagonal</b> y en diagonales abiertas hacia el flanco del rey rival.','Pregunta clave: ¿qué casillas dejaron de estar protegidas por peones?'],
+  q:'¿Qué casilla no pueden atacar los peones rivales y cómo llega tu pieza hasta ella?'},
+ {id:'debil',ic:'🎯',n:'Debilidades: peones y casillas',
+  resumen:'Las debilidades (peones aislados, doblados o retrasados) son <b>objetivos</b>: se atacan con varias piezas hasta que el rival no pueda defenderlas.',
+  claves:['Un <b>peón aislado</b> no tiene peones vecinos: sus defensores deben ser piezas.','Ataca la debilidad con piezas que el rival tenga que dejar fijas defendiéndola.','Presiona con varias piezas: una sola siempre se puede defender.','La casilla delante de un peón débil suele ser un buen puesto para bloquearlo.'],
+  q:'¿Qué peón o casilla del rival no puede defenderse con peones y cómo la presionas?'},
+ {id:'avance',ic:'⇧',n:'Avance y ruptura de peones',
+  resumen:'Los peones definen la estructura: <b>avanzar gana espacio</b> y <b>romper</b> abre líneas para tus piezas, pero cada avance es irreversible.',
+  claves:['Avanza para ganar espacio cuando limites las piezas rivales sin dejar debilidades.','Rompe cuando tus piezas ya estén bien colocadas para aprovechar las líneas abiertas.','Antes de avanzar pregúntate qué casillas deja de controlar ese peón.','Una ruptura bien preparada puede crear una debilidad rival o abrir una columna.'],
+  q:'¿Qué avance o ruptura gana espacio o abre líneas a tus piezas sin dejarte debilidades?'},
+ {id:'columna',ic:'♜',n:'Columnas abiertas y 7.ª fila',
+  resumen:'Las torres necesitan <b>líneas abiertas</b>: la columna sin peones es la autopista por la que entran en campo rival.',
+  claves:['Ocupa las columnas abiertas antes de que lo haga el rival.','En una <b>semiabierta</b> (sin peón tuyo) presionas el peón rival de esa columna.','<b>Duplicar torres</b> en la columna multiplica la presión.','Una torre en la <b>7.ª fila</b> ataca peones y encierra al rey; casi vale un peón de ventaja.'],
+  q:'¿Qué columna está abierta o semiabierta y cómo la ocupas (o la duplicas)?'},
+ {id:'defensa',ic:'🛡',n:'Defender, profilaxis y rey',
+  resumen:'Antes de ejecutar tu plan, <b>mira qué quiere hacer el rival</b>. A veces la mejor jugada es la que le quita su mejor idea.',
+  claves:['Pregúntate siempre: «¿qué amenaza mi rival con su próxima jugada?».','La <b>profilaxis</b> previene el plan rival antes de que ocurra, ganando un tiempo clave.','Defiende antes de atacar si hay una amenaza concreta.','El rey está seguro enrocado; en finales, en cambio, debe ser una pieza activa.'],
+  q:'¿Qué amenaza o plan tiene el rival y cómo lo neutralizas sin perder tiempo?'}
+];
+const POS_LV={1:['Fácil','la mejor jugada destaca claramente'],2:['Medio','hay alternativas razonables'],3:['Difícil','la diferencia es sutil']};
+COLS.posx={n:'Posición',get:()=>Pos.list()};
+const Pos={
+ idea:store.get('posIdea','pieza'),lv:store.get('posLv',1),study:false,si:0,
+ I(id){return POS_IDEAS.find(x=>x.id===(id||this.idea))||POS_IDEAS[0]},
+ key(p){return p.fen.split(' ').slice(0,4).join(' ')},
+ prog(){return store.get('posProg',{})},
+ ex(t,lv){return POS_BANK.filter(p=>p.t===t&&!p.model&&(!lv||p.lv===lv)).sort((a,b)=>b.mg-a.mg)},
+ models(t){return POS_BANK.filter(p=>p.t===t&&p.model).sort((a,b)=>b.mg-a.mg)},
+ list(){return this.ex(this.idea,this.lv)},
+ cnt(t,lv){const pr=this.prog(),L=this.ex(t,lv);return [L.filter(p=>pr[this.key(p)]===1).length,L.length]},
+ title(p,i,n){const I=this.I(p.t);return `<b>${I.ic} ${esc(I.n)} · Nivel ${p.lv} · ejercicio ${i+1}/${n}</b><br>Juegan ${A.userColor==='w'?'blancas':'negras'}. ${I.q}`},
+ q(p){return this.I(p.t).q},
+ mark(p,ok){
+  const pr=this.prog(),k=this.key(p);pr[k]=ok?1:0;store.set('posProg',pr);this.fillSel();this.showProg();
+  const [d,t]=this.cnt(p.t,p.lv);
+  if(ok&&d===t&&t>0)setTimeout(()=>Chat.say(`🏁 <b>Nivel ${p.lv} de «${esc(this.I(p.t).n)}» completado</b> (${d}/${t}).${p.lv<3?` Pasa al nivel ${p.lv+1} desde el selector de nivel.`:' Es el último nivel: repásalo cuando quieras o cambia de idea.'}`,'ok'),80);
+ },
+ fillSel(){
+  const a=$('#psIdea'),b=$('#psLv');if(!a||!b)return;
+  a.innerHTML=POS_IDEAS.map(I=>{let d=0,t=0;[1,2,3].forEach(l=>{const c=this.cnt(I.id,l);d+=c[0];t+=c[1]});return `<option value="${I.id}">${I.ic} ${esc(I.n)} (${d}/${t})</option>`}).join('');a.value=this.idea;
+  b.innerHTML=[1,2,3].map(l=>{const c=this.cnt(this.idea,l);return `<option value="${l}">Nivel ${l} · ${POS_LV[l][0]} (${c[0]}/${c[1]})${c[1]&&c[0]===c[1]?' ✓':''}</option>`}).join('');b.value=this.lv;
+ },
+ showProg(){const el=$('#psProg');if(!el)return;const c=this.cnt(this.idea,this.lv);el.innerHTML=this.study?`Estudiando la idea: <b>${esc(this.I().n)}</b>. Después, practica con ejercicios.`:`Nivel ${this.lv}: ${POS_LV[this.lv][1]}. Resueltos a la primera: <b>${c[0]}/${c[1]}</b>.`},
+ canMove(){return !this.study&&Tac.canMove()},
+ onMove(m){return Tac.onMove(m)},
+ enter(){
+  Tac.col='posx';Tac.calc=false;
+  $('#ctl').innerHTML=`<div class="g2"><label>Idea<select id="psIdea"></select></label><label>Nivel<select id="psLv"></select></label></div>
+  <div class="row"><button id="psStudy">📖 Estudiar la idea</button><button id="psPrac" class="pri">Practicar</button></div>
+  <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpNext">Siguiente ▶</button></div>
+  <div class="small" id="psProg"></div>`;
+  this.fillSel();
+  $('#psIdea').onchange=e=>{this.idea=e.target.value;store.set('posIdea',this.idea);this.fillSel();this.begin()};
+  $('#psLv').onchange=e=>{this.lv=+e.target.value;store.set('posLv',this.lv);this.fillSel();this.practice()};
+  $('#psStudy').onclick=()=>this.startStudy();$('#psPrac').onclick=()=>this.practice();
+  $('#tpHint').onclick=()=>{if(this.study){Chat.say('En el estudio no hay pista: pulsa «Ver la idea».','warn');return}Tac.hint()};
+  $('#tpRestart').onclick=()=>{if(this.study)this.showModel();else Tac.load()};
+  $('#tpNext').onclick=()=>this.next();
+  this.begin();
+ },
+ leave(){this.study=false},
+ begin(){const seen=store.get('posSeen',[]);if(!seen.includes(this.idea)&&this.models(this.idea).length)this.startStudy();else this.practice()},
+ practice(){
+  this.study=false;Tac.col='posx';Tac.calc=false;const L=this.list();this.showProg();
+  if(!L.length){A.epoch++;Chat.clear();Chat.chips([]);Chat.say('Todavía no hay ejercicios en este nivel. Prueba otro nivel u otra idea.');return}
+  const pr=this.prog();let i=L.findIndex(p=>pr[this.key(p)]!==1);if(i<0)i=0;Tac.i=i;Tac.load();
+ },
+ next(){
+  if(this.study)return this.studyNext();
+  const L=this.list();if(!L.length)return this.practice();const pr=this.prog();
+  for(let k=1;k<=L.length;k++){const j=(Tac.i+k)%L.length;if(pr[this.key(L[j])]!==1){Tac.i=j;Tac.load();return}}
+  Tac.i=(Tac.i+1)%L.length;Tac.load();
+  Chat.say(`Ya resolviste todo este nivel a la primera. Repasas ejercicios: cambia de nivel o de idea para seguir avanzando.`,'ok');
+ },
+ /* --- estudio guiado --- */
+ startStudy(){
+  this.study=true;this.si=-1;const I=this.I(),seen=store.get('posSeen',[]);if(!seen.includes(I.id)){seen.push(I.id);store.set('posSeen',seen)}
+  this.showProg();A.epoch++;Engine.stop();Chat.clear();
+  Chat.say(`<b>${I.ic} ${esc(I.n)}</b><br>${I.resumen}<ul style="margin:6px 0 0 16px;padding:0">${I.claves.map(c=>`<li>${c}</li>`).join('')}</ul>`);
+  const n=this.models(I.id).length;
+  Chat.chips(n?[{label:`Ver ${n} ejemplo${n>1?'s':''} ▶`,pri:true,fn:()=>this.studyNext()},{label:'Ir a los ejercicios',fn:()=>this.practice()}]:[{label:'Ir a los ejercicios',pri:true,fn:()=>this.practice()}]);
+ },
+ studyNext(){
+  const M=this.models(this.idea);this.si++;
+  if(this.si>=M.length){
+   Chat.say(`✔ <b>Resumen:</b> ${esc(this.I().q)}`,'ok');
+   Chat.chips([{label:'Practicar con ejercicios ▶',pri:true,fn:()=>this.practice()},{label:'Repetir los ejemplos',fn:()=>{this.si=-1;this.studyNext()}}]);return}
+  this.showModel();
+ },
+ showModel(){
+  const M=this.models(this.idea),p=M[Math.max(0,this.si)];if(!p)return;
+  A.epoch++;Engine.stop();A.game=new Chess(p.fen);A.startFen=A.game.fen();A.viewIdx=null;A.userColor=A.game.turn();board.flipped=A.userColor==='b';board.arrows=[];board.marks=[];
+  setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();
+  A.status('Ejemplo '+(this.si+1)+' de '+M.length);
+  Chat.say(`<b>Ejemplo ${this.si+1}/${M.length}</b> · juegan ${A.userColor==='w'?'blancas':'negras'}.<br>${this.I().q}<br><span class="small">Piénsalo un momento y pulsa «Ver la idea».</span>`);
+  Chat.chips([{label:'Ver la idea ▶',pri:true,fn:()=>this.reveal(p)}]);
+ },
+ reveal(p){
+  const m=A.game.move(p.best);if(!m)return;A.sync();A.updateControls();board.arrows=[[m.from,m.to]];board.marks=(p.tg||[]).slice();board.draw();
+  const alt=p.sec&&p.sec[0];
+  Chat.say(`<b>${esc(Tac.fmt(p.best))}</b>: ${Tac.ex({expl:p.idea})}<br><span class="small">Stockfish: tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(Tac.fmt(alt[0]))}) deja ≈${fmtEv(alt[1])}`:''}.</span>`,'ok');
+  const last=this.si>=this.models(this.idea).length-1;
+  Chat.chips([{label:last?'Terminar el estudio ▶':'Siguiente ejemplo ▶',pri:true,fn:()=>this.studyNext()},{label:'Analizar con Stockfish',fn:analyze}]);
+ }
+};
+
+const MODES={pos:Pos,today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,blind:Blind,reto:Reto,expl:Expl,edit:Edit,coach:Coach,progress:Prog};
 const Nav={
- G:{today:['today'],study:['lesson','expl','struct','review','exam'],prac:['tactics','reto','blind'],play:['play'],ana:['games','edit'],prog:['progress','coach']},
+ G:{today:['today'],study:['lesson','expl','struct','review','exam'],prac:['tactics','pos','reto','blind'],play:['play'],ana:['games','edit'],prog:['progress','coach']},
  last:store.get('navLast',{}),
  of(m){for(const g in this.G)if(this.G[g].includes(m))return g;return 'today'},
  go(g){const L=this.G[g];let m=this.last[g];if(!m||!L.includes(m)||(m==='coach'&&!Coach.on()))m=L[0];Mode.set(m)},

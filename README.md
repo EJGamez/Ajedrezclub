@@ -76,8 +76,24 @@ Edita `src/template.html` (lecciones en `LESSONS`, problemas en `PUZZLES`, nivel
 
 Archivos de publicación: `index.html`, `sw.js`, `manifest.webmanifest`, `icons/`, `.nojekyll`.
 
+### Posición (Práctica → Posición)
+Módulo para profundizar en la **mejora de la posición**, con seis ideas: pieza peor colocada, casillas clave y puestos avanzados, debilidades (peones y casillas), avance y ruptura de peones, columnas abiertas y 7.ª fila, y defender/profilaxis/rey. Cada idea tiene dos partes: **Estudiar la idea** (resumen, claves y ejemplos comentados con flecha y casillas marcadas) y **Practicar** (ejercicios en 3 niveles: Fácil, Medio y Difícil, con progreso por nivel). Los ejercicios están en `data/posicion.json`: son posiciones de partidas de Stockfish donde la mejor jugada fue verificada por el motor frente a las alternativas; el nivel depende de cuánto destaca la mejor jugada. También salen en «Progresivo de todo».
+
+### Táctica al azar (en progreso)
+En *Táctica → Colección → «Al azar de todo (en progreso)»* salen ejercicios de todos los temas y niveles, sin mostrar el tema. Cada acierto a la primera suma a tu racha y porcentaje (con los últimos 30 resultados en puntos verdes/rojos). Los fallos pasan a «Mis errores».
+
+## Importar ejercicios de Lichess (opcional)
+La base de problemas de Lichess es abierta (licencia CC0). Para añadir hasta ~3.000 ejercicios al banco:
+
+1. Descarga `lichess_db_puzzle.csv.zst` de https://database.lichess.org/#puzzles (≈300 MB).
+2. En la carpeta del proyecto: `pip install chess zstandard`
+3. `python3 tools/import_lichess.py RUTA/lichess_db_puzzle.csv.zst --count 3000`
+4. `python3 build.py` y subir los cambios (`data/tactics.json` e `index.html`).
+
+El script filtra por popularidad, número de partidas y dificultad (`--min-rating`, `--max-rating`, `--min-pop`, `--min-plays`, `--max-moves`), reparte los ejercicios de forma equilibrada entre temas y tramos de dificultad (horquilla, clavada, ensartada, ataque a la descubierta, sacrificio, desviación, finales, mates…), los traduce al español y conserva los que ya haya en `data/tactics.json`. Usa la valoración de Lichess como dificultad (≈900–2400). Para apuntar a tu nivel puedes usar, por ejemplo, `--min-rating 1500 --max-rating 2300`. El archivo del banco crece ≈0,25 KB por ejercicio (3.000 ≈ 0,7 MB más en `index.html`).
+
 ## Licencias
-Stockfish.js 19 (WASM, lite, GPLv3) como motor principal, Stockfish.js 10 (asm.js) como respaldo y chess.js (BSD), todo en `libs/`. Por incluir Stockfish, el proyecto se distribuye bajo GPLv3.
+Stockfish.js 19 (WASM, lite, GPLv3) como motor principal, Stockfish.js 10 (asm.js) como respaldo y chess.js (BSD), todo en `libs/`. Por incluir Stockfish, el proyecto se distribuye bajo GPLv3. Los ejercicios importados de Lichess proceden de su base abierta (CC0, https://database.lichess.org).
 
 ## Crear lecciones e importar PGN
 - **Lecciones → Importar PGN**: acepta PGN de estudios (Lichess/ChessBase) con comentarios, `[Orientation]`, flechas `[%cal]` y varias partidas. El color (blancas/negras) se detecta solo; también puedes elegirlo, y elegir si cada partida es un capítulo o una partida modelo. Si el PGN trae notación en español (R, D, T, A, C) se convierte automáticamente. Si algo falla, el mensaje indica qué partida y qué jugada.
