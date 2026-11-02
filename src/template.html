@@ -1273,7 +1273,7 @@ const Tac={
   if(p.t&&this.col==='posx')Chat.say(Pos.title(p,this.i,this.list().length));
   else if(this.col==='mix')Chat.say(p.best?`<b>Ejercicio ${Mix.st().n+1} · nivel ≈${TElo.rate(p)} · Mejorar la posición</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`:`<b>Ejercicio ${Mix.st().n+1} · nivel ≈${TElo.rate(p)}</b><br>Juegan ${who}. Tema oculto: descubre la táctica${p.n?` (hay mate en ${p.n})`:''}.`);
   else if(p.n)Chat.say(`<b>Problema ${this.i+1} · Mate en ${p.n}</b><br>Juegan ${who}. Da mate en ${p.n} jugada${p.n>1?'s':''}, pase lo que pase el rival.`);
-  else if(p.best)Chat.say(`<b>Problema ${this.i+1} · Mejorar la posición</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`);
+  else if(p.best)Chat.say(`<b>${p.t?'Repaso · '+esc(Pos.I(p.t).n):`Problema ${this.i+1} · Mejorar la posición`}</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`);
   else Chat.say(`<b>Problema ${this.i+1} · ${esc(p.theme)}</b><br>Juegan ${who}. Encuentra la mejor jugada.`);
   A.status(this.calc?'Calcula la línea sin mover piezas':'Tu turno');Chat.chips([{label:'Pista',fn:()=>this.hint()}]);Mix.show();
   if(this.calc)this.calcUI(p);
@@ -1356,7 +1356,7 @@ const Tac={
   Chat.chips([{label:'Ver la línea en el tablero ▶',pri:true,fn:step},{label:'Siguiente problema ▶',fn:()=>$('#tpNext').click()}]);
  },
  stat(ok){{const q=this.list()[this.i];if(q&&q.theme==='Mis errores')this.errInfo=ErrSRS.grade(q.fen,ok);
-  if(q&&q.r&&!ok&&q.theme!=='Mis errores'&&!Lvl.on&&!Storm.on){try{ErrSRS.adopt(q);ErrSRS.grade(q.fen,false);this.bankFail=true}catch(e){}}
+  if(q&&(q.r||q.t)&&!ok&&q.theme!=='Mis errores'&&!Lvl.on&&!Storm.on){try{ErrSRS.adopt(q);ErrSRS.grade(q.fen,false);this.bankFail=true}catch(e){}}
   if(q&&this.col==='elo'&&!Lvl.on&&!Storm.on)TElo.update(q,ok);
   if(q&&this.col==='mix'&&!Lvl.on&&!Storm.on)Mix.update(ok);
   if(q&&this.col==='posx'&&q.t&&!Lvl.on&&!Storm.on)Pos.mark(q,ok);
@@ -2662,7 +2662,7 @@ const ErrSRS={
  all(){return store.get('errsrs',{})},
  puzzles(){return store.get('mypuz',[]).filter(p=>p&&p.fen&&p.theme==='Mis errores')},
  rec(p){return this.all()[p.fen]||null},
- adopt(p){const a=store.get('mypuz',[]);if(a.some(x=>x&&x.fen===p.fen&&x.theme==='Mis errores'))return;a.push({fen:p.fen,theme:'Mis errores',sol:p.sol.slice(),r:p.r,orig:p.theme,expl:p.expl||''});store.set('mypuz',a.slice(-300))},
+ adopt(p){const a=store.get('mypuz',[]);if(a.some(x=>x&&x.fen===p.fen&&x.theme==='Mis errores'))return;a.push(p.best&&p.t?{fen:p.fen,theme:'Mis errores',best:p.best,ev:p.ev,sec:p.sec,t:p.t,lv:p.lv,idea:p.idea,tg:p.tg,orig:p.t}:{fen:p.fen,theme:'Mis errores',sol:p.sol.slice(),r:p.r,orig:p.theme,expl:p.expl||''});store.set('mypuz',a.slice(-300))},
  isDue(p){const r=this.rec(p);return !r||r.due<=Date.now()},
  dueList(){return this.puzzles().filter(p=>this.isDue(p)).sort((a,b)=>((this.rec(a)||{due:0}).due)-((this.rec(b)||{due:0}).due))},
  dueCount(){return this.dueList().length},
@@ -4623,7 +4623,13 @@ const Pos={
   a.innerHTML=POS_IDEAS.map(I=>{let d=0,t=0;[1,2,3].forEach(l=>{const c=this.cnt(I.id,l);d+=c[0];t+=c[1]});return `<option value="${I.id}">${I.ic} ${esc(I.n)} (${d}/${t})</option>`}).join('');a.value=this.idea;
   b.innerHTML=[1,2,3].map(l=>{const c=this.cnt(this.idea,l);return `<option value="${l}">Nivel ${l} · ${POS_LV[l][0]} (${c[0]}/${c[1]})${c[1]&&c[0]===c[1]?' ✓':''}</option>`}).join('');b.value=this.lv;
  },
- showProg(){const el=$('#psProg');if(!el)return;const c=this.cnt(this.idea,this.lv);el.innerHTML=this.study?`Estudiando la idea: <b>${esc(this.I().n)}</b>. Después, practica con ejercicios.`:`Nivel ${this.lv}: ${POS_LV[this.lv][1]}. Resueltos a la primera: <b>${c[0]}/${c[1]}</b>.`},
+ showRev(){
+  const el=$('#psRev');if(!el)return;const all=ErrSRS.puzzles().filter(p=>p.t),due=ErrSRS.dueList().filter(p=>p.t);
+  if(!all.length){el.innerHTML='';return}
+  el.innerHTML=due.length?`<button id="psRevBtn" class="pri">📅 Repasar errores de Posición (${due.length})</button><span class="small">${all.length} en seguimiento</span>`:`<span class="small">📅 Sin repasos pendientes hoy · ${all.length} error${all.length===1?'':'es'} en seguimiento (vuelven a salir a 1, 3, 7, 14, 30 días).</span>`;
+  const b=$('#psRevBtn');if(b)b.onclick=()=>{store.set('tcol','err');Mode.set('tactics')};
+ },
+ showProg(){this.showRev();const el=$('#psProg');if(!el)return;const c=this.cnt(this.idea,this.lv);el.innerHTML=this.study?`Estudiando la idea: <b>${esc(this.I().n)}</b>. Después, practica con ejercicios.`:`Nivel ${this.lv}: ${POS_LV[this.lv][1]}. Resueltos a la primera: <b>${c[0]}/${c[1]}</b>.`},
  canMove(){return !this.study&&Tac.canMove()},
  onMove(m){return Tac.onMove(m)},
  enter(){
@@ -4631,7 +4637,7 @@ const Pos={
   $('#ctl').innerHTML=`<div class="g2"><label>Idea<select id="psIdea"></select></label><label>Nivel<select id="psLv"></select></label></div>
   <div class="row"><button id="psStudy">📖 Estudiar la idea</button><button id="psPrac" class="pri">Practicar</button></div>
   <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpNext">Siguiente ▶</button></div>
-  <div class="small" id="psProg"></div>`;
+  <div class="row" id="psRev"></div><div class="small" id="psProg"></div>`;
   this.fillSel();
   $('#psIdea').onchange=e=>{this.idea=e.target.value;store.set('posIdea',this.idea);this.fillSel();this.begin()};
   $('#psLv').onchange=e=>{this.lv=+e.target.value;store.set('posLv',this.lv);this.fillSel();this.practice()};
