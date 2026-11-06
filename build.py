@@ -16,7 +16,10 @@ assert '</script' not in tactics
 pb = root / 'data' / 'posicion.json'
 posbank = pb.read_text(encoding='utf-8').strip() if pb.exists() else '[]'
 assert '</script' not in posbank
-out = t.replace('__POSBANK__', posbank).replace('__TACTICS__', tactics).replace('__BUILD__', build).replace('__CHESSJS__', cj).replace('__SF__', sf).replace('__SFJS__', sfjs).replace('__SFWASM__', sfw)
+fb = root / 'data' / 'finales.json'
+finbank = fb.read_text(encoding='utf-8').strip() if fb.exists() else '[]'
+assert '</script' not in finbank
+out = t.replace('__FINBANK__', finbank).replace('__POSBANK__', posbank).replace('__TACTICS__', tactics).replace('__BUILD__', build).replace('__CHESSJS__', cj).replace('__SF__', sf).replace('__SFJS__', sfjs).replace('__SFWASM__', sfw)
 (root / 'index.html').write_text(out, encoding='utf-8')
 
 # --- archivos para publicar como web / app instalable (GitHub Pages) ---

@@ -79,6 +79,15 @@ Archivos de publicación: `index.html`, `sw.js`, `manifest.webmanifest`, `icons/
 ### Posición (Práctica → Posición)
 Módulo para profundizar en la **mejora de la posición**, con seis ideas: pieza peor colocada, casillas clave y puestos avanzados, debilidades (peones y casillas), avance y ruptura de peones, columnas abiertas y 7.ª fila, y defender/profilaxis/rey. Cada idea tiene dos partes: **Estudiar la idea** (resumen, claves y ejemplos comentados con flecha y casillas marcadas) y **Practicar** (ejercicios en 3 niveles: Fácil, Medio y Difícil, con progreso por nivel). Los ejercicios están en `data/posicion.json`: son posiciones de partidas de Stockfish donde la mejor jugada fue verificada por el motor frente a las alternativas; el nivel depende de cuánto destaca la mejor jugada. También salen en «Progresivo de todo». Si fallas un ejercicio, pasa a «Mis errores» y vuelve a salir a 1, 3, 7, 14 y 30 días hasta que lo aciertes 4 veces seguidas; en Posición hay un botón «Repasar errores de Posición» con los pendientes de hoy.
 
+### Cálculo (Práctica → Cálculo)
+Entrena el cálculo sin mover piezas: ves la posición, escribes la **línea completa** (tus jugadas y las respuestas del rival) y la app la comprueba. Tres niveles según cuántas jugadas tuyas hay que calcular (2, 3 o 4 o más), separados en tácticas y mates. Los fallos pasan a «Mis errores» con repaso espaciado.
+
+### Finales prácticos (Práctica → Finales)
+Igual que Posición (estudio guiado + ejercicios en 3 niveles con progreso y repaso de fallos) pero para finales de **peones, torres, alfiles y caballos, y damas**. Los ejercicios (`data/finales.json`) son posiciones donde solo una jugada conserva la victoria o las tablas, verificadas con Stockfish a profundidad 22; el nivel se mide por la profundidad de cálculo que necesita el motor para encontrar la jugada.
+
+### Plan de la semana (Hoy)
+Cada lunes la app genera un plan de 7 días con tus puntos débiles (temas de táctica con peor acierto, ideas de Posición y tipos de final con más fallos, estructuras, cálculo, repertorio y errores). Las tareas se marcan solas al practicar, se ve el cumplimiento y se puede regenerar los días que faltan; el tamaño de las tareas depende de la sesión elegida (15, 30 o 45 min).
+
 ### Táctica al azar (en progreso)
 En *Táctica → Colección → «Al azar de todo (en progreso)»* salen ejercicios de todos los temas y niveles, sin mostrar el tema. Cada acierto a la primera suma a tu racha y porcentaje (con los últimos 30 resultados en puntos verdes/rojos). Los fallos pasan a «Mis errores».
 

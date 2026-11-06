@@ -264,6 +264,8 @@ label.cfgrow:has(input[type=checkbox]){justify-content:flex-start}
     <button data-g="study" data-m="exam">Examen</button>
     <button data-g="prac" data-m="tactics">Táctica</button>
     <button data-g="prac" data-m="pos" title="Estudiar y practicar la mejora de la posición por ideas y niveles">Posición</button>
+    <button data-g="prac" data-m="cal" title="Calcula la línea completa sin mover piezas">Cálculo</button>
+    <button data-g="prac" data-m="fp" title="Finales prácticos: peones, torres, piezas menores y damas">Finales</button>
     <button data-g="prac" data-m="reto" title="Contrarreloj, finales teóricos y partidas con reloj">Retos</button>
     <button data-g="prac" data-m="blind" title="Partida sin ver las piezas">A ciegas</button>
     <button data-g="ana" data-m="games">Partidas</button>
@@ -397,6 +399,7 @@ const LESSONS=[{
 /* =============== CONTENIDO: TÁCTICA =============== */
 const TAC_BANK=__TACTICS__;
 const POS_BANK=__POSBANK__;
+const FP_BANK=__FINBANK__;
 const PZ=()=>PUZZLES.concat(store.get('mypuz',[]));
 const PUZZLES=[
  {fen:'6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1',theme:'Mate de pasillo',sol:['Rd8#'],expl:'El rey negro no tiene casillas de escape porque sus propios peones lo encierran. Siempre busca el mate de pasillo cuando el rey rival no tiene "ventana".'},
@@ -1270,10 +1273,10 @@ const Tac={
   this.s=0;this.tries=0;this.failed=false;this.done=false;this.lock=false;this.errInfo=null;this.mq=p.n||0;
   setEval(null);$('#engineLines').innerHTML='';A.sync();A.updateControls();Chat.clear();
   const who=A.userColor==='w'?'blancas':'negras';
-  if(p.t&&this.col==='posx')Chat.say(Pos.title(p,this.i,this.list().length));
+  if(p.t&&MODS[this.col])Chat.say(MODS[this.col].title(p,this.i,this.list().length));
   else if(this.col==='mix')Chat.say(p.best?`<b>Ejercicio ${Mix.st().n+1} · nivel ≈${TElo.rate(p)} · Mejorar la posición</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`:`<b>Ejercicio ${Mix.st().n+1} · nivel ≈${TElo.rate(p)}</b><br>Juegan ${who}. Tema oculto: descubre la táctica${p.n?` (hay mate en ${p.n})`:''}.`);
   else if(p.n)Chat.say(`<b>Problema ${this.i+1} · Mate en ${p.n}</b><br>Juegan ${who}. Da mate en ${p.n} jugada${p.n>1?'s':''}, pase lo que pase el rival.`);
-  else if(p.best)Chat.say(`<b>${p.t?'Repaso · '+esc(Pos.I(p.t).n):`Problema ${this.i+1} · Mejorar la posición`}</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`);
+  else if(p.best)Chat.say(`<b>${p.t?'Repaso · '+esc(ideaOf(p.t).n):`Problema ${this.i+1} · Mejorar la posición`}</b><br>Juegan ${who}. Es una posición de plan más que de táctica: encuentra la mejor jugada de <b>plan</b> (pieza, casilla o ruptura).`);
   else Chat.say(`<b>Problema ${this.i+1} · ${esc(p.theme)}</b><br>Juegan ${who}. Encuentra la mejor jugada.`);
   A.status(this.calc?'Calcula la línea sin mover piezas':'Tu turno');Chat.chips([{label:'Pista',fn:()=>this.hint()}]);Mix.show();
   if(this.calc)this.calcUI(p);
@@ -1359,8 +1362,8 @@ const Tac={
   if(q&&(q.r||q.t)&&!ok&&q.theme!=='Mis errores'&&!Lvl.on&&!Storm.on){try{ErrSRS.adopt(q);ErrSRS.grade(q.fen,false);this.bankFail=true}catch(e){}}
   if(q&&this.col==='elo'&&!Lvl.on&&!Storm.on)TElo.update(q,ok);
   if(q&&this.col==='mix'&&!Lvl.on&&!Storm.on)Mix.update(ok);
-  if(q&&this.col==='posx'&&q.t&&!Lvl.on&&!Storm.on)Pos.mark(q,ok);
-  try{if(q){const w=Log.key(Evo.monday()),th=store.get('thist',{}),t=q.theme||(q.n?'Mate en '+q.n:'Otros'),o=th[w]||(th[w]={}),c=o[t]||(o[t]=[0,0]);if(ok)c[0]++;c[1]++;const ks=Object.keys(th).sort();if(ks.length>80)ks.slice(0,ks.length-80).forEach(k=>delete th[k]);store.set('thist',th)}}catch(e){}}if(this.calc){const q=store.get('cstats',{n:0,ok:0});q.n++;if(ok)q.ok++;store.set('cstats',q);Log.add('cal',1,ok)}Log.add('tac',1,ok);const s=store.get('tstats',{});const q2=this.list()[this.i],t=q2.theme||(q2.n?'Mate en '+q2.n:q2.best?'Mejorar la posición':'Otros');s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
+  if(q&&MODS[this.col]&&q.t&&!Lvl.on&&!Storm.on)MODS[this.col].mark(q,ok);
+  try{if(q&&!MODS[this.col]){const w=Log.key(Evo.monday()),th=store.get('thist',{}),t=q.theme||(q.n?'Mate en '+q.n:'Otros'),o=th[w]||(th[w]={}),c=o[t]||(o[t]=[0,0]);if(ok)c[0]++;c[1]++;const ks=Object.keys(th).sort();if(ks.length>80)ks.slice(0,ks.length-80).forEach(k=>delete th[k]);store.set('thist',th)}}catch(e){}}if(this.calc){const q=store.get('cstats',{n:0,ok:0});q.n++;if(ok)q.ok++;store.set('cstats',q);Log.add('cal',1,ok)}if(MODS[this.col]){if(MODS[this.col].k!=='cal')Log.add(MODS[this.col].k,1,ok);return}Log.add('tac',1,ok);const s=store.get('tstats',{});const q2=this.list()[this.i],t=q2.theme||(q2.n?'Mate en '+q2.n:q2.best?'Mejorar la posición':'Otros');s[t]=s[t]||{ok:0,fail:0};ok?s[t].ok++:s[t].fail++;store.set('tstats',s)},
  wrong(msg){if(Lvl.on){Lvl.answer(0);return}if(Storm.on){Storm.fail();return}this.tries++;this.lock=true;let note='';if(!this.failed){this.failed=true;this.errInfo=null;this.stat(false);const q=this.list()[this.i];if(q&&q.theme==='Mis errores')note=ErrSRS.note(q,this.errInfo)}if(!note&&this.bankFail)note='<br><span class="small">📅 Lo añadí a «Mis errores»: volverá a salir mañana hasta que lo domines.</span>';this.bankFail=false;Chat.say(msg+note,'bad');setTimeout(()=>{A.game.undo();A.sync();A.updateControls();this.lock=false},700)},
  onMove(m){
   const p=this.list()[this.i];
@@ -1405,9 +1408,9 @@ const Tac={
   if(clean(m.san)===clean(p.best))return this.solved();
   const s=(p.sec||[]).find(x=>clean(x[0])===clean(m.san));
   if(Lvl.on)return Lvl.answer(s&&s[1]>=-60?.5:0);
-  let msg=`<b>${esc(this.fmt(m.san))}</b> ${s?`es una jugada razonable (≈${fmtEv(s[1])} para ti), pero no es la mejor.`:'no es la mejor jugada.'}`;
+  let msg=`<b>${esc(this.fmt(m.san))}</b> ${s?(p.res!=null?`${RESW(s[1])==='gana'?'también gana, pero no es la mejor':'deja el resultado en «'+RESW(s[1])+'», y no es la mejor'}.`:`es una jugada razonable (≈${fmtEv(s[1])} para ti), pero no es la mejor.`):'no es la mejor jugada.'}`;
   const next=this.tries+1;
-  msg+=next>=3?` La mejor era <b>${esc(this.fmt(p.best))}</b> (≈${fmtEv(p.ev)}). Juégala para continuar.`:(p.t?' '+Pos.q(p):' Piensa en el plan: ¿qué pieza está peor situada, qué casilla débil o ruptura puedes aprovechar?');
+  msg+=next>=3?` La mejor era <b>${esc(this.fmt(p.best))}</b> (≈${fmtEv(p.ev)}). Juégala para continuar.`:(p.t?' '+ideaOf(p.t).q:' Piensa en el plan: ¿qué pieza está peor situada, qué casilla débil o ruptura puedes aprovechar?');
   this.wrong(msg);
   if(next>=3)setTimeout(()=>{const c=new Chess(A.game.fen());const x=c.move(p.best);if(x){board.arrows=[[x.from,x.to]];board.draw()}},900);
  },
@@ -1417,7 +1420,7 @@ const Tac={
   const p=this.list()[this.i];this.done=true;this.errInfo=null;if(!this.failed)this.stat(true);
   A.status('¡Resuelto!');Snd.play('ok',.12);let h;
   if(p.n)h=`<b>¡Mate!</b> ${esc(p.pat)}.<br>${p.expl}<br><span class="small">Línea: ${esc(p.line)}</span>`;
-  else if(p.best){const alt=p.sec&&p.sec[0];h=`<b>¡Correcto: ${esc(this.fmt(p.best))}!</b> ${this.ex({expl:p.idea})}<br><span class="small">Stockfish: con ${esc(this.fmt(p.best))} tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(this.fmt(alt[0]))}) deja ≈${fmtEv(alt[1])}`:''}.</span>`}
+  else if(p.best){const alt=p.sec&&p.sec[0];h=`<b>¡Correcto: ${esc(this.fmt(p.best))}!</b> ${this.ex({expl:p.idea})}<br><span class="small">${p.res!=null?`Stockfish: con ${esc(this.fmt(p.best))} ${RESW(p.ev)}${alt?`; con la mejor alternativa (${esc(this.fmt(alt[0]))}) ${RESW(alt[1])}`:''}.`:`Stockfish: con ${esc(this.fmt(p.best))} tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(this.fmt(alt[0]))}) deja ≈${fmtEv(alt[1])}`:''}.`}</span>`}
   else h=`<b>¡Correcto!</b> ${this.ex(p)}`;
   if(p&&p.t&&p.tg){board.marks=p.tg.slice();board.draw()}
   Chat.say(h+(this.failed?'':'<br>Resuelto al primer intento.')+(p.theme==='Mis errores'&&!this.failed?ErrSRS.note(p,this.errInfo):''),'ok');
@@ -2662,7 +2665,7 @@ const ErrSRS={
  all(){return store.get('errsrs',{})},
  puzzles(){return store.get('mypuz',[]).filter(p=>p&&p.fen&&p.theme==='Mis errores')},
  rec(p){return this.all()[p.fen]||null},
- adopt(p){const a=store.get('mypuz',[]);if(a.some(x=>x&&x.fen===p.fen&&x.theme==='Mis errores'))return;a.push(p.best&&p.t?{fen:p.fen,theme:'Mis errores',best:p.best,ev:p.ev,sec:p.sec,t:p.t,lv:p.lv,idea:p.idea,tg:p.tg,orig:p.t}:{fen:p.fen,theme:'Mis errores',sol:p.sol.slice(),r:p.r,orig:p.theme,expl:p.expl||''});store.set('mypuz',a.slice(-300))},
+ adopt(p){if(!p.sol&&!(p.best&&p.t))return;const a=store.get('mypuz',[]);if(a.some(x=>x&&x.fen===p.fen&&x.theme==='Mis errores'))return;a.push(p.best&&p.t?{fen:p.fen,theme:'Mis errores',best:p.best,ev:p.ev,sec:p.sec,t:p.t,lv:p.lv,idea:p.idea,tg:p.tg,orig:p.t}:{fen:p.fen,theme:'Mis errores',sol:p.sol.slice(),r:p.r,orig:p.theme,expl:p.expl||''});store.set('mypuz',a.slice(-300))},
  isDue(p){const r=this.rec(p);return !r||r.due<=Date.now()},
  dueList(){return this.puzzles().filter(p=>this.isDue(p)).sort((a,b)=>((this.rec(a)||{due:0}).due)-((this.rec(b)||{due:0}).due))},
  dueCount(){return this.dueList().length},
@@ -3303,7 +3306,7 @@ const Log={
   }catch(e){}
  },
  today(){return this.all()[this.key()]||{min:0,srs:0,exam:0,tac:0,str:0,play:0,les:0,gam:0,ok:0,n:0}},
- active(d){return d&&(d.min>=.5||d.srs||d.exam||d.tac||d.str||d.play||d.les||d.gam||d.fin||d.clk)},
+ active(d){return d&&(d.min>=.5||d.srs||d.exam||d.tac||d.str||d.play||d.les||d.gam||d.fin||d.clk||d.pos||d.fp||d.cal)},
  streak(){
   const L=this.all();let cur=0,d=new Date();if(!this.active(L[this.key(d)]))d.setDate(d.getDate()-1);
   while(this.active(L[this.key(d)])){cur++;d.setDate(d.getDate()-1)}
@@ -3364,7 +3367,7 @@ const Today={
   tasks.push({id:'tac',title:'Táctica: '+wt.label,desc:wt.acc==null?'Tema nuevo para ti hoy.':`Tu tema más débil: acierto ${Math.round(wt.acc*100)}% en ${wt.n} intentos.`,target:T.tac,done:td.tac,min:Math.ceil(T.tac*1),go:()=>Tac.focusTheme(wt.label)});
   if(boost){const t=tasks.find(x=>x.id==='tac');if(t)t.desc+=' '+boost}
   {const ed=ErrSRS.dueCount();if(ed>0&&T.tac){const tg=Math.min(ed,Math.max(3,Math.round(T.tac*.8)));tasks.push({id:'err',title:'Repasa tus errores de partidas',desc:`${ed} problema${ed===1?'':'s'} de tus partidas toca${ed===1?'':'n'} repasar hoy.`,target:tg,done:td.err||0,min:tg*2,go:()=>{store.set('tcol','err');Mode.set('tactics')}})}}
-  if(T.cal)tasks.push({id:'cal',title:'Cálculo sin mover piezas',desc:'Mate en 2: escribe la línea completa (con las respuestas del rival) antes de comprobar.',target:T.cal,done:td.cal||0,min:T.cal*3,go:()=>{store.set('tcalc',true);store.set('tcol','m2');Mode.set('tactics')}});
+  if(T.cal)tasks.push({id:'cal',title:'Cálculo sin mover piezas',desc:'Mate en 2: escribe la línea completa (con las respuestas del rival) antes de comprobar.',target:T.cal,done:td.cal||0,min:T.cal*3,go:()=>Mode.set('cal')});
   const ws=this.pick(this.structStats(),STRUCTS.map(x=>x.name));
   if(T.str)tasks.push({id:'str',title:'Estructura de peones: '+ws.label,desc:ws.acc==null?'Una estructura nueva para entrenar el plan.':`Tu acierto aquí es ${Math.round(ws.acc*100)}%: adivina el plan.`,target:T.str,done:td.str,min:T.str*2,go:()=>Mode.set('struct',()=>{Struct.rand=false;Struct.si=ws.i;Struct.pi=0;const sel=$('#stSel');if(sel)sel.value=Struct.si;Struct.ask()})});
   const gs=store.get('games_pgn',[]),an=store.get('games_an',{});const un=gs.filter(g=>!an[g.id]).length;
@@ -3383,16 +3386,18 @@ const Today={
   h+='<table style="margin-top:8px">'+tasks.map((t,i)=>{const ok=t.done>=t.target;return `<tr><td style="width:22px">${ok?'✓':'○'}</td><td><b>${esc(t.title)}</b><br><span class="small">${esc(t.desc)}</span></td><td style="white-space:nowrap">${Math.min(t.done,t.target)}/${t.target}<br><span class="small">~${t.min} min</span></td><td><button data-task="${i}" class="${ok?'':'pri'}">${ok?'Repetir':'Ir'}</button></td></tr>`}).join('')+'</table>';
   const nxt=tasks.findIndex(t=>t.done<t.target);
   h+=`<div class="row" style="margin-top:8px"><button data-task="${nxt<0?0:nxt}" class="pri">${nxt<0?'¡Plan completo! Repetir la primera':'Empezar con la primera pendiente'}</button></div>`;
+  h+=Plan.card();
   // semana
   const L=Log.all(),days=[],names=['D','L','M','X','J','V','S'];let wk=0;
   for(let k=6;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);const e=L[Log.key(d)];const m=e?Math.round(e.min):0;wk+=m;days.push({n:names[d.getDay()],m,t:k===0})}
   const mx=Math.max(10,...days.map(x=>x.m));
-  h+='<h3>Esta semana</h3><div style="display:flex;gap:8px;align-items:flex-end;height:70px">'+days.map(x=>`<div style="flex:1;text-align:center;font-size:11px;color:var(--mut)"><div style="height:${Math.max(3,x.m/mx*52)}px;background:${x.m?'var(--acc)':'var(--line)'};border-radius:3px;opacity:${x.t?1:.7}"></div>${x.n}<br>${x.m}</div>`).join('')+`</div><div class="small">Total: ${wk} min. Meta sugerida: 30 min al día, 5 días a la semana.</div>`;
+  h+='<h3>Minutos esta semana</h3><div style="display:flex;gap:8px;align-items:flex-end;height:70px">'+days.map(x=>`<div style="flex:1;text-align:center;font-size:11px;color:var(--mut)"><div style="height:${Math.max(3,x.m/mx*52)}px;background:${x.m?'var(--acc)':'var(--line)'};border-radius:3px;opacity:${x.t?1:.7}"></div>${x.n}<br>${x.m}</div>`).join('')+`</div><div class="small">Total: ${wk} min. Meta sugerida: 30 min al día, 5 días a la semana.</div>`;
   h+=Evo.weekDetails();
   h+=this.profile();
   Chat.el.innerHTML='<div class="panel">'+h+'</div>';Evo.bindToday(Chat.el,()=>this.render());Nb.bind(Chat.el);Lvl.bindToday(Chat.el);
   Chat.el.querySelectorAll('[data-sess]').forEach(b=>b.onclick=()=>{store.set('todayMin',+b.dataset.sess);this.render()});
   Backup.bind(Chat.el,()=>this.render());Coach.bind(Chat.el,()=>this.render());
+  Plan.bind(Chat.el,()=>this.render());
   Chat.el.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{const t=this.tasks[+b.dataset.task];if(t)t.go()});
   Chat.el.querySelectorAll('[data-weak]').forEach(b=>b.onclick=()=>{const w=this.weak[+b.dataset.weak];if(w&&w.go)w.go()});
  },
@@ -3421,6 +3426,94 @@ const Today={
   if(gp.games){h+='<h3>Tus partidas por fase</h3><table>'+gp.ph.map(p=>`<tr><td>${p.l}</td><td>${p.acc==null?'—':Math.round(p.acc)+'%'}</td><td>${p.n} jugadas · ${p.e} errores</td><td><div class="bar"><i style="width:${p.acc==null?0:Math.round(p.acc)}%"></i></div></td></tr>`).join('')+'</table>'}
   if(fg.length)h+='<h3>Jugadas que más olvidas</h3><ul>'+fg.map(x=>`<li>${esc(x.label)} <span class="small">(${x.lap} fallos)</span></li>`).join('')+'</ul>';
   return h;
+ }
+};
+
+/* =============== PLAN SEMANAL AUTOMÁTICO =============== */
+const modNames=()=>new Set([...POS_IDEAS,...FP_IDEAS,...CAL_IDEAS].map(i=>i.n));
+const Plan={
+ DN:['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+ TG:{15:{tac:4,pos:3,cal:2,fp:2,str:1,exam:3,err:3,srs:8},30:{tac:8,pos:6,cal:4,fp:4,str:2,exam:5,err:5,srs:15},45:{tac:12,pos:9,cal:6,fp:6,str:3,exam:8,err:8,srs:25}},
+ mon(d=new Date()){return Evo.monday(d)},
+ get(){return store.get('planw',null)},
+ weakTac(){
+  const st=Today.themeStats().filter(x=>!modNames().has(x.label)).sort((a,b)=>a.acc-b.acc||b.n-a.n),out=st.slice(0,3).map(x=>({label:x.label,why:`acierto ${Math.round(x.acc*100)}% en ${x.n} intentos`}));
+  const base=['Mate en 2','Horquilla','Clavada','Descubierta','Ataque doble','Mate en 1','Mate en 3'],avail=[...new Set(ALLPZ().map(p=>p.theme))];
+  const wk=Math.floor(Date.now()/(7*DAY));let k=0;
+  while(out.length<3&&k<30){const t=base[(wk+k)%base.length];k++;if(!out.some(o=>o.label===t)&&(/^Mate en/.test(t)||avail.includes(t)))out.push({label:t,why:'tema para ampliar tu repertorio táctico'})}
+  return out;
+ },
+ weakMod(M){
+  const w=M.weakIdeas();return w.length?w:M.ideas.map(i=>({id:i.id,n:i.n,f:0,d:0,t:0}));
+ },
+ gen(S,from){
+  const T=this.TG[S]||this.TG[30],mon=this.mon(),wt=this.weakTac(),wp=this.weakMod(Pos),wf=this.weakMod(Fp);
+  const ws=Today.pick(Today.structStats(),STRUCTS.map(x=>x.name));
+  const lvOf=(M,id)=>{for(let l=1;l<=3;l++){const c=M.cnt(id,l);if(c[1]&&c[0]<c[1])return l}return 1};
+  const tT=(i)=>{const w=wt[i%wt.length];return {kind:'tac',theme:w.label,title:'Táctica: '+w.label,desc:'Tu punto a reforzar: '+w.why+'.',target:T.tac}};
+  const tP=(i)=>{const w=wp[i%wp.length];return {kind:'pos',idea:w.id,lv:lvOf(Pos,w.id),title:'Posición: '+w.n,desc:w.f?`Fallaste ${w.f} ejercicio${w.f===1?'':'s'} de esta idea: repásala.`:`Idea con menos práctica (${w.d}/${w.t} resueltos).`,target:T.pos}};
+  const tF=(i)=>{const w=wf[i%wf.length];return {kind:'fp',idea:w.id,lv:lvOf(Fp,w.id),title:'Final: '+w.n,desc:w.f?`Fallaste ${w.f} ejercicio${w.f===1?'':'s'} de este tipo de final.`:`Tipo de final con menos práctica (${w.d}/${w.t}).`,target:T.fp}};
+  const tC=()=>({kind:'cal',title:'Cálculo sin mover piezas',desc:'Escribe la línea completa antes de comprobar: entrena el cálculo visual.',target:T.cal});
+  const tE=()=>({kind:'exam',title:'Examen de repertorio',desc:'Líneas de tu repertorio jugadas de memoria.',target:T.exam});
+  const tS=()=>({kind:'str',title:'Estructura de peones: '+ws.label,desc:'Adivina el plan de la estructura.',target:T.str,idx:ws.i});
+  const tR=()=>({kind:'err',title:'Repasa tus errores',desc:'Los problemas fallados vuelven a salir hasta que los domines.',target:T.err});
+  const plan=[
+   [tT(0),tP(0)],
+   [tC(),tE()],
+   [tF(0),tT(1)],
+   [tP(1),tS()],
+   [tC(),tT(2),tR()],
+   [{kind:'play',title:'Una partida contra Stockfish',desc:'Aplica lo de la semana en una partida completa.',target:1},{kind:'gam',title:'Analiza tu última partida',desc:'Revisa dónde fallaste y guarda tus errores como problemas.',target:1}],
+   [{kind:'srs',title:'Repaso espaciado',desc:'Cierra la semana repasando tu repertorio.',target:T.srs},{kind:'fin',title:'Un final teórico',desc:'Practica técnica contra Stockfish.',target:1}]
+  ];
+  const old=this.get(),days=[];
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const k=Log.key(d);
+   days.push(old&&old.wk===Log.key(mon)&&old.days[i]&&i<from?old.days[i]:{d:k,tasks:plan[i]});}
+  const pl={wk:Log.key(mon),S,days};store.set('planw',pl);return pl;
+ },
+ ensure(){
+  const S=+store.get('todayMin',30),mon=Log.key(this.mon());let pl=this.get();
+  if(!pl||pl.wk!==mon||!pl.days||pl.days.length!==7)pl=this.gen(S,0);
+  else if(pl.S!==S){const today=(new Date().getDay()+6)%7;pl=this.gen(S,today)}
+  return pl;
+ },
+ regen(){const S=+store.get('todayMin',30);this.gen(S,(new Date().getDay()+6)%7)},
+ counts(day){const e=Log.all()[day.d]||{},use={},out=[];
+  for(const t of day.tasks){const have=(e[t.kind]||0)-(use[t.kind]||0);const done=Math.max(0,Math.min(t.target,have));use[t.kind]=(use[t.kind]||0)+t.target;out.push(done)}
+  return out},
+ go(t){
+  switch(t.kind){
+   case 'tac':return Tac.focusTheme(t.theme);
+   case 'pos':return Mode.set('pos',()=>{Pos.idea=t.idea;store.set('posIdea',t.idea);Pos.lv=t.lv;store.set('posLv',t.lv);Pos.fillSel();Pos.practice()});
+   case 'fp':return Mode.set('fp',()=>{Fp.idea=t.idea;store.set('fpIdea',t.idea);Fp.lv=t.lv;store.set('fpLv',t.lv);Fp.fillSel();Fp.practice()});
+   case 'cal':return Mode.set('cal');
+   case 'exam':return Mode.set('exam',()=>{Exam.scope='all';Exam.n=Math.max(5,t.target);Exam.start(false)});
+   case 'str':return Mode.set('struct',()=>{Struct.rand=false;if(t.idx!=null){Struct.si=t.idx;Struct.pi=0;const sel=$('#stSel');if(sel)sel.value=Struct.si}Struct.ask()});
+   case 'err':store.set('tcol','err');return Mode.set('tactics');
+   case 'play':return Mode.set('play');
+   case 'gam':return Mode.set('games');
+   case 'srs':return Mode.set('review');
+   case 'fin':{const fp=Fin.suggest();return Reto.goFin(fp.id)}
+  }
+ },
+ card(){
+  const pl=this.ensure(),today=(new Date().getDay()+6)%7;let tot=0,got=0,h='';
+  const rows=pl.days.map((day,i)=>{
+   const c=this.counts(day),dn=c.every((x,j)=>x>=day.tasks[j].target),part=c.reduce((a,x)=>a+x,0)>0;
+   day.tasks.forEach((t,j)=>{if(i<=today){tot+=t.target;got+=c[j]}});
+   const state=i>today?'':(dn?'✓':(i===today?'●':(part?'◐':'·')));
+   const open=i===today;
+   const list=day.tasks.map((t,j)=>`<div style="display:flex;gap:8px;align-items:center;padding:4px 0;border-top:1px solid var(--line)"><span style="width:18px">${c[j]>=t.target?'✓':'○'}</span><div style="flex:1;min-width:0"><b>${esc(t.title)}</b><br><span class="small">${esc(t.desc)}</span></div><span class="small" style="white-space:nowrap">${c[j]}/${t.target}</span>${i===today?`<button data-pw="${j}">Ir</button>`:''}</div>`).join('');
+   return `<details${open?' open':''} style="margin:4px 0;padding:6px 8px;border:1px solid var(--line);border-radius:10px${open?';background:var(--panel)':''}"><summary style="cursor:pointer"><b>${this.DN[i]}</b>${open?' · hoy':''} <span class="small">· ${day.tasks.map(t=>esc(t.title.split(':')[0])).join(' · ')}</span> <span style="float:right">${state}</span></summary>${list}</details>`;
+  }).join('');
+  const pct=tot?Math.round(got/tot*100):0;
+  h+=`<h3>Plan de la semana</h3><div class="small">Se genera cada lunes con tus puntos débiles (táctica, posición, finales) y se marca solo al practicar. Cumplido hasta hoy: <b>${pct}%</b></div><div class="bar" style="margin:6px 0"><i style="width:${pct}%"></i></div>${rows}<div class="row" style="margin-top:6px"><button id="planRegen" class="sm">↻ Regenerar los días que faltan</button></div>`;
+  return h;
+ },
+ bind(el,rerender){
+  const pl=this.get(),today=(new Date().getDay()+6)%7;
+  el.querySelectorAll('[data-pw]').forEach(b=>b.onclick=()=>{const t=pl&&pl.days[today]&&pl.days[today].tasks[+b.dataset.pw];if(t)this.go(t)});
+  const r=el.querySelector('#planRegen');if(r)r.onclick=()=>{this.regen();rerender()};
  }
 };
 
@@ -4600,57 +4693,61 @@ const POS_IDEAS=[
   claves:['Pregúntate siempre: «¿qué amenaza mi rival con su próxima jugada?».','La <b>profilaxis</b> previene el plan rival antes de que ocurra, ganando un tiempo clave.','Defiende antes de atacar si hay una amenaza concreta.','El rey está seguro enrocado; en finales, en cambio, debe ser una pieza activa.'],
   q:'¿Qué amenaza o plan tiene el rival y cómo lo neutralizas sin perder tiempo?'}
 ];
+const RESW=v=>v>=150?'gana':v<=-150?'pierde':'tablas';
 const POS_LV={1:['Fácil','la mejor jugada destaca claramente'],2:['Medio','hay alternativas razonables'],3:['Difícil','la diferencia es sutil']};
-COLS.posx={n:'Posición',get:()=>Pos.list()};
-const Pos={
- idea:store.get('posIdea','pieza'),lv:store.get('posLv',1),study:false,si:0,
- I(id){return POS_IDEAS.find(x=>x.id===(id||this.idea))||POS_IDEAS[0]},
+const MODS={};
+function ideaOf(id){for(const k in MODS){const x=MODS[k].ideas.find(i=>i.id===id);if(x)return x}return POS_IDEAS[0]}
+function mkMod(o){const LV=o.lv||POS_LV;const m={
+ idea:store.get(o.k+'Idea',o.ideas[0].id),lv:store.get(o.k+'Lv',1),study:false,si:0,
+ I(id){return o.ideas.find(x=>x.id===(id||this.idea))||o.ideas[0]},
  key(p){return p.fen.split(' ').slice(0,4).join(' ')},
- prog(){return store.get('posProg',{})},
- ex(t,lv){return POS_BANK.filter(p=>p.t===t&&!p.model&&(!lv||p.lv===lv)).sort((a,b)=>b.mg-a.mg)},
- models(t){return POS_BANK.filter(p=>p.t===t&&p.model).sort((a,b)=>b.mg-a.mg)},
+ prog(){return store.get(o.k+'Prog',{})},
+ ex(t,lv){return o.bank().filter(p=>p.t===t&&!p.model&&(!lv||p.lv===lv)).sort((a,b)=>b.mg-a.mg)},
+ models(t){return o.bank().filter(p=>p.t===t&&p.model).sort((a,b)=>b.mg-a.mg)},
  list(){return this.ex(this.idea,this.lv)},
  cnt(t,lv){const pr=this.prog(),L=this.ex(t,lv);return [L.filter(p=>pr[this.key(p)]===1).length,L.length]},
- title(p,i,n){const I=this.I(p.t);return `<b>${I.ic} ${esc(I.n)} · Nivel ${p.lv} · ejercicio ${i+1}/${n}</b><br>Juegan ${A.userColor==='w'?'blancas':'negras'}. ${I.q}`},
+ title(p,i,n){const I=this.I(p.t);return `<b>${I.ic} ${esc(I.n)} · Nivel ${p.lv} · ejercicio ${i+1}/${n}</b><br>Juegan ${A.userColor==='w'?'blancas':'negras'}. ${I.q}${o.extra?o.extra(p):''}`},
  q(p){return this.I(p.t).q},
  mark(p,ok){
-  const pr=this.prog(),k=this.key(p);pr[k]=ok?1:0;store.set('posProg',pr);this.fillSel();this.showProg();
+  const pr=this.prog(),k=this.key(p);pr[k]=ok?1:0;store.set(o.k+'Prog',pr);this.fillSel();this.showProg();
   const [d,t]=this.cnt(p.t,p.lv);
   if(ok&&d===t&&t>0)setTimeout(()=>Chat.say(`🏁 <b>Nivel ${p.lv} de «${esc(this.I(p.t).n)}» completado</b> (${d}/${t}).${p.lv<3?` Pasa al nivel ${p.lv+1} desde el selector de nivel.`:' Es el último nivel: repásalo cuando quieras o cambia de idea.'}`,'ok'),80);
  },
  fillSel(){
   const a=$('#psIdea'),b=$('#psLv');if(!a||!b)return;
-  a.innerHTML=POS_IDEAS.map(I=>{let d=0,t=0;[1,2,3].forEach(l=>{const c=this.cnt(I.id,l);d+=c[0];t+=c[1]});return `<option value="${I.id}">${I.ic} ${esc(I.n)} (${d}/${t})</option>`}).join('');a.value=this.idea;
-  b.innerHTML=[1,2,3].map(l=>{const c=this.cnt(this.idea,l);return `<option value="${l}">Nivel ${l} · ${POS_LV[l][0]} (${c[0]}/${c[1]})${c[1]&&c[0]===c[1]?' ✓':''}</option>`}).join('');b.value=this.lv;
+  a.innerHTML=o.ideas.map(I=>{let d=0,t=0;[1,2,3].forEach(l=>{const c=this.cnt(I.id,l);d+=c[0];t+=c[1]});return `<option value="${I.id}">${I.ic} ${esc(I.n)} (${d}/${t})</option>`}).join('');a.value=this.idea;
+  b.innerHTML=[1,2,3].map(l=>{const c=this.cnt(this.idea,l);return `<option value="${l}">Nivel ${l} · ${LV[l][0]} (${c[0]}/${c[1]})${c[1]&&c[0]===c[1]?' ✓':''}</option>`}).join('');b.value=this.lv;
  },
+ weakIdeas(){const pr=this.prog();return o.ideas.map(i=>{const L=this.ex(i.id);let f=0,d=0;L.forEach(p=>{const v=pr[this.key(p)];if(v===1)d++;else if(v===0)f++});return {id:i.id,n:i.n,f,d,t:L.length}}).filter(x=>x.t).sort((a,b)=>b.f-a.f||a.d/a.t-b.d/b.t)},
  showRev(){
-  const el=$('#psRev');if(!el)return;const all=ErrSRS.puzzles().filter(p=>p.t),due=ErrSRS.dueList().filter(p=>p.t);
+  const el=$('#psRev');if(!el)return;const all=ErrSRS.puzzles().filter(p=>p.t&&this.I(p.t).id===p.t&&o.ideas.some(i=>i.id===p.t)),due=ErrSRS.dueList().filter(p=>p.t&&o.ideas.some(i=>i.id===p.t));
   if(!all.length){el.innerHTML='';return}
   el.innerHTML=due.length?`<button id="psRevBtn" class="pri">📅 Repasar errores de Posición (${due.length})</button><span class="small">${all.length} en seguimiento</span>`:`<span class="small">📅 Sin repasos pendientes hoy · ${all.length} error${all.length===1?'':'es'} en seguimiento (vuelven a salir a 1, 3, 7, 14, 30 días).</span>`;
   const b=$('#psRevBtn');if(b)b.onclick=()=>{store.set('tcol','err');Mode.set('tactics')};
  },
- showProg(){this.showRev();const el=$('#psProg');if(!el)return;const c=this.cnt(this.idea,this.lv);el.innerHTML=this.study?`Estudiando la idea: <b>${esc(this.I().n)}</b>. Después, practica con ejercicios.`:`Nivel ${this.lv}: ${POS_LV[this.lv][1]}. Resueltos a la primera: <b>${c[0]}/${c[1]}</b>.`},
+ showProg(){this.showRev();const el=$('#psProg');if(!el)return;const c=this.cnt(this.idea,this.lv);el.innerHTML=this.study?`Estudiando la idea: <b>${esc(this.I().n)}</b>. Después, practica con ejercicios.`:`Nivel ${this.lv}: ${LV[this.lv][1]}. Resueltos a la primera: <b>${c[0]}/${c[1]}</b>.`},
  canMove(){return !this.study&&Tac.canMove()},
  onMove(m){return Tac.onMove(m)},
  enter(){
-  Tac.col='posx';Tac.calc=false;
+  Tac.col=o.col;Tac.calc=!!o.calc;
   $('#ctl').innerHTML=`<div class="g2"><label>Idea<select id="psIdea"></select></label><label>Nivel<select id="psLv"></select></label></div>
-  <div class="row"><button id="psStudy">📖 Estudiar la idea</button><button id="psPrac" class="pri">Practicar</button></div>
-  <div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpNext">Siguiente ▶</button></div>
+  <div class="row">${o.study===false?'':'<button id="psStudy">📖 Estudiar la idea</button>'}<button id="psPrac" class="pri">Practicar</button></div>
+  ${o.calc?'<div class="row"><select id="tpNot" title="Notación al escribir las jugadas"><option value="es">R D T A C (español)</option><option value="en">K Q R B N (inglés)</option></select></div>':''}<div class="row"><button id="tpHint">Pista</button><button id="tpRestart">Reiniciar</button><button id="tpNext">Siguiente ▶</button></div>
   <div class="row" id="psRev"></div><div class="small" id="psProg"></div>`;
   this.fillSel();
-  $('#psIdea').onchange=e=>{this.idea=e.target.value;store.set('posIdea',this.idea);this.fillSel();this.begin()};
-  $('#psLv').onchange=e=>{this.lv=+e.target.value;store.set('posLv',this.lv);this.fillSel();this.practice()};
-  $('#psStudy').onclick=()=>this.startStudy();$('#psPrac').onclick=()=>this.practice();
+  $('#psIdea').onchange=e=>{this.idea=e.target.value;store.set(o.k+'Idea',this.idea);this.fillSel();this.begin()};
+  $('#psLv').onchange=e=>{this.lv=+e.target.value;store.set(o.k+'Lv',this.lv);this.fillSel();this.practice()};
+  if($('#psStudy'))$('#psStudy').onclick=()=>this.startStudy();$('#psPrac').onclick=()=>this.practice();
   $('#tpHint').onclick=()=>{if(this.study){Chat.say('En el estudio no hay pista: pulsa «Ver la idea».','warn');return}Tac.hint()};
   $('#tpRestart').onclick=()=>{if(this.study)this.showModel();else Tac.load()};
   $('#tpNext').onclick=()=>this.next();
+  if($('#tpNot')){$('#tpNot').value=store.get('tnot','es');$('#tpNot').onchange=e=>{store.set('tnot',e.target.value);Tac.load()}}
   this.begin();
  },
  leave(){this.study=false},
- begin(){const seen=store.get('posSeen',[]);if(!seen.includes(this.idea)&&this.models(this.idea).length)this.startStudy();else this.practice()},
+ begin(){const seen=store.get(o.k+'Seen',[]);if(!seen.includes(this.idea)&&this.models(this.idea).length)this.startStudy();else this.practice()},
  practice(){
-  this.study=false;Tac.col='posx';Tac.calc=false;const L=this.list();this.showProg();
+  this.study=false;Tac.col=o.col;Tac.calc=!!o.calc;const L=this.list();this.showProg();
   if(!L.length){A.epoch++;Chat.clear();Chat.chips([]);Chat.say('Todavía no hay ejercicios en este nivel. Prueba otro nivel u otra idea.');return}
   const pr=this.prog();let i=L.findIndex(p=>pr[this.key(p)]!==1);if(i<0)i=0;Tac.i=i;Tac.load();
  },
@@ -4663,7 +4760,7 @@ const Pos={
  },
  /* --- estudio guiado --- */
  startStudy(){
-  this.study=true;this.si=-1;const I=this.I(),seen=store.get('posSeen',[]);if(!seen.includes(I.id)){seen.push(I.id);store.set('posSeen',seen)}
+  this.study=true;this.si=-1;const I=this.I(),seen=store.get(o.k+'Seen',[]);if(!seen.includes(I.id)){seen.push(I.id);store.set(o.k+'Seen',seen)}
   this.showProg();A.epoch++;Engine.stop();Chat.clear();
   Chat.say(`<b>${I.ic} ${esc(I.n)}</b><br>${I.resumen}<ul style="margin:6px 0 0 16px;padding:0">${I.claves.map(c=>`<li>${c}</li>`).join('')}</ul>`);
   const n=this.models(I.id).length;
@@ -4687,15 +4784,56 @@ const Pos={
  reveal(p){
   const m=A.game.move(p.best);if(!m)return;A.sync();A.updateControls();board.arrows=[[m.from,m.to]];board.marks=(p.tg||[]).slice();board.draw();
   const alt=p.sec&&p.sec[0];
-  Chat.say(`<b>${esc(Tac.fmt(p.best))}</b>: ${Tac.ex({expl:p.idea})}<br><span class="small">Stockfish: tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(Tac.fmt(alt[0]))}) deja ≈${fmtEv(alt[1])}`:''}.</span>`,'ok');
+  Chat.say(`<b>${esc(Tac.fmt(p.best))}</b>: ${Tac.ex({expl:p.idea})}<br><span class="small">${p.res!=null?`Stockfish: con ${esc(Tac.fmt(p.best))} ${RESW(p.ev)}${alt?`; con la mejor alternativa (${esc(Tac.fmt(alt[0]))}) ${RESW(alt[1])}`:''}.`:`Stockfish: tu posición vale ≈${fmtEv(p.ev)}${alt?`; la mejor alternativa (${esc(Tac.fmt(alt[0]))}) deja ≈${fmtEv(alt[1])}`:''}.`}</span>`,'ok');
   const last=this.si>=this.models(this.idea).length-1;
   Chat.chips([{label:last?'Terminar el estudio ▶':'Siguiente ejemplo ▶',pri:true,fn:()=>this.studyNext()},{label:'Analizar con Stockfish',fn:analyze}]);
  }
 };
+ COLS[o.col]={n:o.name,get:()=>m.list()};MODS[o.col]=m;m.ideas=o.ideas;return m}
+const Pos=mkMod({k:'pos',col:'posx',name:'Posición',ideas:POS_IDEAS,bank:()=>POS_BANK});
+const FP_IDEAS=[
+ {id:'f_peones',ic:'♙',n:'Finales de peones',
+  resumen:'En los finales de peones cada tempo cuenta: <b>el rey activo, la oposición y las casillas clave</b> deciden entre ganar y tablas.',
+  claves:['El rey es una pieza fuerte: llévalo al centro y delante de sus peones.','<b>Oposición</b>: los reyes quedan frente a frente con una casilla entre ellos; el bando que tiene que mover cede el paso. Quien consigue la oposición suele ganar el final.','<b>Casillas clave</b>: las tres casillas dos filas por delante del peón. Si tu rey llega a una de ellas, el peón corona aunque el rival tenga la oposición (salvo con peón de torre).','<b>Regla del cuadrado</b>: si el rey rival entra en el cuadrado del peón pasado, lo alcanza; si no, el peón corona.','El peón de torre (columna a o h) es el más difícil de ganar: si el rey defensor llega a la esquina de promoción, son tablas.'],
+  q:'¿Quién llega antes: el rey o el peón? ¿Quién tiene la oposición?'},
+ {id:'f_torres',ic:'♖',n:'Finales de torres',
+  resumen:'Son los finales más frecuentes y se deciden por <b>la actividad de la torre</b> y la posición de los reyes.',
+  claves:['Una torre activa vale más que un peón: la torre pasiva casi siempre pierde.','Coloca la torre <b>detrás de los peones pasados</b>, tuyos o del rival.','<b>Corte</b>: usa la torre para cortar al rey rival en una fila o columna y alejarlo de la acción.','<b>Posición de Philidor</b> (defensa): con la torre en la 3.ª fila (contando desde tu lado) impides que el rey rival avance; cuando el peón llega a la 6.ª fila, pasas a dar jaques desde atrás: tablas.','<b>Posición de Lucena</b> (ataque): rey delante del peón en la 7.ª; construye el «puente» con la torre en la 4.ª fila para ganar.'],
+  q:'¿Qué torre es más activa, dónde están los reyes y quién tiene el peón pasado?'},
+ {id:'f_menores',ic:'♗',n:'Alfiles y caballos',
+  resumen:'Aquí importa saber <b>qué pieza menor rinde más</b> y dónde están los peones.',
+  claves:['<b>Alfiles de distinto color</b> tienden a tablas, incluso con peones de ventaja; el bando inferior debe buscar ese refugio.','<b>Alfil bueno y malo</b>: tus peones en casillas del color de tu alfil lo limitan.','Con peones en <b>ambos flancos</b> el alfil suele ser mejor que el caballo, porque actúa a distancia.','El <b>caballo</b> es lento y necesita casillas cercanas: acércalo al peón pasado o a las debilidades; en posiciones cerradas gana valor.','El rey activo también decide aquí: llévalo a la acción antes de mover las piezas menores.'],
+  q:'¿Qué pieza es mejor en este final y en qué color están los peones?'},
+ {id:'f_damas',ic:'♕',n:'Finales de dama',
+  resumen:'Con damas en el tablero mandan <b>los jaques</b>: el jaque perpetuo y el ahogado están siempre en el aire.',
+  claves:['<b>Dama contra peón en 7.ª</b>: gana la dama si su rey está cerca; con peón de alfil o de torre y el rey fuerte lejos, son tablas por ahogado.','<b>Jaque perpetuo</b>: con dama y poco más, el bando peor suele salvarse con jaques; el bando mejor debe resguardar a su rey.','<b>Dama contra torre</b>: la dama suele ganar con ayuda del rey, pero con peones la torre puede defenderse.','Antes de empujar un peón, asegúrate de que tu rey no quedará expuesto a los jaques.'],
+  q:'¿Hay jaque perpetuo, ahogado o una casilla de promoción que vigilar?'}
+];
+const FP_LV={1:['Fácil','la idea se ve con poco cálculo'],2:['Medio','hay que calcular con cuidado'],3:['Difícil','solo se ve calculando a fondo']};
+const CAL_IDEAS=[
+ {id:'c_tac',ic:'🧮',n:'Calcular tácticas',q:'Calcula la línea completa sin mover piezas y escríbela con las respuestas del rival.'},
+ {id:'c_mate',ic:'♚',n:'Calcular mates',q:'Calcula la secuencia de mate completa, incluidas las respuestas del rival.'}
+];
+const CAL_LV={1:['2 jugadas','calculas 2 jugadas tuyas'],2:['3 jugadas','calculas 3 jugadas tuyas'],3:['4 o más','calculas 4 o más jugadas tuyas']};
+let _calBank=null;
+function CAL_BANK(){
+ if(_calBank)return _calBank;const out=[];
+ const k=p=>p.n?p.n:Math.ceil((p.sol||[]).length/2);
+ for(const p of [...TAC_BANK,...PUZZLES,...PZ_MATE]){
+  const n=k(p);if(n<2)continue;if(!p.n&&(!p.sol||p.sol.length<3))continue;
+  const mate=!!p.n||/^Mate/.test(p.theme||'')||(p.sol&&p.sol[p.sol.length-1]==='#');
+  out.push(Object.assign({},p,{t:mate?'c_mate':'c_tac',lv:n===2?1:n===3?2:3,mg:-(p.r||1300+n*60),k:n}));
+ }
+ const g={};out.forEach(x=>(g[x.t+x.lv]=g[x.t+x.lv]||[]).push(x));
+ const fin=[];Object.values(g).forEach(L=>{L.sort((a,b)=>b.mg-a.mg);const st=Math.max(1,Math.ceil(L.length/80));for(let i=0;i<L.length;i+=st)fin.push(L[i])});
+ return _calBank=fin;
+}
+const Fp=mkMod({k:'fp',col:'fpx',name:'Finales prácticos',ideas:FP_IDEAS,bank:()=>FP_BANK,lv:FP_LV});
+const Cal=mkMod({k:'cal',col:'calx',name:'Cálculo',ideas:CAL_IDEAS,bank:CAL_BANK,lv:CAL_LV,calc:true,study:false,extra:p=>{const n=p.n||Math.ceil((p.sol||[]).length/2);return `<br><span class="small">Calcula ${n} jugadas tuyas (con las respuestas del rival) y escribe la línea.</span>`}});
 
-const MODES={pos:Pos,today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,blind:Blind,reto:Reto,expl:Expl,edit:Edit,coach:Coach,progress:Prog};
+const MODES={pos:Pos,fp:Fp,cal:Cal,today:Today,lesson:Lesson,review:Rev,exam:Exam,tactics:Tac,struct:Struct,games:Games,play:Play,blind:Blind,reto:Reto,expl:Expl,edit:Edit,coach:Coach,progress:Prog};
 const Nav={
- G:{today:['today'],study:['lesson','expl','struct','review','exam'],prac:['tactics','pos','reto','blind'],play:['play'],ana:['games','edit'],prog:['progress','coach']},
+ G:{today:['today'],study:['lesson','expl','struct','review','exam'],prac:['tactics','pos','cal','fp','reto','blind'],play:['play'],ana:['games','edit'],prog:['progress','coach']},
  last:store.get('navLast',{}),
  of(m){for(const g in this.G)if(this.G[g].includes(m))return g;return 'today'},
  go(g){const L=this.G[g];let m=this.last[g];if(!m||!L.includes(m)||(m==='coach'&&!Coach.on()))m=L[0];Mode.set(m)},
